@@ -1,4 +1,4 @@
-package com.teamdev.javaclasses.entities;
+package com.teamdev.javaclasses.repository;
 
 public interface Repository<TYPE, TYPE_ID> {
     void create(TYPE type, TYPE_ID type_id);

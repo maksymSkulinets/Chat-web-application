@@ -11,8 +11,9 @@ public interface UserService {
 
     /**
      * Sign up new user.
-     * @param nickname user nickname
-     * @param password user password
+     *
+     * @param nickname       user nickname
+     * @param password       user password
      * @param verifyPassword password for confirm
      * @return unique id
      * @throws SignUpException if sign up fail
@@ -21,6 +22,7 @@ public interface UserService {
 
     /**
      * Login already sign up users.
+     *
      * @param nickname user nickname
      * @param password user password
      * @return token for access
