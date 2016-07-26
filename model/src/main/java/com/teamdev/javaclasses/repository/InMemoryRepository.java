@@ -12,12 +12,12 @@ import java.util.Map;
 public abstract class InMemoryRepository<TYPE, TYPE_ID> implements Repository<TYPE, TYPE_ID> {
     private Map<TYPE, TYPE_ID> storageKey = new HashMap();
     private Map<TYPE_ID, TYPE> storageValue = new HashMap();
-
+    @Override
     public void create(TYPE type, TYPE_ID type_id) {
         storageKey.put(type, type_id);
         storageValue.put(type_id, type);
     }
-
+    @Override
     public TYPE read(TYPE_ID type_id) {
         return storageValue.get(type_id);
     }

@@ -3,7 +3,7 @@ package com.teamdev.javaclasses;
 /**
  * Throws if sign up fail.
  */
-class SignUpException extends Exception {
+public class SignUpException extends Exception {
     public SignUpException(String message) {
         super(message);
     }
