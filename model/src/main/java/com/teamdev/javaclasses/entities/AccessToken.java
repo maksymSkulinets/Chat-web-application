@@ -7,7 +7,7 @@ public class AccessToken {
     private final long value;
 
     public AccessToken() {
-        value = System.currentTimeMillis();
+        value = System.nanoTime();
     }
 
     public long getValue() {

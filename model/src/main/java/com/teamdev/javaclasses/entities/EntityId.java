@@ -16,6 +16,6 @@ public abstract class EntityId {
 
     @Override
     public String toString() {
-        return "" + value;
+        return String.valueOf(value);
     }
 }

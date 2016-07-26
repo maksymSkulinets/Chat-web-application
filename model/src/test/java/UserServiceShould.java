@@ -13,18 +13,19 @@ import org.junit.Test;
 import static org.junit.Assert.fail;
 
 public class UserServiceShould {
+
     final UserRepository userRepository = UserRepository.getInstance();
     final TokenRepository tokenRepository = TokenRepository.getInstance();
     final UserService userService = new UserServiceImpl(userRepository, tokenRepository);
 
     @Test
     public void signUpUser() throws SignUpException {
-        User expectedUser = new User("Mike", "you_shall_not_pass");
+        final User expectedUser = new User("Mike", "you_shall_not_pass");
 
-        UserId userId = userService
+        final UserId actualUserId = userService
                 .signUp(expectedUser.getNickname(), expectedUser.getPassword(), expectedUser.getPassword());
 
-        User actualUser = (User) userRepository.readType(userId);
+        final User actualUser = (User) userRepository.readType(actualUserId);
 
         Assert.assertEquals("User with current nickname is not registered",
                 expectedUser.getNickname(), actualUser.getNickname());
@@ -33,8 +34,8 @@ public class UserServiceShould {
     }
 
     @Test
-    public void failDuplicateUserSignUp() throws SignUpException {
-        User expectedUser = new User("Anna", "you_shall_not_pass");
+    public void failInDuplicateUserSignUp() throws SignUpException {
+        final User expectedUser = new User("Anna", "you_shall_not_pass");
 
         userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), expectedUser.getPassword());
 
@@ -47,8 +48,8 @@ public class UserServiceShould {
     }
 
     @Test
-    public void failPasswordMatchingSignUp() {
-        User expectedUser = new User("John", "you_shall_not_pass");
+    public void passwordMatchingSignUpFail() {
+        final User expectedUser = new User("John", "you_shall_not_pass");
 
         try {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), "not_match_password");
@@ -59,8 +60,8 @@ public class UserServiceShould {
     }
 
     @Test
-    public void failEmptyInputSignUp() {
-        User expectedUser = new User("   ", "you_shall_not_pass");
+    public void emptyInputSignUpFail() {
+        final User expectedUser = new User("   ", "you_shall_not_pass");
 
         try {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), "");
@@ -95,7 +96,7 @@ public class UserServiceShould {
     }
 
     @Test
-    public void notSignUpLoginFail() throws SignUpException {
+    public void nonSignUpUserLoginFail() throws SignUpException {
         final User expectedUser = new User("Paul", "paul_password");
 
         try {
@@ -118,6 +119,4 @@ public class UserServiceShould {
             Assert.assertEquals("User with non correct password was login", "Such user must register before", e.getMessage());
         }
     }
-
-
 }

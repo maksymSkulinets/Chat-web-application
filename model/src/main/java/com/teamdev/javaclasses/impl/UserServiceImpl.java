@@ -10,9 +10,9 @@ import com.teamdev.javaclasses.repository.TokenRepository;
 import com.teamdev.javaclasses.repository.UserRepository;
 
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private TokenRepository tokenRepository;
-    long lastIdValue = 0;
+    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
+    private long lastIdValue = 0;
 
     public UserServiceImpl(UserRepository userRepository, TokenRepository tokenRepository) {
         this.userRepository = userRepository;
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     public UserId signUp(String nickname, String password, String verifyPassword) throws SignUpException {
 
-        String trimmedNickname = nickname.trim();
+        final String trimmedNickname = nickname.trim();
 
         if (trimmedNickname.isEmpty() || password.isEmpty() || verifyPassword.isEmpty()) {
             throw new SignUpException("All fields must be filled");
@@ -31,16 +31,17 @@ public class UserServiceImpl implements UserService {
             throw new SignUpException("Passwords must match");
         }
 
-        UserId userId = (UserId) userRepository.readId(new User(nickname, password));
+        final User currentUser = new User(nickname, password);
+        final UserId userId = (UserId) userRepository.readId(currentUser);
         if (userId != null) {
             throw new SignUpException("Current nickname must be unique");
         }
 
         User user = new User(nickname, password);
-        userId = new UserId(lastIdValue++);
-        userRepository.create(user, userId);
+        final UserId currentUserId = new UserId(lastIdValue++);
+        userRepository.create(user, currentUserId);
 
-        return userId;
+        return currentUserId;
     }
 
     public AccessToken login(String nickname, String password) throws LoginException {
@@ -51,14 +52,14 @@ public class UserServiceImpl implements UserService {
         }
 
         final User currentUser = new User(nickname, password);
-        final UserId currentUserId = (UserId) userRepository.readId(currentUser);
+        final UserId UserId = (UserId) userRepository.readId(currentUser);
 
-        if (currentUserId == null) {
+        if (UserId == null) {
             throw new LoginException("Such user must register before");
         }
 
         final AccessToken currentToken = new AccessToken();
-        tokenRepository.create(currentToken, currentUserId);
+        tokenRepository.create(currentToken, UserId);
         return currentToken;
     }
 }
