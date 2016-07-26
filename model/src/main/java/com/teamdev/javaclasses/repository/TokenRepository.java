@@ -6,7 +6,7 @@ import com.teamdev.javaclasses.entities.UserId;
 
 public class TokenRepository extends InMemoryRepository<AccessToken, UserId> {
     private final static TokenRepository tokenRepository = new TokenRepository();
-
+    /*TODO USE UUID*/
     private TokenRepository() {
     }
 
