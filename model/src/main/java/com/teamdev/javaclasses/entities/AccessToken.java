@@ -6,8 +6,8 @@ package com.teamdev.javaclasses.entities;
 public class AccessToken {
     private final long value;
 
-    public AccessToken(long value) {
-        this.value = value;
+    public AccessToken() {
+        value = System.currentTimeMillis();
     }
 
     public long getValue() {
