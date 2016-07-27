@@ -1,5 +1,6 @@
 package com.teamdev.javaclasses.impl;
 
+import com.google.common.base.Preconditions;
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.UserService;

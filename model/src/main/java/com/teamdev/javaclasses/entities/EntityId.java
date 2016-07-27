@@ -18,4 +18,22 @@ public abstract class EntityId {
     public String toString() {
         return String.valueOf(value);
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EntityId entityId = (EntityId) o;
+
+        return value == entityId.value;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (value ^ (value >>> 32));
+    }
 }

@@ -33,6 +33,7 @@ public class UserServiceShould {
                 expectedUser.getPassword(), actualUser.getPassword());
     }
 
+
     @Test
     public void failInDuplicateUserSignUp() throws SignUpException {
         final User expectedUser = new User("Anna", "you_shall_not_pass");
@@ -48,8 +49,8 @@ public class UserServiceShould {
     }
 
     @Test
-    public void passwordMatchingSignUpFail() {
-        final User expectedUser = new User("John", "you_shall_not_pass");
+    public void passwordsNonMatchingSignUpFail() {
+        final User expectedUser = new User("John", "John_password");
 
         try {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), "not_match_password");
@@ -61,7 +62,7 @@ public class UserServiceShould {
 
     @Test
     public void emptyInputSignUpFail() {
-        final User expectedUser = new User("   ", "you_shall_not_pass");
+        final User expectedUser = new User("   ", "password");
 
         try {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), "");
