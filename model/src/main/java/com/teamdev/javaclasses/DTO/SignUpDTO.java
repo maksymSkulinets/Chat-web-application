@@ -1,5 +1,8 @@
 package com.teamdev.javaclasses.DTO;
 
+/**
+ * Data transfer object for sign up personal information.
+ */
 public class SignUpDTO {
     private String nickname;
     private String password;
@@ -15,24 +18,12 @@ public class SignUpDTO {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getVerifyPassword() {
         return verifyPassword;
-    }
-
-    public void setVerifyPassword(String verifyPassword) {
-        this.verifyPassword = verifyPassword;
     }
 
     @Override
