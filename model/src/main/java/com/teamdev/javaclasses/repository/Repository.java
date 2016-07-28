@@ -1,9 +1,21 @@
 package com.teamdev.javaclasses.repository;
 
-public interface Repository<TYPE, TYPE_ID> {
-    void create(TYPE type, TYPE_ID type_id);
+import com.teamdev.javaclasses.entities.Entity;
+import com.teamdev.javaclasses.entities.EntityId;
 
-    TYPE readType(TYPE_ID type_id);
+import java.util.Collection;
 
-    TYPE_ID readId(TYPE type);
+/**
+ * Public API of repository
+ *
+ * @param <TYPE>    raw type for any inheritance entity
+ * @param <TYPE_ID> raw type for any inheritance entity id
+ */
+interface Repository<TYPE extends Entity, TYPE_ID extends EntityId> {
+    void add(TYPE type);
+
+    TYPE find(TYPE_ID type_id);
+
+    Collection<TYPE> findAll();
+
 }

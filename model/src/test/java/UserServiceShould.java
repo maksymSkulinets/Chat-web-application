@@ -1,12 +1,9 @@
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
-import com.teamdev.javaclasses.UserService;
-import com.teamdev.javaclasses.entities.AccessToken;
+import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.impl.UserServiceImpl;
-import com.teamdev.javaclasses.repository.TokenRepository;
-import com.teamdev.javaclasses.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,9 +11,7 @@ import static org.junit.Assert.fail;
 
 public class UserServiceShould {
 
-    final UserRepository userRepository = UserRepository.getInstance();
-    final TokenRepository tokenRepository = TokenRepository.getInstance();
-    final UserService userService = new UserServiceImpl(userRepository, tokenRepository);
+    final UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Test
     public void signUpUser() throws SignUpException {
@@ -25,7 +20,7 @@ public class UserServiceShould {
         final UserId actualUserId = userService
                 .signUp(expectedUser.getNickname(), expectedUser.getPassword(), expectedUser.getPassword());
 
-        final User actualUser = (User) userRepository.readType(actualUserId);
+        final User actualUser = userService.getUser(actualUserId);
 
         Assert.assertEquals("User with current nickname is not registered",
                 expectedUser.getNickname(), actualUser.getNickname());
@@ -77,9 +72,10 @@ public class UserServiceShould {
         final User expectedUser = new User("Steve", "it_is_steve_password");
 
         final UserId userIdExpected = userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), expectedUser.getPassword());
-        final AccessToken token = userService.login(expectedUser.getNickname(), expectedUser.getPassword());
+        final SecurityToken token = userService.login(expectedUser.getNickname(), expectedUser.getPassword());
 
-        final UserId userIdActual = (UserId) tokenRepository.readId(token);
+        final UserId userIdActual = userService.getUserId(token);
+
         Assert.assertEquals("User with correct input was not login", userIdExpected, userIdActual);
     }
 
@@ -98,7 +94,6 @@ public class UserServiceShould {
 
     @Test
     public void nonSignUpUserLoginFail() throws SignUpException {
-        final User expectedUser = new User("Paul", "paul_password");
 
         try {
             userService.login("another_user", "another_password");

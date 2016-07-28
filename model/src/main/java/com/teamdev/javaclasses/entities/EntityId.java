@@ -1,39 +1,40 @@
 package com.teamdev.javaclasses.entities;
 
 /**
- * Abstract entity.
+ * Type for entity unique identifier.
  */
 public abstract class EntityId {
-    private final long value;
 
-    public EntityId(long value) {
-        this.value = value;
+    private long id;
+
+    public EntityId(long id) {
+        this.id = id;
     }
 
-    public long getValue() {
-        return value;
+    public long getId() {
+        return id;
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(value);
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
     public boolean equals(Object o) {
-
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         EntityId entityId = (EntityId) o;
-
-        return value == entityId.value;
+        return id == entityId.id;
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (value ^ (value >>> 32));
+        return (int) (id ^ (id >>> 32));
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 }

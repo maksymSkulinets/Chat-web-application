@@ -3,13 +3,20 @@ package com.teamdev.javaclasses.entities;
 /**
  * User entity
  */
-public class User {
+public class User implements Entity<UserId> {
     private String nickname;
     private String password;
+    private UserId id;
 
     public User(String nickname, String password) {
         this.nickname = nickname;
         this.password = password;
+    }
+
+    public User(String nickname, String password, UserId id) {
+        this.nickname = nickname;
+        this.password = password;
+        this.id = id;
     }
 
     public String getNickname() {
@@ -28,6 +35,15 @@ public class User {
         this.password = password;
     }
 
+    public UserId getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(UserId id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -36,7 +52,8 @@ public class User {
         User user = (User) o;
 
         if (nickname != null ? !nickname.equals(user.nickname) : user.nickname != null) return false;
-        return password != null ? password.equals(user.password) : user.password == null;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        return id != null ? id.equals(user.id) : user.id == null;
 
     }
 
@@ -44,6 +61,7 @@ public class User {
     public int hashCode() {
         int result = nickname != null ? nickname.hashCode() : 0;
         result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
     }
 }

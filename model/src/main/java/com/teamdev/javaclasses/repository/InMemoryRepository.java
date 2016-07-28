@@ -1,5 +1,9 @@
 package com.teamdev.javaclasses.repository;
 
+import com.teamdev.javaclasses.entities.Entity;
+import com.teamdev.javaclasses.entities.EntityId;
+
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,23 +13,25 @@ import java.util.Map;
  * @param <TYPE>    raw type for any inheritance entity
  * @param <TYPE_ID> raw type for any inheritance entity id
  */
-public abstract class InMemoryRepository<TYPE, TYPE_ID> implements Repository<TYPE, TYPE_ID> {
-    private Map<TYPE, TYPE_ID> storageWithKeyType = new HashMap();
-    private Map<TYPE_ID, TYPE> storageWithKeyTypeId = new HashMap();
+abstract class InMemoryRepository<TYPE extends Entity, TYPE_ID extends EntityId> implements Repository<TYPE, TYPE_ID> {
+    private Map<TYPE_ID, TYPE> storage = new HashMap<>();
 
     @Override
-    public void create(TYPE type, TYPE_ID type_id) {
-        storageWithKeyType.put(type, type_id);
-        storageWithKeyTypeId.put(type_id, type);
+    public void add(TYPE type) {
+        final TYPE_ID id = getNextId();
+        type.setId(id);
+        storage.put(id, type);
     }
 
     @Override
-    public TYPE readType(TYPE_ID type_id) {
-        return storageWithKeyTypeId.get(type_id);
+    public TYPE find(TYPE_ID type_id) {
+        return storage.get(type_id);
     }
 
     @Override
-    public TYPE_ID readId(TYPE type) {
-        return storageWithKeyType.get(type);
+    public Collection<TYPE> findAll() {
+        return storage.values();
     }
+
+    abstract TYPE_ID getNextId();
 }

@@ -1,12 +1,12 @@
 package com.teamdev.javaclasses.entities;
 
 /**
- * Custom data for user id.
+ * User unique identifier.
  */
 public class UserId extends EntityId {
 
-    public UserId(long value) {
-        super(value);
+    public UserId(long userId) {
+        super(userId);
     }
 
 }

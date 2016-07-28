@@ -1,7 +1,6 @@
 package com.teamdev.javaclasses;
 
-
-import com.teamdev.javaclasses.entities.AccessToken;
+import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.UserId;
 
 /**
@@ -28,5 +27,7 @@ public interface UserService {
      * @return token for access
      * @throws LoginException if login fail
      */
-    AccessToken login(String nickname, String password) throws LoginException;
+    SecurityToken login(String nickname, String password) throws LoginException;
+
+
 }
