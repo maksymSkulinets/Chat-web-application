@@ -1,5 +1,6 @@
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
+import com.teamdev.javaclasses.SignUpFailCases;
 import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
@@ -11,7 +12,7 @@ import static org.junit.Assert.fail;
 
 public class UserServiceShould {
 
-    final UserServiceImpl userService = UserServiceImpl.getInstance();
+    private final UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Test
     public void signUpUser() throws SignUpException {
@@ -39,7 +40,7 @@ public class UserServiceShould {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), expectedUser.getPassword());
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
-            Assert.assertEquals("Sign up fail messages are not match", "Current nickname must be unique", e.getMessage());
+            Assert.assertEquals("Sign up fail messages are not match", SignUpFailCases.USER_EXIST.getMessage(), e.getMessage());
         }
     }
 
@@ -51,7 +52,7 @@ public class UserServiceShould {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), "not_match_password");
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
-            Assert.assertEquals("Sign up fail messages are not match", "Passwords must match", e.getMessage());
+            Assert.assertEquals("Sign up fail messages are not match", SignUpFailCases.PASSWORDS_NOT_MATCH.getMessage(), e.getMessage());
         }
     }
 
@@ -63,7 +64,7 @@ public class UserServiceShould {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), "");
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
-            Assert.assertEquals("Sign up with not filled input", "All fields must be filled", e.getMessage());
+            Assert.assertEquals("Sign up with not filled input", SignUpFailCases.EMPTY_INPUT.getMessage(), e.getMessage());
         }
     }
 

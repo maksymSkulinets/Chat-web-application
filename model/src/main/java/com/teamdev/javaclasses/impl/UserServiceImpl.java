@@ -2,6 +2,7 @@ package com.teamdev.javaclasses.impl;
 
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
+import com.teamdev.javaclasses.SignUpFailCases;
 import com.teamdev.javaclasses.UserService;
 import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
@@ -31,17 +32,17 @@ public class UserServiceImpl implements UserService {
         final String trimmedNickname = nickname.trim();
 
         if (trimmedNickname.isEmpty() || password.isEmpty() || verifyPassword.isEmpty()) {
-            throw new SignUpException("All fields must be filled");
+            throw new SignUpException(SignUpFailCases.EMPTY_INPUT);
         }
 
         if (!password.equals(verifyPassword)) {
-            throw new SignUpException("Passwords must match");
+            throw new SignUpException(SignUpFailCases.PASSWORDS_NOT_MATCH);
         }
 
         final User user = userRepository.get(trimmedNickname);
 
         if (user != null) {
-            throw new SignUpException("Current nickname must be unique");
+            throw new SignUpException(SignUpFailCases.USER_EXIST);
         }
 
         final User currentUser = new User(trimmedNickname, password);
