@@ -1,9 +1,6 @@
 package com.teamdev.javaclasses.impl;
 
-import com.teamdev.javaclasses.LoginException;
-import com.teamdev.javaclasses.SignUpException;
-import com.teamdev.javaclasses.SignUpFailCases;
-import com.teamdev.javaclasses.UserService;
+import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
@@ -42,7 +39,7 @@ public class UserServiceImpl implements UserService {
         final User user = userRepository.get(trimmedNickname);
 
         if (user != null) {
-            throw new SignUpException(SignUpFailCases.USER_EXIST);
+            throw new SignUpException(SignUpFailCases.EXIST_USER);
         }
 
         final User currentUser = new User(trimmedNickname, password);
@@ -56,13 +53,13 @@ public class UserServiceImpl implements UserService {
         final String trimmedNickname = nickname.trim();
 
         if (trimmedNickname.isEmpty() || password.isEmpty()) {
-            throw new LoginException("All fields must be filled");
+            throw new LoginException(LoginFailCases.EMPTY_INPUT);
         }
 
         final User currentUser = new User(nickname, password);
         final UserId userId = userRepository.get(currentUser);
         if (userId == null) {
-            throw new LoginException("Such user must register before");
+            throw new LoginException(LoginFailCases.NON_SIGN_UP_USER);
         }
 
         tokenRepository.add(new SecurityToken(userId));

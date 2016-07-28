@@ -1,4 +1,5 @@
 import com.teamdev.javaclasses.LoginException;
+import com.teamdev.javaclasses.LoginFailCases;
 import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.SignUpFailCases;
 import com.teamdev.javaclasses.entities.SecurityToken;
@@ -40,7 +41,7 @@ public class UserServiceShould {
             userService.signUp(expectedUser.getNickname(), expectedUser.getPassword(), expectedUser.getPassword());
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
-            Assert.assertEquals("Sign up fail messages are not match", SignUpFailCases.USER_EXIST.getMessage(), e.getMessage());
+            Assert.assertEquals("Sign up fail messages are not match", SignUpFailCases.EXIST_USER.getMessage(), e.getMessage());
         }
     }
 
@@ -89,7 +90,7 @@ public class UserServiceShould {
             userService.login(expectedUser.getNickname(), "");
             fail("LoginException was not thrown");
         } catch (LoginException e) {
-            Assert.assertEquals("Sign up fail messages are not match", "All fields must be filled", e.getMessage());
+            Assert.assertEquals("Sign up fail messages are not match", LoginFailCases.EMPTY_INPUT.getMessage(), e.getMessage());
         }
     }
 
@@ -100,7 +101,7 @@ public class UserServiceShould {
             userService.login("another_user", "another_password");
             fail("LoginException was not thrown");
         } catch (LoginException e) {
-            Assert.assertEquals("Login fail messages are not match", "Such user must register before", e.getMessage());
+            Assert.assertEquals("Login fail messages are not match", LoginFailCases.NON_SIGN_UP_USER.getMessage(), e.getMessage());
         }
     }
 
@@ -113,7 +114,8 @@ public class UserServiceShould {
             userService.login(expectedUser.getNickname(), "wrong_password");
             fail("LoginException was not thrown");
         } catch (LoginException e) {
-            Assert.assertEquals("User with non correct password was login", "Such user must register before", e.getMessage());
+            Assert.assertEquals("User with non correct password was login", LoginFailCases.NON_SIGN_UP_USER.getMessage(), e.getMessage());
+
         }
     }
 }

@@ -7,7 +7,7 @@ public enum SignUpFailCases {
 
     EMPTY_INPUT("All fields must be filled"),
     PASSWORDS_NOT_MATCH("Passwords must match"),
-    USER_EXIST("Current nickname must be unique");
+    EXIST_USER("Current nickname must be unique");
 
     private String message;
 
