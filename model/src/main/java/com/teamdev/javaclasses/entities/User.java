@@ -13,29 +13,15 @@ public class User implements Entity<UserId> {
         this.password = password;
     }
 
-    public User(String nickname, String password, UserId id) {
-        this.nickname = nickname;
-        this.password = password;
-        this.id = id;
-    }
-
     public String getNickname() {
         return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public UserId getId() {
+    public UserId getValue() {
         return id;
     }
 

@@ -1,26 +1,23 @@
+
 package com.teamdev.javaclasses.DTO;
 
-import com.teamdev.javaclasses.entities.TokenId;
+import com.teamdev.javaclasses.entities.Entity;
+import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.UserId;
 
-public class SecurityTokenDTO {
-    private TokenId tokenId;
+/**
+ * Unique token for access to system.
+ */
+public class SecurityTokenDTO implements Entity<SecurityToken> {
+    private SecurityToken token;
     private UserId userId;
 
-    public TokenId getTokenId() {
-        return tokenId;
-    }
-
-    public void setTokenId(TokenId tokenId) {
-        this.tokenId = tokenId;
+    public SecurityTokenDTO(UserId userId) {
+        this.userId = userId;
     }
 
     public UserId getUserId() {
         return userId;
-    }
-
-    public void setUserId(UserId userId) {
-        this.userId = userId;
     }
 
     @Override
@@ -30,16 +27,25 @@ public class SecurityTokenDTO {
 
         SecurityTokenDTO that = (SecurityTokenDTO) o;
 
-        if (tokenId != null ? !tokenId.equals(that.tokenId) : that.tokenId != null) return false;
+        if (token != null ? !token.equals(that.token) : that.token != null) return false;
         return userId != null ? userId.equals(that.userId) : that.userId == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = tokenId != null ? tokenId.hashCode() : 0;
+        int result = token != null ? token.hashCode() : 0;
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
     }
 
+    @Override
+    public SecurityToken getValue() {
+        return token;
+    }
+
+    @Override
+    public void setId(SecurityToken id) {
+        token = id;
+    }
 }

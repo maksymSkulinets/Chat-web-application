@@ -7,15 +7,7 @@ public abstract class EntityId {
 
     private long id;
 
-    public EntityId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
+    EntityId(long id) {
         this.id = id;
     }
 
@@ -36,5 +28,9 @@ public abstract class EntityId {
     @Override
     public String toString() {
         return String.valueOf(id);
+    }
+
+    public long getId() {
+        return id;
     }
 }

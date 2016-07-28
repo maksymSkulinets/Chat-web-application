@@ -1,5 +1,8 @@
 package com.teamdev.javaclasses.DTO;
 
+/**
+ * Data transfer object for login login personal information.
+ */
 public class LoginDTO {
     private String nickname;
     private String password;
@@ -13,16 +16,8 @@ public class LoginDTO {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override

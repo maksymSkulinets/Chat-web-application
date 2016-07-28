@@ -2,6 +2,8 @@ package com.teamdev.javaclasses.repository;
 
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,11 +12,17 @@ import java.util.concurrent.atomic.AtomicLong;
  * Implementation {@link InMemoryRepository} for User entity keeping.
  */
 public class UserRepository extends InMemoryRepository<User, UserId> {
+    private final Logger log = LoggerFactory.getLogger(UserRepository.class);
     private AtomicLong nextId = new AtomicLong(0);
 
     @Override
     UserId getNextId() {
-        return new UserId(nextId.getAndIncrement());
+
+        final UserId userId = new UserId(nextId.getAndIncrement());
+        if (log.isDebugEnabled()) {
+            log.debug("User id with value: " + userId.getId()+ " produce.");
+        }
+        return userId;
     }
 
     public User get(String nickname) {
@@ -38,7 +46,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
         for (User currentUser : allUsers) {
             if (currentUser.getNickname().equals(user.getNickname())
                     && currentUser.getPassword().equals(user.getPassword())) {
-                userId = currentUser.getId();
+                userId = currentUser.getValue();
                 break;
             }
         }
