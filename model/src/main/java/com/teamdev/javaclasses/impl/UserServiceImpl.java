@@ -1,9 +1,9 @@
 package com.teamdev.javaclasses.impl;
 
-import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.DTO.LoginDTO;
-import com.teamdev.javaclasses.DTO.SignUpDTO;
 import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
+import com.teamdev.javaclasses.DTO.SignUpDTO;
+import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.repository.TokenRepository;
@@ -18,10 +18,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class UserServiceImpl implements UserService {
 
+    private final static UserServiceImpl userServiceImpl = new UserServiceImpl();
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final String lineSeparator = System.getProperty("line.separator");
-
-    private final static UserServiceImpl userServiceImpl = new UserServiceImpl();
     private final UserRepository userRepository = new UserRepository();
     private final TokenRepository tokenRepository = new TokenRepository();
 
