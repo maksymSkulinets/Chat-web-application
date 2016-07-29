@@ -6,6 +6,7 @@ import com.teamdev.javaclasses.entities.EntityId;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Abstract in memory repository.
@@ -14,7 +15,7 @@ import java.util.Map;
  * @param <TYPE_ID> raw type for any inheritance entity id
  */
 abstract class InMemoryRepository<TYPE extends Entity, TYPE_ID extends EntityId> implements Repository<TYPE, TYPE_ID> {
-    private Map<TYPE_ID, TYPE> storage = new HashMap<>();
+    private Map<TYPE_ID, TYPE> storage = new ConcurrentHashMap<>();
 
     @Override
     public void add(TYPE type) {
