@@ -9,6 +9,9 @@ import org.json.simple.JSONObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Implementation {@link Handler} for login requests.
+ */
 public class LoginHandler implements Handler {
     @Override
     public JSONObject process(HttpServletRequest request, HttpServletResponse response) {

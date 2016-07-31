@@ -1,11 +1,14 @@
 package com.teamdev.javaclasses;
 
-public class RequestContext {
+/**
+ * Holder of request data
+ */
+class RequestContext {
 
     private final String uri;
     private final String method;
 
-    public RequestContext(String uri, String method) {
+    RequestContext(String uri, String method) {
         this.uri = uri;
         this.method = method;
     }
