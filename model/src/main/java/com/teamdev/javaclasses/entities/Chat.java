@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Chat entity
  */
-public class Chat {
+public class Chat implements Entity {
     private final ChatId chatId;
     private final String chatName;
     private final UserId owner;

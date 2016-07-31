@@ -1,9 +1,11 @@
 package com.teamdev.javaclasses.DTO;
 
+import com.teamdev.javaclasses.entities.EntityId;
+
 /**
  * Data transfer object for chat id.
  */
-public class ChatId {
+public class ChatId extends EntityId {
     private final long id;
 
     public ChatId(long id) {

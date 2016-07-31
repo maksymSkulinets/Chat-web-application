@@ -13,14 +13,14 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class UserRepository extends InMemoryRepository<User, UserId> {
     private final Logger log = LoggerFactory.getLogger(UserRepository.class);
-    private AtomicLong nextId = new AtomicLong(0);
+    private AtomicLong idCounter = new AtomicLong(0);
 
     @Override
     UserId getNextId() {
 
-        final UserId userId = new UserId(nextId.getAndIncrement());
+        final UserId userId = new UserId(idCounter.getAndIncrement());
         if (log.isDebugEnabled()) {
-            log.debug("User id with value: " + userId.getValue()+ " produce.");
+            log.debug("User idCounter with value: " + userId.getValue()+ " produce.");
         }
         return userId;
     }
