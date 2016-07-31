@@ -48,11 +48,4 @@ public interface ChatService {
      */
     ChatDto getChat(ChatId id);
 
-    /**
-     * Delete chat with current id.
-     *
-     * @param chatId - id of remove chat
-     */
-    void deleteChat(ChatId chatId);
-
 }
