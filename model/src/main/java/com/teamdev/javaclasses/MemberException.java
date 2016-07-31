@@ -1,6 +1,6 @@
 package com.teamdev.javaclasses;
 
-class MemberException extends Exception {
+public class MemberException extends Exception {
     public MemberException(String message) {
         super(message);
     }

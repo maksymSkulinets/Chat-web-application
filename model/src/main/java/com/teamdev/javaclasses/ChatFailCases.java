@@ -4,7 +4,9 @@ package com.teamdev.javaclasses;
  * Chat wrong scenarios
  */
 public enum ChatFailCases {
-    SOME("message");
+
+    EMPTY_CHAT_NAME("Chat name must be filled."),
+    NON_UNIQUE_CHAT_NAME("Chat name must be unique.");
 
     private String message;
 

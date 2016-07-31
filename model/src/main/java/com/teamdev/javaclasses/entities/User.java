@@ -21,7 +21,7 @@ public class User implements Entity<UserId> {
         return password;
     }
 
-    public UserId getToken() {
+    public UserId getId() {
         return id;
     }
 

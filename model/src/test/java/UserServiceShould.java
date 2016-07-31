@@ -45,7 +45,7 @@ public class UserServiceShould {
                 password, actualUser.getPassword());
 
         assertEquals("Id keep in server storage and id which return are different",
-                actualUserDTO.getUserId(), actualUser.getToken().getValue());
+                actualUserDTO.getUserId(), actualUser.getId().getValue());
     }
 
 
@@ -190,7 +190,7 @@ public class UserServiceShould {
 
         for (Future<SecurityTokenDTO> future : results) {
             userIds.add(future.get().getUserId());
-            tokens.add(future.get().getToken());
+            tokens.add(future.get().getId());
         }
 
         if (userIds.size() != count) {

@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository = new UserRepository();
     private final TokenRepository tokenRepository = new TokenRepository();
 
-    private UserServiceImpl() {
+    public UserServiceImpl() {
     }
 
     public static UserServiceImpl getInstance() {
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         final User currentUser = new User(trimmedNickname, password);
         userRepository.add(currentUser);
 
-        final UserDTO result = new UserDTO(currentUser.getToken().getValue(), currentUser.getNickname());
+        final UserDTO result = new UserDTO(currentUser.getId().getValue(), currentUser.getNickname());
 
         if (log.isInfoEnabled()) {
             log.info("User sign up with nickname: " + currentUser.getNickname() + " is successful.");

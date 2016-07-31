@@ -8,11 +8,16 @@ import java.util.List;
  * Chat entity
  */
 public class Chat implements Entity {
-    private final ChatId chatId;
     private final String chatName;
     private final UserId owner;
-    private final List<UserId> members;
-    private final List<Message> messages;
+    private ChatId chatId;
+    private List<UserId> members;
+    private List<Message> messages;
+
+    public Chat(String chatName, UserId owner) {
+        this.chatName = chatName;
+        this.owner = owner;
+    }
 
     public Chat(ChatId chatId, String chatName, UserId owner, List<UserId> members, List<Message> messages) {
         this.chatId = chatId;
@@ -50,5 +55,15 @@ public class Chat implements Entity {
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public EntityId getId() {
+        return chatId;
+    }
+
+    @Override
+    public void setId(EntityId id) {
+        chatId = new ChatId(id.getValue());
     }
 }

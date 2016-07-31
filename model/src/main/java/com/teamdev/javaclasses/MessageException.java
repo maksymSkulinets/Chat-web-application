@@ -3,7 +3,7 @@ package com.teamdev.javaclasses;
 /**
  * Throws if message can be posted.
  */
-class MessageException extends Exception {
+public class MessageException extends Exception {
     public MessageException(String message) {
         super(message);
     }

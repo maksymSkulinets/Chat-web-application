@@ -10,11 +10,11 @@ public interface ChatService {
     /**
      * Create new chat.
      *
-     * @param securityTokenDTO contain owner userId and access key
+     * @param chatCreationDto contain owner userId and chat name
      * @return chat id
      * @throws ChatCreationException throws if chat creation is fail
      */
-    ChatId createChat(SecurityTokenDTO securityTokenDTO) throws ChatCreationException;
+    ChatId createChat(ChatCreationDto chatCreationDto) throws ChatCreationException;
 
     /**
      * Add member to chat.

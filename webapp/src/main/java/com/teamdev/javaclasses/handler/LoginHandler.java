@@ -22,7 +22,7 @@ public class LoginHandler implements Handler {
         UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
             final SecurityTokenDTO currentTokenDTO = userService.login(new LoginDTO(nickname, password));
-            content.put("token", currentTokenDTO.getToken().getValue());
+            content.put("token", currentTokenDTO.getId().getValue());
             content.put("userId", currentTokenDTO.getUserId().getValue());
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (LoginException e) {

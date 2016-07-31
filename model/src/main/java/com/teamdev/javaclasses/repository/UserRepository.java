@@ -46,7 +46,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
         for (User currentUser : allUsers) {
             if (currentUser.getNickname().equals(user.getNickname())
                     && currentUser.getPassword().equals(user.getPassword())) {
-                userId = currentUser.getToken();
+                userId = currentUser.getId();
                 break;
             }
         }

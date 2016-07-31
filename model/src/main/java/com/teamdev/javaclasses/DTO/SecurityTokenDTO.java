@@ -40,7 +40,7 @@ public class SecurityTokenDTO implements Entity<SecurityToken> {
     }
 
     @Override
-    public SecurityToken getToken() {
+    public SecurityToken getId() {
         return token;
     }
 

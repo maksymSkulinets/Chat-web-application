@@ -7,7 +7,7 @@ package com.teamdev.javaclasses.entities;
  */
 public interface Entity<TypeId extends EntityId> {
 
-    TypeId getToken();
+    TypeId getId();
 
     void setId(TypeId id);
 }

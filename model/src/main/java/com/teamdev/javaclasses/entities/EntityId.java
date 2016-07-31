@@ -7,7 +7,7 @@ public abstract class EntityId {
 
     private long id;
 
-    EntityId(long id) {
+    public EntityId(long id) {
         this.id = id;
     }
 
