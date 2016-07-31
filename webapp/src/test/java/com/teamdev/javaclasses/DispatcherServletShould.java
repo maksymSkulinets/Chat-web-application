@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ import java.util.UUID;
 
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DispatcherServletShould {
 
@@ -30,7 +30,7 @@ public class DispatcherServletShould {
 
     private final HttpClient client = HttpClientBuilder.create().build();
 
-    private String registerUser(String nickname, String password) throws IOException {
+    private Long successfulRegisterUser(String nickname, String password) throws IOException, ParseException {
         final String url = "http://localhost:8080/registration";
 
         final List<NameValuePair> parameters = new ArrayList<>();
@@ -45,17 +45,12 @@ public class DispatcherServletShould {
 
         HttpResponse postResponse = client.execute(postRequest);
 
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(postResponse.getEntity().getContent()));
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new InputStreamReader(postResponse.getEntity().getContent()));
+        JSONObject jsonObj = (JSONObject) obj;
+        final Long userId = (Long) jsonObj.get("userId");
 
-        StringBuilder result = new StringBuilder();
-
-        String line;
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
-        }
-
-        return result.toString();
+        return userId;
     }
 
     @Test
@@ -83,9 +78,11 @@ public class DispatcherServletShould {
         JSONObject jsonObj = (JSONObject) obj;
         final int expectedStatus = 200;
         final String signUpUserNickname = (String) jsonObj.get("nickname");
+        final Long signUpUserId = (Long) jsonObj.get("userId");
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
         assertEquals("Post request failed", nickname, signUpUserNickname);
+        assertNotNull("Post request failed", signUpUserId);
     }
 
     @Test
@@ -186,18 +183,18 @@ public class DispatcherServletShould {
     }
 
     @Test
-    public void loginRequestLoginSuccessful() throws IOException {
-        final String registrationLogin = "http://localhost:8080/login";
+    public void loginRequestLoginSuccessful() throws IOException, ParseException {
+        final String loginUrl = "http://localhost:8080/login";
 
-        final String nickname = "YuriGagarin" + UUID.randomUUID();
-        final String password = "LETS_DRIVE!!!" + UUID.randomUUID();
+        final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
+        final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
 
-        final String userId = registerUser(nickname, password);
+        final Long actualUserId = successfulRegisterUser(nickname, password);
 
         final List<NameValuePair> loginParameters = new ArrayList<>();
         loginParameters.add(new BasicNameValuePair("nickname", nickname));
         loginParameters.add(new BasicNameValuePair("password", password));
-        HttpPost postRequest = new HttpPost(registrationLogin);
+        HttpPost postRequest = new HttpPost(loginUrl);
         postRequest.setHeader("User-Agent", USER_AGENT);
 
         postRequest.setEntity(new UrlEncodedFormEntity(loginParameters));
@@ -206,21 +203,108 @@ public class DispatcherServletShould {
 
         HttpResponse postResponse = client.execute(postRequest);
 
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(postResponse.getEntity().getContent()));
-
-        StringBuilder result = new StringBuilder();
-
-        String line;
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
-        }
-
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new InputStreamReader(postResponse.getEntity().getContent()));
+        JSONObject jsonObj = (JSONObject) obj;
+        Long expectedUserId = (Long) jsonObj.get("userId");
+        Long token = (Long) jsonObj.get("token");
         final int expectedStatus = 200;
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
-        assertEquals("Post request failed", userId, result.toString());
-
-
+        assertEquals("Post request failed", expectedUserId, actualUserId);
+        assertNotNull("Post request failed", token);
     }
+
+    @Test
+    public void loginRequestLoginEmptyInput() throws IOException, ParseException {
+        final String loginUrl = "http://localhost:8080/login";
+
+        final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
+        final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
+
+        successfulRegisterUser(nickname, password);
+
+        final List<NameValuePair> loginParameters = new ArrayList<>();
+        loginParameters.add(new BasicNameValuePair("nickname", nickname));
+        loginParameters.add(new BasicNameValuePair("password", ""));
+        HttpPost postRequest = new HttpPost(loginUrl);
+        postRequest.setHeader("User-Agent", USER_AGENT);
+
+        postRequest.setEntity(new UrlEncodedFormEntity(loginParameters));
+
+        client.execute(postRequest);
+
+        HttpResponse postResponse = client.execute(postRequest);
+
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new InputStreamReader(postResponse.getEntity().getContent()));
+        JSONObject jsonObj = (JSONObject) obj;
+        String expectedMessage = (String) jsonObj.get("message");
+        final int expectedStatus = 500;
+
+        assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
+        assertEquals("Post request failed", expectedMessage, LoginFailCases.EMPTY_INPUT.getMessage());
+    }
+
+    @Test
+    public void loginRequestLoginWithWrongPassword() throws IOException, ParseException {
+        final String loginUrl = "http://localhost:8080/login";
+
+        final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
+        final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
+
+        successfulRegisterUser(nickname, password);
+
+        final List<NameValuePair> loginParameters = new ArrayList<>();
+        loginParameters.add(new BasicNameValuePair("nickname", nickname));
+        loginParameters.add(new BasicNameValuePair("password", password + "WRONG_PASSWORD"));
+        HttpPost postRequest = new HttpPost(loginUrl);
+        postRequest.setHeader("User-Agent", USER_AGENT);
+
+        postRequest.setEntity(new UrlEncodedFormEntity(loginParameters));
+
+        client.execute(postRequest);
+
+        HttpResponse postResponse = client.execute(postRequest);
+
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new InputStreamReader(postResponse.getEntity().getContent()));
+        JSONObject jsonObj = (JSONObject) obj;
+        String expectedMessage = (String) jsonObj.get("message");
+        final int expectedStatus = 500;
+
+        assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
+        assertEquals("Post request failed", expectedMessage, LoginFailCases.NON_SIGN_UP_USER.getMessage());
+    }
+
+    @Test
+    public void loginRequestLoginNonSignUpUser() throws IOException, ParseException {
+        final String loginUrl = "http://localhost:8080/login";
+
+        final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
+        final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
+
+        final List<NameValuePair> loginParameters = new ArrayList<>();
+        loginParameters.add(new BasicNameValuePair("nickname", nickname));
+        loginParameters.add(new BasicNameValuePair("password", password));
+        HttpPost postRequest = new HttpPost(loginUrl);
+        postRequest.setHeader("User-Agent", USER_AGENT);
+
+        postRequest.setEntity(new UrlEncodedFormEntity(loginParameters));
+
+        client.execute(postRequest);
+
+        HttpResponse postResponse = client.execute(postRequest);
+
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new InputStreamReader(postResponse.getEntity().getContent()));
+        JSONObject jsonObj = (JSONObject) obj;
+        String expectedMessage = (String) jsonObj.get("message");
+        final int expectedStatus = 500;
+
+        assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
+        assertEquals("Post request failed", expectedMessage, LoginFailCases.NON_SIGN_UP_USER.getMessage());
+    }
+
+
 }
