@@ -38,6 +38,7 @@ public class ChatServiceImpl implements ChatService {
                 log.warn("Fail chat creation: " + trimmedChatName + " - chat name is exist.");
                 throw new ChatCreationException(ChatFailCases.NON_UNIQUE_CHAT_NAME.getMessage());
             }
+
         }
 
         chatRepository.add(new Chat(trimmedChatName, chatCreationDto.getUserId()));
@@ -48,6 +49,11 @@ public class ChatServiceImpl implements ChatService {
             if (current.getChatName().equals(trimmedChatName)) {
                 newChatId = current.getChatId();
             }
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Chat was created. Chat name: " + trimmedChatName +
+                    " Chat id: " + newChatId.getValue());
         }
 
         return newChatId;
@@ -65,6 +71,13 @@ public class ChatServiceImpl implements ChatService {
         }
 
         chat.getMembers().add(memberChatDto.getUserId());
+
+        if (log.isDebugEnabled()) {
+            log.debug("Chat member was added." +
+                    " Chat id:" + memberChatDto.getChatId().getValue() +
+                    " Member id: " + memberChatDto.getUserId().getValue());
+        }
+
     }
 
     @Override
@@ -78,6 +91,13 @@ public class ChatServiceImpl implements ChatService {
             throw new MemberException(NOT_A_CHAT_MEMBER.getMessage());
         } else {
             chatMembers.remove(memberChatDto.getUserId());
+
+            if (log.isDebugEnabled()) {
+                log.debug("Chat member was removed." +
+                        " Chat id is: " + memberChatDto.getChatId().getValue() +
+                        " Member id is : " + memberChatDto.getUserId().getValue());
+            }
+
         }
     }
 
@@ -92,7 +112,15 @@ public class ChatServiceImpl implements ChatService {
             throw new MessageException(NOT_A_CHAT_MEMBER.getMessage());
         } else {
             chat.getMessages().add(new Message(messageDto.getNickName(), messageDto.getMessage()));
+
+            if (log.isDebugEnabled()) {
+                log.debug("Message was sent successfully." +
+                        " To chat with id:" + messageDto.getChatId().getValue()+
+                        " Message author:  " +  messageDto.getNickName());
+            }
         }
+
+
     }
 
     @Override
