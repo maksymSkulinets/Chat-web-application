@@ -9,11 +9,13 @@ public class MessageDto {
     private final UserId userId;
     private final ChatId chatId;
     private final String message;
+    private final String nickName;
 
-    public MessageDto(UserId userId, ChatId chatId, String message) {
+    public MessageDto(UserId userId, ChatId chatId, String message, String nickName) {
         this.userId = userId;
         this.chatId = chatId;
         this.message = message;
+        this.nickName = nickName;
     }
 
     public UserId getUserId() {
@@ -28,6 +30,10 @@ public class MessageDto {
         return message;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,7 +43,8 @@ public class MessageDto {
 
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (chatId != null ? !chatId.equals(that.chatId) : that.chatId != null) return false;
-        return message != null ? message.equals(that.message) : that.message == null;
+        if (message != null ? !message.equals(that.message) : that.message != null) return false;
+        return nickName != null ? nickName.equals(that.nickName) : that.nickName == null;
 
     }
 
@@ -46,6 +53,7 @@ public class MessageDto {
         int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (chatId != null ? chatId.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (nickName != null ? nickName.hashCode() : 0);
         return result;
     }
 }

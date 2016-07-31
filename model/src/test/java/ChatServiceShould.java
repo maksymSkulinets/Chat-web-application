@@ -3,13 +3,11 @@ import com.teamdev.javaclasses.DTO.*;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.impl.ChatServiceImpl;
 import com.teamdev.javaclasses.impl.UserServiceImpl;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.teamdev.javaclasses.ChatFailCases.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class ChatServiceShould {
     private final String nickName = "John";
@@ -115,6 +113,7 @@ public class ChatServiceShould {
     public void addMemberToChat() {
         String chatName = "fishing";
         ChatId chatId = null;
+
         try {
             chatId = chatService.createChat(new ChatCreationDto(new UserId((userDTO.getUserId())), chatName));
         } catch (ChatCreationException e) {
@@ -133,6 +132,7 @@ public class ChatServiceShould {
     public void removeChatMember() {
         String chatName = "sport";
         ChatId chatId = null;
+
         try {
             chatId = chatService.createChat(new ChatCreationDto(new UserId((userDTO.getUserId())), chatName));
         } catch (ChatCreationException e) {
@@ -153,9 +153,10 @@ public class ChatServiceShould {
     }
 
     @Test
-    public void removeChatMemberFail() {
+    public void removeChatMemberFailNotAChatMember() {
         String chatName = "sport";
         ChatId chatId = null;
+
         try {
             chatId = chatService.createChat(new ChatCreationDto(new UserId((userDTO.getUserId())), chatName));
         } catch (ChatCreationException e) {
@@ -168,4 +169,50 @@ public class ChatServiceShould {
         }
     }
 
+    @Test
+    public void sendMessageToChat() {
+
+        String chatName = "watches";
+        ChatId chatId = null;
+        String message = "Hello, it is my first message.";
+
+        try {
+            chatId = chatService.createChat(new ChatCreationDto(new UserId((userDTO.getUserId())), chatName));
+        } catch (ChatCreationException e) {
+            fail("Chat creation failed.");
+        }
+
+        try {
+            chatService.addMember(new MemberChatDto(new UserId(userDTO.getUserId()), chatId));
+        } catch (MemberException e) {
+            fail("Add member failed");
+        }
+
+        try {
+            chatService.sendMessage(new MessageDto(new UserId(userDTO.getUserId()), chatId, message, userDTO.getNickname()));
+        } catch (MessageException e) {
+            fail("Sending message fail.");
+        }
+    }
+
+    @Test
+    public void sendMessageToChatFailNotAChatMember() {
+
+        String chatName = "watches";
+        String message = "Hello, it is my second message.";
+        ChatId chatId = null;
+
+        try {
+            chatId = chatService.createChat(new ChatCreationDto(new UserId((userDTO.getUserId())), chatName));
+        } catch (ChatCreationException e) {
+            fail("Chat creation failed.");
+        }
+
+        try {
+            chatService.sendMessage(new MessageDto(new UserId(userDTO.getUserId()), chatId, message, userDTO.getNickname()));
+        } catch (MessageException e) {
+            assertEquals("Add chat member fail message are not match", NOT_A_CHAT_MEMBER.getMessage(), e.getMessage());
+        }
+
+    }
 }

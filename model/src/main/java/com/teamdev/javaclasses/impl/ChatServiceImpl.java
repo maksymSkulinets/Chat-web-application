@@ -3,6 +3,7 @@ package com.teamdev.javaclasses.impl;
 import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.DTO.*;
 import com.teamdev.javaclasses.entities.Chat;
+import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.repository.ChatRepository;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static com.teamdev.javaclasses.ChatFailCases.CHAT_MEMBER_ALREADY_JOIN;
+import static com.teamdev.javaclasses.ChatFailCases.NOT_A_CHAT_MEMBER;
 
 /**
  * Implementation of {@link ChatService}.
@@ -73,19 +75,29 @@ public class ChatServiceImpl implements ChatService {
 
         if (!chatMembers.contains(memberChatDto.getUserId())) {
             log.warn("Remove chat member fail: user not a chat member.");
-            throw new MemberException(ChatFailCases.NOT_A_CHAT_MEMBER.getMessage());
+            throw new MemberException(NOT_A_CHAT_MEMBER.getMessage());
         } else {
             chatMembers.remove(memberChatDto.getUserId());
         }
     }
 
     @Override
-    public void postMessage(MessageDto postMessageDto) throws MessageException {
+    public void sendMessage(MessageDto messageDto) throws MessageException {
+        final Chat chat = chatRepository.find(messageDto.getChatId());
 
+        final List<UserId> chatMembers = chat.getMembers();
+
+        if (!chatMembers.contains(messageDto.getUserId())) {
+            log.warn("Post message chat member fail: user not a chat member.");
+            throw new MessageException(NOT_A_CHAT_MEMBER.getMessage());
+        } else {
+            chat.getMessages().add(new Message(messageDto.getNickName(), messageDto.getMessage()));
+        }
     }
 
     @Override
     public ChatDto getChat(ChatId id) {
+        /*TODO implement for nest testing*/
         return null;
     }
 
