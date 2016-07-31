@@ -10,20 +10,19 @@ import static com.teamdev.javaclasses.ChatFailCases.*;
 import static org.junit.Assert.*;
 
 public class ChatServiceShould {
-    private final String nickName = "John";
-    private final String password = "password_321123";
     private final String chatName = "technologies";
 
     private final UserServiceImpl userService = new UserServiceImpl();
     private final ChatService chatService = new ChatServiceImpl();
 
     private UserDTO userDTO;
-    private SecurityTokenDTO securityDTO;
 
     @Before
     public void setUp() {
+        String nickName = "John";
+        String password = "password_321123";
         userDTO = successfulSignUp(new SignUpDTO(nickName, password, password));
-        securityDTO = successfulLogin(new LoginDTO(nickName, password));
+        successfulLogin(new LoginDTO(nickName, password));
     }
 
     private UserDTO successfulSignUp(SignUpDTO signUpData) {
@@ -49,7 +48,6 @@ public class ChatServiceShould {
 
     @Test
     public void addNewChat() {
-        /*TODO "new UserId((userDTO.getUserId()))" > parametrize user id*/
         ChatId actualChatId = null;
 
         try {
