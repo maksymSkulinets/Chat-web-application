@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses;
 
 /**
- * User wrong login scenarios.
+ * User login wrong scenarios.
  */
 public enum LoginFailCases {
 
