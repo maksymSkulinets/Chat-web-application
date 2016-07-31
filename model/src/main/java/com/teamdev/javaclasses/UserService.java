@@ -3,6 +3,7 @@ package com.teamdev.javaclasses;
 import com.teamdev.javaclasses.DTO.LoginDTO;
 import com.teamdev.javaclasses.DTO.SignUpDTO;
 import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
+import com.teamdev.javaclasses.DTO.UserDTO;
 import com.teamdev.javaclasses.entities.UserId;
 
 /**
@@ -14,10 +15,10 @@ public interface UserService {
      * Sign up new user.
      *
      * @param signUpData client sign up data
-     * @return unique id
+     * @return unique user id and unique nickname
      * @throws SignUpException if sign up fail
      */
-    UserId signUp(SignUpDTO signUpData) throws SignUpException;
+    UserDTO signUp(SignUpDTO signUpData) throws SignUpException;
 
     /**
      * Login already sign up users.

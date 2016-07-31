@@ -4,6 +4,7 @@ import com.teamdev.javaclasses.DTO.LoginDTO;
 import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
 import com.teamdev.javaclasses.DTO.SignUpDTO;
 import com.teamdev.javaclasses.*;
+import com.teamdev.javaclasses.DTO.UserDTO;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.repository.TokenRepository;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
         return userServiceImpl;
     }
 
-    public UserId signUp(SignUpDTO signUpData) throws SignUpException {
+    public UserDTO signUp(SignUpDTO signUpData) throws SignUpException {
         if (log.isInfoEnabled()) {
             log.info("Attempt to sign up.");
         }
@@ -69,11 +70,13 @@ public class UserServiceImpl implements UserService {
         final User currentUser = new User(trimmedNickname, password);
         userRepository.add(currentUser);
 
+        final UserDTO result = new UserDTO(currentUser.getToken().getValue(), currentUser.getNickname());
+
         if (log.isInfoEnabled()) {
             log.info("User sign up with nickname: " + currentUser.getNickname() + " is successful.");
         }
 
-        return currentUser.getValue();
+        return result;
     }
 
     public SecurityTokenDTO login(LoginDTO loginData) throws LoginException {

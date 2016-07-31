@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses.DTO;
 
 /**
- * Data transfer object for login login personal information.
+ * Data transfer object for login personal information.
  */
 public class LoginDTO {
     private String nickname;

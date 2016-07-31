@@ -30,7 +30,7 @@ public abstract class EntityId {
         return String.valueOf(id);
     }
 
-    public long getId() {
+    public long getValue() {
         return id;
     }
 }

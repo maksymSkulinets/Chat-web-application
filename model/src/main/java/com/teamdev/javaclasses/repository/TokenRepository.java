@@ -23,35 +23,4 @@ public class TokenRepository extends InMemoryRepository<SecurityTokenDTO, Securi
         return new SecurityToken(System.nanoTime());
     }
 
-    public SecurityTokenDTO get(UserId userId) {
-
-        final Collection<SecurityTokenDTO> allTokens = findAll();
-        SecurityTokenDTO accessToken = null;
-
-        for (SecurityTokenDTO currentToken : allTokens) {
-            if (userId.equals(currentToken.getUserId())) {
-                accessToken = currentToken;
-                break;
-
-            }
-        }
-        return accessToken;
-
-    }
-
-    public UserId get(SecurityTokenDTO accessToken) {
-
-        final Collection<SecurityTokenDTO> allTokens = findAll();
-        UserId userId = null;
-
-        for (SecurityTokenDTO currentToken : allTokens) {
-            if (accessToken.getValue().equals(currentToken.getValue())) {
-                userId = currentToken.getUserId();
-                break;
-
-            }
-        }
-        return userId;
-
-    }
 }

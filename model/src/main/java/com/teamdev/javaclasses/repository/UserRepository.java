@@ -20,7 +20,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
 
         final UserId userId = new UserId(nextId.getAndIncrement());
         if (log.isDebugEnabled()) {
-            log.debug("User id with value: " + userId.getId()+ " produce.");
+            log.debug("User id with value: " + userId.getValue()+ " produce.");
         }
         return userId;
     }
@@ -46,7 +46,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
         for (User currentUser : allUsers) {
             if (currentUser.getNickname().equals(user.getNickname())
                     && currentUser.getPassword().equals(user.getPassword())) {
-                userId = currentUser.getValue();
+                userId = currentUser.getToken();
                 break;
             }
         }

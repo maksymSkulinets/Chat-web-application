@@ -1,21 +1,25 @@
 import com.teamdev.javaclasses.DTO.LoginDTO;
+import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
 import com.teamdev.javaclasses.DTO.SignUpDTO;
+import com.teamdev.javaclasses.DTO.UserDTO;
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.LoginFailCases;
 import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.SignUpFailCases;
-import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
 import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.impl.UserServiceImpl;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class UserServiceShould {
@@ -23,21 +27,25 @@ public class UserServiceShould {
     private final UserServiceImpl userService = UserServiceImpl.getInstance();
     private String nickname;
     private String password;
+    private Callable<SecurityTokenDTO> securityTokenDTOCallable;
 
     @Test
     public void signUpUser() throws SignUpException {
         nickname = "Luk";
         password = "qwerty";
 
-        final UserId actualUserId = userService
+        final UserDTO actualUserDTO = userService
                 .signUp(new SignUpDTO(nickname, password, password));
 
-        final User actualUser = userService.getUser(actualUserId);
+        final User actualUser = userService.getUser(new UserId(actualUserDTO.getUserId()));
 
         assertEquals("User with current nickname is not registered",
-                nickname, actualUser.getNickname());
+                nickname, actualUserDTO.getNickname());
         assertEquals("User with current password is not registered",
                 password, actualUser.getPassword());
+
+        assertEquals("Id keep in server storage and id which return are different",
+                actualUserDTO.getUserId(), actualUser.getToken().getValue());
     }
 
 
@@ -87,14 +95,17 @@ public class UserServiceShould {
         nickname = "Anna";
         password = "anna_password";
 
-        userService.signUp(new SignUpDTO(nickname, password, password));
-        final SecurityTokenDTO token = userService.login(new LoginDTO(nickname, password));
-        final User actualUser = userService.getUser(token.getUserId());
+        final UserDTO currentUserDTO = userService.signUp(new SignUpDTO(nickname, password, password));
+        final SecurityTokenDTO currentTokenDTO = userService.login(new LoginDTO(nickname, password));
+        final User actualUser = userService.getUser(currentTokenDTO.getUserId());
 
+        assertEquals("User ID after registration and user ID after login are difference ,",
+                currentUserDTO.getUserId(), currentTokenDTO.getUserId().getValue());
         assertEquals("User with current nickname is not login",
                 nickname, actualUser.getNickname());
         assertEquals("User with current password is not login",
                 password, actualUser.getPassword());
+
     }
 
     @Test
@@ -149,45 +160,45 @@ public class UserServiceShould {
 
     @Test
     public void multiThreadingSupportTest() throws ExecutionException, InterruptedException {
-        final int threadsNumber = 50;
 
-        final ExecutorService executorService = Executors.newFixedThreadPool(threadsNumber);
-        final List<Future<SecurityTokenDTO>> loginResults = new ArrayList<>();
-        final CountDownLatch startLatch = new CountDownLatch(threadsNumber);
-        final AtomicInteger atomicInteger = new AtomicInteger(0);
-        final ArrayList<UserId> userIds = new ArrayList<>();
-        final ArrayList<SecurityToken> tokens = new ArrayList<>();
-
+        final int count = 100;
+        final ExecutorService executor = Executors.newFixedThreadPool(count);
+        final CountDownLatch startLatch = new CountDownLatch(count);
+        final List<Future<SecurityTokenDTO>> results = new ArrayList<>();
+        AtomicInteger number = new AtomicInteger(0);
 
         Callable<SecurityTokenDTO> callable = () -> {
-
-            final String nickName = "Steven_" + atomicInteger.get();
-            final String password = "password_" + atomicInteger.getAndIncrement();
 
             startLatch.countDown();
             startLatch.await();
 
-            final UserId userId = userService.signUp(new SignUpDTO(nickName, password, password));
-            final SecurityTokenDTO token = userService.login(new LoginDTO(nickName, password));
-            return token;
+            final String nickname = "nickname" + number.get();
+            final String password = "password" + number.getAndIncrement();
+
+            userService.signUp(new SignUpDTO(nickname, password, password));
+            return userService.login(new LoginDTO(nickname, password));
         };
 
-        for (int i = 0; i < threadsNumber; i++) {
-            Future<SecurityTokenDTO> future = executorService.submit(callable);
-            loginResults.add(future);
-        }
-        int objectsCounter = 0;
-        for (Future<SecurityTokenDTO> currentToken : loginResults) {
-            objectsCounter++;
-            userIds.add(currentToken.get().getUserId());
-            tokens.add(currentToken.get().getValue());
-            /*TODO  compare */
+        for (int i = 0; i < count; i++) {
 
-            if (tokens.size() != objectsCounter) {
-                {
-                    fail("Generated tokens are not unique");
-                }
-            }
+            Future<SecurityTokenDTO> future = executor.submit(callable);
+            results.add(future);
+        }
+
+        final Set<UserId> userIds = new HashSet<>();
+        final Set<SecurityToken> tokens = new HashSet<>();
+
+        for (Future<SecurityTokenDTO> future : results) {
+            userIds.add(future.get().getUserId());
+            tokens.add(future.get().getToken());
+        }
+
+        if (userIds.size() != count) {
+            fail("Generated user ids are not unique");
+        }
+
+        if (tokens.size() != count) {
+            fail("Generated tokens are not unique");
         }
 
     }
