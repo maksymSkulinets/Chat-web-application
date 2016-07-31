@@ -1,6 +1,7 @@
 package com.teamdev.javaclasses;
 
 import com.teamdev.javaclasses.handler.Handler;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,9 +31,8 @@ public class DispatcherServlet extends HttpServlet {
 
         final Handler handler = HandlerContainer.getHandler(requestContext);
 
-        final TransferContent transferContent = handler.process(request, response);
-        response.getWriter().write(transferContent.getContent());
-
+        final JSONObject transferContent = handler.process(request, response);
+        response.getWriter().write(transferContent.toJSONString());
 
     }
 }
