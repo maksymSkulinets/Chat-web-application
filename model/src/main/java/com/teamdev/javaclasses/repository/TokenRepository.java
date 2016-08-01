@@ -12,7 +12,7 @@ import java.util.Collection;
  * Implementation {@link InMemoryRepository} for SecurityTokenDTO entity keeping.
  */
 public class TokenRepository extends InMemoryRepository<SecurityTokenDTO, SecurityToken> {
-
+    /*TODO init > singleton*/
     private final Logger log = LoggerFactory.getLogger(TokenRepository.class);
 
     @Override
@@ -23,4 +23,7 @@ public class TokenRepository extends InMemoryRepository<SecurityTokenDTO, Securi
         return new SecurityToken(System.nanoTime());
     }
 
+    public void remove(SecurityTokenDTO token) {
+
+    }
 }

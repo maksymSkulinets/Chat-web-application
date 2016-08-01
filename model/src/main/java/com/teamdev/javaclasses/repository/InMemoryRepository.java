@@ -4,7 +4,6 @@ import com.teamdev.javaclasses.entities.Entity;
 import com.teamdev.javaclasses.entities.EntityId;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,4 +34,9 @@ abstract class InMemoryRepository<TYPE extends Entity, TYPE_ID extends EntityId>
     }
 
     abstract TYPE_ID getNextId();
+
+    @Override
+    public TYPE remove(TYPE_ID id) {
+        return storage.remove(id);
+    }
 }

@@ -4,6 +4,7 @@ import com.teamdev.javaclasses.DTO.LoginDTO;
 import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
 import com.teamdev.javaclasses.DTO.SignUpDTO;
 import com.teamdev.javaclasses.DTO.UserDTO;
+import com.teamdev.javaclasses.entities.UserId;
 
 /**
  * User service public API.
@@ -29,4 +30,7 @@ public interface UserService {
     SecurityTokenDTO login(LoginDTO loginData) throws LoginException;
 
 
+    void deleteUser(UserId id);
+
+    void logout(SecurityTokenDTO token);
 }

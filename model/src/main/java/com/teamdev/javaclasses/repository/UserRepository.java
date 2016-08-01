@@ -12,15 +12,23 @@ import java.util.concurrent.atomic.AtomicLong;
  * Implementation {@link InMemoryRepository} for User entity keeping.
  */
 public class UserRepository extends InMemoryRepository<User, UserId> {
+    private static final UserRepository userRepository = new UserRepository();
     private final Logger log = LoggerFactory.getLogger(UserRepository.class);
-    private AtomicLong idCounter = new AtomicLong(0);
+    private final AtomicLong idCounter = new AtomicLong(0);
+
+    private UserRepository() {
+    }
+
+    public static UserRepository getInstance() {
+        return userRepository;
+    }
 
     @Override
     UserId getNextId() {
 
         final UserId userId = new UserId(idCounter.getAndIncrement());
         if (log.isDebugEnabled()) {
-            log.debug("User idCounter with value: " + userId.getValue()+ " produce.");
+            log.debug("User idCounter with value: " + userId.getValue() + " produce.");
         }
         return userId;
     }

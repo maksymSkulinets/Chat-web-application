@@ -21,7 +21,7 @@ import static com.teamdev.javaclasses.ChatFailCases.NOT_A_CHAT_MEMBER;
  * Implementation of {@link ChatService}.
  */
 public class ChatServiceImpl implements ChatService {
-    private final ChatRepository chatRepository = new ChatRepository();
+    private final ChatRepository chatRepository = ChatRepository.getInstance();
     private final Logger log = LoggerFactory.getLogger(ChatServiceImpl.class);
 
     public ChatServiceImpl() {

@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final static UserServiceImpl userServiceImpl = new UserServiceImpl();
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final String lineSeparator = System.getProperty("line.separator");
-    private final UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository = UserRepository.getInstance();
     private final TokenRepository tokenRepository = new TokenRepository();
 
     public UserServiceImpl() {
@@ -120,5 +120,26 @@ public class UserServiceImpl implements UserService {
 
     public UserId findUserIdByToken(SecurityToken securityToken) {
         return tokenRepository.find(securityToken).getUserId();
+    }
+
+    @Override
+    public void deleteUser(UserId id) {
+
+        userRepository.remove(id);
+
+        if (log.isInfoEnabled()) {
+            log.info("Delete user user with id:" + id.getValue());
+        }
+    }
+
+    @Override
+    public void logout(SecurityTokenDTO token) {
+
+        tokenRepository.remove(token);
+
+        if (log.isInfoEnabled()) {
+            log.info("Logged out user with id:" + token.getUserId().getValue());
+        }
+
     }
 }

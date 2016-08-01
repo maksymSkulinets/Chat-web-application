@@ -18,4 +18,5 @@ interface Repository<TYPE extends Entity, TYPE_ID extends EntityId> {
 
     Collection<TYPE> findAll();
 
+    TYPE remove(TYPE_ID id);
 }
