@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.teamdev.javaclasses.ChatFailCases.*;
+import static com.teamdev.javaclasses.ChatServiceFailCases.*;
 import static org.junit.Assert.*;
 
 public class ChatServiceShould {

@@ -3,9 +3,7 @@ import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
 import com.teamdev.javaclasses.DTO.SignUpDTO;
 import com.teamdev.javaclasses.DTO.UserDTO;
 import com.teamdev.javaclasses.LoginException;
-import com.teamdev.javaclasses.LoginFailCases;
 import com.teamdev.javaclasses.SignUpException;
-import com.teamdev.javaclasses.SignUpFailCases;
 import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
@@ -19,6 +17,7 @@ import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.teamdev.javaclasses.UserServiceFailCases.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -60,7 +59,7 @@ public class UserServiceShould {
             userService.signUp(new SignUpDTO(nickname, password, password));
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
-            assertEquals("Sign up fail messages are not match", SignUpFailCases.EXIST_USER.getMessage(), e.getMessage());
+            assertEquals("Sign up fail messages are not match", EXIST_USER.getMessage(), e.getMessage());
         }
     }
 
@@ -73,7 +72,7 @@ public class UserServiceShould {
             userService.signUp(new SignUpDTO(nickname, password, password + "NO!!!"));
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
-            assertEquals("Sign up fail messages are not match", SignUpFailCases.PASSWORDS_NOT_MATCH.getMessage(), e.getMessage());
+            assertEquals("Sign up fail messages are not match", PASSWORDS_NOT_MATCH.getMessage(), e.getMessage());
         }
     }
 
@@ -86,7 +85,7 @@ public class UserServiceShould {
             userService.signUp(new SignUpDTO(nickname, password, password));
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
-            assertEquals("Sign up with not filled input", SignUpFailCases.EMPTY_INPUT.getMessage(), e.getMessage());
+            assertEquals("Sign up with not filled input", EMPTY_INPUT.getMessage(), e.getMessage());
         }
     }
 
@@ -121,7 +120,7 @@ public class UserServiceShould {
             userService.login(loginData);
             fail("LoginException was not thrown");
         } catch (LoginException e) {
-            assertEquals("Sign up fail messages are not match", LoginFailCases.EMPTY_INPUT.getMessage(), e.getMessage());
+            assertEquals("Sign up fail messages are not match", EMPTY_INPUT.getMessage(), e.getMessage());
         }
     }
 
@@ -137,7 +136,7 @@ public class UserServiceShould {
             fail("LoginException was not thrown");
         } catch (LoginException e) {
             assertEquals("Login fail messages are not match",
-                    LoginFailCases.NON_SIGN_UP_USER.getMessage(), e.getMessage());
+                    NON_SIGN_UP_USER.getMessage(), e.getMessage());
         }
     }
 
@@ -153,7 +152,7 @@ public class UserServiceShould {
             fail("LoginException was not thrown");
         } catch (LoginException e) {
             assertEquals("User with non correct password was login",
-                    LoginFailCases.NON_SIGN_UP_USER.getMessage(), e.getMessage());
+                    NON_SIGN_UP_USER.getMessage(), e.getMessage());
 
         }
     }

@@ -5,7 +5,7 @@ package com.teamdev.javaclasses;
  */
 public class SignUpException extends Exception {
 
-    public SignUpException(SignUpFailCases failCase) {
+    public SignUpException(UserServiceFailCases failCase) {
         super(failCase.getMessage());
     }
 

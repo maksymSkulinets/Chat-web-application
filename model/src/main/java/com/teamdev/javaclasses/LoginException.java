@@ -4,7 +4,7 @@ package com.teamdev.javaclasses;
  * Throws if login fail.
  */
 public class LoginException extends Exception {
-    public LoginException(LoginFailCases failCase) {
+    public LoginException(UserServiceFailCases failCase) {
         super(failCase.getMessage());
     }
 

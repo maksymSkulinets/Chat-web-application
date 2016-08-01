@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.teamdev.javaclasses.UserServiceFailCases.*;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -111,7 +112,7 @@ public class DispatcherServletShould {
         JSONObject jsonObj = (JSONObject) obj;
         String actualMessage = (String) jsonObj.get("message");
         final int expectedStatus = 500;
-        final String expectedMessage = SignUpFailCases.EXIST_USER.getMessage();
+        final String expectedMessage = EXIST_USER.getMessage();
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
         assertEquals("Post request failed", expectedMessage, actualMessage);
@@ -143,7 +144,7 @@ public class DispatcherServletShould {
         JSONObject jsonObj = (JSONObject) obj;
         String actualMessage = (String) jsonObj.get("message");
         final int expectedStatus = 500;
-        final String expectedMessage = SignUpFailCases.EMPTY_INPUT.getMessage();
+        final String expectedMessage = EMPTY_INPUT.getMessage();
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
         /*TODO build expected in util method or chane fail messages*/
@@ -176,7 +177,7 @@ public class DispatcherServletShould {
         JSONObject jsonObj = (JSONObject) obj;
         String actualMessage = (String) jsonObj.get("message");
         final int expectedStatus = 500;
-        final String expectedMessage = SignUpFailCases.PASSWORDS_NOT_MATCH.getMessage();
+        final String expectedMessage = PASSWORDS_NOT_MATCH.getMessage();
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
         assertEquals("Post request failed", expectedMessage, actualMessage);
@@ -243,7 +244,7 @@ public class DispatcherServletShould {
         final int expectedStatus = 500;
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
-        assertEquals("Post request failed", expectedMessage, LoginFailCases.EMPTY_INPUT.getMessage());
+        assertEquals("Post request failed", expectedMessage, EMPTY_INPUT.getMessage());
     }
 
     @Test
@@ -274,7 +275,7 @@ public class DispatcherServletShould {
         final int expectedStatus = 500;
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
-        assertEquals("Post request failed", expectedMessage, LoginFailCases.NON_SIGN_UP_USER.getMessage());
+        assertEquals("Post request failed", expectedMessage,NON_SIGN_UP_USER.getMessage());
     }
 
     @Test
@@ -303,8 +304,7 @@ public class DispatcherServletShould {
         final int expectedStatus = 500;
 
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
-        assertEquals("Post request failed", expectedMessage, LoginFailCases.NON_SIGN_UP_USER.getMessage());
+        assertEquals("Post request failed", expectedMessage, NON_SIGN_UP_USER.getMessage());
     }
-
 
 }

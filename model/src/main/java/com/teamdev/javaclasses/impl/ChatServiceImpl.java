@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.teamdev.javaclasses.ChatFailCases.CHAT_MEMBER_ALREADY_JOIN;
-import static com.teamdev.javaclasses.ChatFailCases.NOT_A_CHAT_MEMBER;
+import static com.teamdev.javaclasses.ChatServiceFailCases.CHAT_MEMBER_ALREADY_JOIN;
+import static com.teamdev.javaclasses.ChatServiceFailCases.NOT_A_CHAT_MEMBER;
 
 /**
  * Implementation of {@link ChatService}.
@@ -38,14 +38,14 @@ public class ChatServiceImpl implements ChatService {
 
         if (trimmedChatName.isEmpty()) {
             log.warn("Fail chat creation: chat name input is empty");
-            throw new ChatCreationException(ChatFailCases.EMPTY_CHAT_NAME.getMessage());
+            throw new ChatCreationException(ChatServiceFailCases.EMPTY_CHAT_NAME.getMessage());
         }
 
         for (Chat current : chatRepository.findAll()) {
 
             if (current.getChatName().equals(trimmedChatName)) {
                 log.warn("Fail chat creation: " + trimmedChatName + " - chat name is exist.");
-                throw new ChatCreationException(ChatFailCases.NON_UNIQUE_CHAT_NAME.getMessage());
+                throw new ChatCreationException(ChatServiceFailCases.NON_UNIQUE_CHAT_NAME.getMessage());
             }
 
         }

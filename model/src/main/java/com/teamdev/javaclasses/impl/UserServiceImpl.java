@@ -4,7 +4,10 @@ import com.teamdev.javaclasses.DTO.LoginDTO;
 import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
 import com.teamdev.javaclasses.DTO.SignUpDTO;
 import com.teamdev.javaclasses.DTO.UserDTO;
-import com.teamdev.javaclasses.*;
+import com.teamdev.javaclasses.LoginException;
+import com.teamdev.javaclasses.SignUpException;
+import com.teamdev.javaclasses.UserService;
+import com.teamdev.javaclasses.UserServiceFailCases;
 import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
@@ -14,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.teamdev.javaclasses.UserServiceFailCases.*;
 
 /**
  * Implementation {@link UserService}
@@ -24,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final String lineSeparator = System.getProperty("line.separator");
     private final UserRepository userRepository = UserRepository.getInstance();
-    private final TokenRepository tokenRepository = new TokenRepository();
+    private final TokenRepository tokenRepository = TokenRepository.getInstance();
 
     public UserServiceImpl() {
     }
@@ -52,20 +56,20 @@ public class UserServiceImpl implements UserService {
         checkNotNull(verifyPassword);
 
         if (trimmedNickname.isEmpty() || password.isEmpty() || verifyPassword.isEmpty()) {
-            log.warn(SignUpFailCases.EMPTY_INPUT.getMessage());
-            throw new SignUpException(SignUpFailCases.EMPTY_INPUT);
+            log.warn(EMPTY_INPUT.getMessage());
+            throw new SignUpException(EMPTY_INPUT);
         }
 
         if (!password.equals(verifyPassword)) {
-            log.warn(SignUpFailCases.PASSWORDS_NOT_MATCH.getMessage());
-            throw new SignUpException(SignUpFailCases.PASSWORDS_NOT_MATCH);
+            log.warn(PASSWORDS_NOT_MATCH.getMessage());
+            throw new SignUpException(PASSWORDS_NOT_MATCH);
         }
 
         final User user = userRepository.get(trimmedNickname);
 
         if (user != null) {
-            log.warn(SignUpFailCases.EXIST_USER.getMessage());
-            throw new SignUpException(SignUpFailCases.EXIST_USER);
+            log.warn(EXIST_USER.getMessage());
+            throw new SignUpException(EXIST_USER);
         }
 
         final User currentUser = new User(trimmedNickname, password);
@@ -94,15 +98,15 @@ public class UserServiceImpl implements UserService {
         final String password = loginData.getPassword();
 
         if (trimmedNickname.isEmpty() || password.isEmpty()) {
-            log.warn(LoginFailCases.EMPTY_INPUT.getMessage());
-            throw new LoginException(LoginFailCases.EMPTY_INPUT);
+            log.warn(EMPTY_INPUT.getMessage());
+            throw new LoginException(EMPTY_INPUT);
         }
 
         final User currentUser = new User(trimmedNickname, password);
         final UserId userId = userRepository.get(currentUser);
         if (userId == null) {
-            log.warn(LoginFailCases.NON_SIGN_UP_USER.getMessage());
-            throw new LoginException(LoginFailCases.NON_SIGN_UP_USER);
+            log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
+            throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
         SecurityTokenDTO currentDTOToken = new SecurityTokenDTO(userId);

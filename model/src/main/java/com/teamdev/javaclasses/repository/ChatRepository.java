@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class ChatRepository extends InMemoryRepository<Chat, ChatId> {
 
-    private static ChatRepository chatRepository = new ChatRepository();
+    private final static ChatRepository chatRepository = new ChatRepository();
     private final Logger log = LoggerFactory.getLogger(ChatRepository.class);
     private final AtomicLong idCounter = new AtomicLong(0);
 
