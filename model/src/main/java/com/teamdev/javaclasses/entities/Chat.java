@@ -28,7 +28,7 @@ public class Chat implements Entity {
         return chatName;
     }
 
-    public UserId getOwner() {
+    public UserId getOwnerId() {
         return owner;
     }
 

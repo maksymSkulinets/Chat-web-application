@@ -1,6 +1,7 @@
 package com.teamdev.javaclasses;
 
 import com.teamdev.javaclasses.DTO.*;
+import com.teamdev.javaclasses.entities.Chat;
 
 /**
  * Public API of chat service.
@@ -46,6 +47,6 @@ public interface ChatService {
      * @param id - chat id
      * @return Chat DTO
      */
-    ChatDto getChat(ChatId id);
+    Chat getChat(ChatId id);
 
 }

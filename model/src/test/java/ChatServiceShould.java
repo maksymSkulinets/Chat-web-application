@@ -1,10 +1,14 @@
 import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.DTO.*;
+import com.teamdev.javaclasses.entities.Chat;
+import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.impl.ChatServiceImpl;
 import com.teamdev.javaclasses.impl.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static com.teamdev.javaclasses.ChatFailCases.*;
 import static org.junit.Assert.*;
@@ -57,7 +61,14 @@ public class ChatServiceShould {
             assertNotNull("New chat was not created.");
         }
 
-        assertNotNull(actualChatId);
+        assertNotNull("Chat id is null.", actualChatId);
+
+        final Chat chat = chatService.getChat(actualChatId);
+        assertEquals("Chat owner ids is not equals",
+                chat.getOwnerId().getValue(), userDTO.getUserId());
+        assertEquals("Chat ids is not equals",
+                chat.getId().getValue(), actualChatId.getValue());
+
     }
 
     @Test
@@ -87,7 +98,7 @@ public class ChatServiceShould {
     }
 
     @Test
-    public void addDuplicateMemberToChatFail() throws MemberException {
+    public void failAddDuplicateMemberToChat() throws MemberException {
         String chatName = "fishing";
         ChatId chatId = null;
 
@@ -101,6 +112,7 @@ public class ChatServiceShould {
 
         try {
             chatService.addMember(new MemberChatDto(new UserId(userDTO.getUserId()), chatId));
+            fail("Chat creation exception was not thrown");
         } catch (MemberException e) {
             assertEquals("Add chat member fail message are not match",
                     CHAT_MEMBER_ALREADY_JOIN.getMessage(), e.getMessage());
@@ -122,6 +134,12 @@ public class ChatServiceShould {
             chatService.addMember(new MemberChatDto(new UserId(userDTO.getUserId()), chatId));
         } catch (MemberException e) {
             fail("Add member failed");
+        }
+
+        final List<UserId> members = chatService.getChat(chatId).getMembers();
+
+        if (!members.contains(new UserId(userDTO.getUserId()))) {
+            fail("User was not set like member of current chat.");
         }
 
     }
@@ -148,6 +166,12 @@ public class ChatServiceShould {
         } catch (MemberException e) {
             fail("Remove member failed");
         }
+
+        final List<UserId> members = chatService.getChat(chatId).getMembers();
+
+        if (members.contains(new UserId(userDTO.getUserId()))) {
+            fail("User is not in membership of current chat.");
+        }
     }
 
     @Test
@@ -168,11 +192,11 @@ public class ChatServiceShould {
     }
 
     @Test
-    public void sendMessageToChat() {
+    public void postMessageToChat() {
 
         String chatName = "watches";
         ChatId chatId = null;
-        String message = "Hello, it is my first message.";
+        String messageContent = "Hello, it is my first message.";
 
         try {
             chatId = chatService.createChat(new ChatCreationDto(new UserId((userDTO.getUserId())), chatName));
@@ -187,9 +211,16 @@ public class ChatServiceShould {
         }
 
         try {
-            chatService.sendMessage(new MessageDTO(new UserId(userDTO.getUserId()), chatId, message, userDTO.getNickname()));
+            chatService.sendMessage(new MessageDTO(new UserId(userDTO.getUserId()), chatId, messageContent, userDTO.getNickname()));
         } catch (MessageException e) {
             fail("Sending message fail.");
+        }
+
+        final List<Message> messages = chatService.getChat(chatId).getMessages();
+        final Message actualMessage = new Message(userDTO.getNickname(), messageContent);
+
+        if (!messages.contains(actualMessage)) {
+            fail("Message was not posted.");
         }
     }
 

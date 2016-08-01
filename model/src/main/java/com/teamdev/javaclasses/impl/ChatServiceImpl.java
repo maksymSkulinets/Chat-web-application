@@ -1,7 +1,10 @@
 package com.teamdev.javaclasses.impl;
 
 import com.teamdev.javaclasses.*;
-import com.teamdev.javaclasses.DTO.*;
+import com.teamdev.javaclasses.DTO.ChatCreationDto;
+import com.teamdev.javaclasses.DTO.ChatId;
+import com.teamdev.javaclasses.DTO.MemberChatDto;
+import com.teamdev.javaclasses.DTO.MessageDTO;
 import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.UserId;
@@ -21,7 +24,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository = new ChatRepository();
     private final Logger log = LoggerFactory.getLogger(ChatServiceImpl.class);
 
-    private ChatServiceImpl() {
+    public ChatServiceImpl() {
     }
 
     public static ChatServiceImpl getInstance() {
@@ -70,7 +73,7 @@ public class ChatServiceImpl implements ChatService {
         final Chat chat = chatRepository.find(memberChatDto.getChatId());
 
         for (UserId memberId : chat.getMembers()) {
-            if (memberChatDto.getChatId().equals(memberId)) {
+            if (memberChatDto.getUserId().equals(memberId)) {
                 log.warn("Add chat member fail: chat member already join.");
                 throw new MemberException(CHAT_MEMBER_ALREADY_JOIN.getMessage());
             }
@@ -130,9 +133,8 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatDto getChat(ChatId id) {
-        /*TODO implement for nest testing*/
-        return null;
+    public Chat getChat(ChatId id) {
+        return chatRepository.find(id);
     }
 
 }
