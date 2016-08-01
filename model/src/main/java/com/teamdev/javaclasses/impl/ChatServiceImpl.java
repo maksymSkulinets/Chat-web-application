@@ -108,7 +108,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void sendMessage(MessageDto messageDto) throws MessageException {
+    public void sendMessage(MessageDTO messageDto) throws MessageException {
         final Chat chat = chatRepository.find(messageDto.getChatId());
 
         final List<UserId> chatMembers = chat.getMembers();

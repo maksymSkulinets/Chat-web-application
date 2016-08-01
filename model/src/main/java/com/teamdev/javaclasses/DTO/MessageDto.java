@@ -5,13 +5,13 @@ import com.teamdev.javaclasses.entities.UserId;
 /**
  * DTO for post messages to chat.
  */
-public class MessageDto {
+public class MessageDTO {
     private final UserId userId;
     private final ChatId chatId;
     private final String message;
     private final String nickName;
 
-    public MessageDto(UserId userId, ChatId chatId, String message, String nickName) {
+    public MessageDTO(UserId userId, ChatId chatId, String message, String nickName) {
         this.userId = userId;
         this.chatId = chatId;
         this.message = message;
@@ -39,7 +39,7 @@ public class MessageDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MessageDto that = (MessageDto) o;
+        MessageDTO that = (MessageDTO) o;
 
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (chatId != null ? !chatId.equals(that.chatId) : that.chatId != null) return false;

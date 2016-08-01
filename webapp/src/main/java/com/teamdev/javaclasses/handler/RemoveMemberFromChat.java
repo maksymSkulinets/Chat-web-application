@@ -42,7 +42,6 @@ public class RemoveMemberFromChat implements Handler {
                 content.put("message", e.getMessage());
             }
         }
-
         return content;
     }
 }

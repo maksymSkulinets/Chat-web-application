@@ -187,7 +187,7 @@ public class ChatServiceShould {
         }
 
         try {
-            chatService.sendMessage(new MessageDto(new UserId(userDTO.getUserId()), chatId, message, userDTO.getNickname()));
+            chatService.sendMessage(new MessageDTO(new UserId(userDTO.getUserId()), chatId, message, userDTO.getNickname()));
         } catch (MessageException e) {
             fail("Sending message fail.");
         }
@@ -207,7 +207,7 @@ public class ChatServiceShould {
         }
 
         try {
-            chatService.sendMessage(new MessageDto(new UserId(userDTO.getUserId()), chatId, message, userDTO.getNickname()));
+            chatService.sendMessage(new MessageDTO(new UserId(userDTO.getUserId()), chatId, message, userDTO.getNickname()));
         } catch (MessageException e) {
             assertEquals("Add chat member fail message are not match", NOT_A_CHAT_MEMBER.getMessage(), e.getMessage());
         }

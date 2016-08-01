@@ -38,7 +38,7 @@ public interface ChatService {
      * @param postMessageDto - contains user id, chat id and message
      * @throws MessageException if sending message fails
      */
-    void sendMessage(MessageDto postMessageDto) throws MessageException;
+    void sendMessage(MessageDTO postMessageDto) throws MessageException;
 
     /**
      * Get chat by id
