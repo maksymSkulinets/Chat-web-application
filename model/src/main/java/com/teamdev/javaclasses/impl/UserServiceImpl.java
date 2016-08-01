@@ -3,8 +3,9 @@ package com.teamdev.javaclasses.impl;
 import com.teamdev.javaclasses.DTO.LoginDTO;
 import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
 import com.teamdev.javaclasses.DTO.SignUpDTO;
-import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.DTO.UserDTO;
+import com.teamdev.javaclasses.*;
+import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.repository.TokenRepository;
@@ -115,5 +116,9 @@ public class UserServiceImpl implements UserService {
 
     public User getUser(UserId userId) {
         return userRepository.find(userId);
+    }
+
+    public UserId findUserIdByToken(SecurityToken securityToken) {
+        return tokenRepository.find(securityToken).getUserId();
     }
 }

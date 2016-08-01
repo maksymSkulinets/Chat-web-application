@@ -1,5 +1,6 @@
 package com.teamdev.javaclasses;
 
+import com.teamdev.javaclasses.handler.ChatCreateHandler;
 import com.teamdev.javaclasses.handler.Handler;
 import com.teamdev.javaclasses.handler.LoginHandler;
 import com.teamdev.javaclasses.handler.SignUpHandler;
@@ -13,6 +14,7 @@ class HandlerContainer {
             new HashMap<RequestContext, Handler>() {{
                 put(new RequestContext("/registration", "POST"), new SignUpHandler());
                 put(new RequestContext("/login", "POST"), new LoginHandler());
+                put(new RequestContext("createChat","POST"),new ChatCreateHandler());
             }};
 
 

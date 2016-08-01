@@ -13,13 +13,14 @@ import javax.servlet.http.HttpServletResponse;
  * Implementation {@link Handler} for login requests.
  */
 public class LoginHandler implements Handler {
+    private final UserServiceImpl userService = UserServiceImpl.getInstance();
+
     @Override
     public JSONObject process(HttpServletRequest request, HttpServletResponse response) {
         JSONObject content = new JSONObject();
         final String nickname = request.getParameter("nickname");
         final String password = request.getParameter("password");
 
-        UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
             final SecurityTokenDTO currentTokenDTO = userService.login(new LoginDTO(nickname, password));
             content.put("token", currentTokenDTO.getId().getValue());

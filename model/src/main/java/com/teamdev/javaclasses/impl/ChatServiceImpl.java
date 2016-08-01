@@ -19,8 +19,14 @@ import static com.teamdev.javaclasses.ChatFailCases.NOT_A_CHAT_MEMBER;
  */
 public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository = new ChatRepository();
+    private final Logger log = LoggerFactory.getLogger(ChatServiceImpl.class);
 
-    private Logger log = LoggerFactory.getLogger(ChatServiceImpl.class);
+    private ChatServiceImpl() {
+    }
+
+    public static ChatServiceImpl getInstance() {
+        return new ChatServiceImpl();
+    }
 
     @Override
     public ChatId createChat(ChatCreationDto chatCreationDto) throws ChatCreationException {
@@ -115,8 +121,8 @@ public class ChatServiceImpl implements ChatService {
 
             if (log.isDebugEnabled()) {
                 log.debug("Message was sent successfully." +
-                        " To chat with id:" + messageDto.getChatId().getValue()+
-                        " Message author:  " +  messageDto.getNickName());
+                        " To chat with id:" + messageDto.getChatId().getValue() +
+                        " Message author:  " + messageDto.getNickName());
             }
         }
 

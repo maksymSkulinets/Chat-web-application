@@ -20,6 +20,8 @@ public class SecurityTokenDTO implements Entity<SecurityToken> {
         return userId;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

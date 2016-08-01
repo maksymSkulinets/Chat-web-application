@@ -13,16 +13,17 @@ import javax.servlet.http.HttpServletResponse;
  * Implementation {@link Handler} for signUp request.
  */
 public class SignUpHandler implements Handler {
+    private final UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Override
     public JSONObject process(HttpServletRequest request, HttpServletResponse response) {
+
         final JSONObject content = new JSONObject();
 
         final String nickname = request.getParameter("nickname");
         final String password = request.getParameter("password");
         final String verifyPassword = request.getParameter("verifyPassword");
 
-        UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
             final UserDTO currentUserDTO = userService.signUp(new SignUpDTO(nickname, password, verifyPassword));
             content.put("nickname", currentUserDTO.getNickname());
