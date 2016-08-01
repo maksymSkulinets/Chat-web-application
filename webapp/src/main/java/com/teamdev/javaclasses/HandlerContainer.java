@@ -1,9 +1,6 @@
 package com.teamdev.javaclasses;
 
-import com.teamdev.javaclasses.handler.ChatCreateHandler;
-import com.teamdev.javaclasses.handler.Handler;
-import com.teamdev.javaclasses.handler.LoginHandler;
-import com.teamdev.javaclasses.handler.SignUpHandler;
+import com.teamdev.javaclasses.handler.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,10 +8,14 @@ import java.util.Map;
 class HandlerContainer {
 
     private static final Map<RequestContext, Handler> registry =
+
             new HashMap<RequestContext, Handler>() {{
                 put(new RequestContext("/registration", "POST"), new SignUpHandler());
                 put(new RequestContext("/login", "POST"), new LoginHandler());
-                put(new RequestContext("createChat","POST"),new ChatCreateHandler());
+                put(new RequestContext("/create_chat", "POST"), new ChatCreateHandler());
+                put(new RequestContext("/add_member", "POST"), new AddMemberToChatHandler());
+                put(new RequestContext("/create_chat", "POST"), new ChatCreateHandler());
+                put(new RequestContext("/send_message", "POST"), new SendMessageHandler());
             }};
 
 
