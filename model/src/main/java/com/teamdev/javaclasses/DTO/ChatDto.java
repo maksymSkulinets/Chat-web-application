@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * DTO for transfer chats data.
  */
-public class ChatDto {
+class ChatDto {
     private final ChatId chatId;
     private final String chatName;
     private final UserId owner;

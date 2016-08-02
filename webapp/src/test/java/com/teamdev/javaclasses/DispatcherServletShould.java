@@ -46,7 +46,7 @@ public class DispatcherServletShould {
     }
 
     private Long successfullyRegisterUser(String nickname, String password) throws IOException, ParseException {
-        final String url = "http://localhost:8080/registration";
+        final String url = "http://localhost:8080/api/registration";
 
         final List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("nickname", nickname));
@@ -59,7 +59,7 @@ public class DispatcherServletShould {
     }
 
     private SecurityTokenDTO successfulLoginUser(String nickname, String password) throws IOException, ParseException {
-        final String url = "http://localhost:8080/login";
+        final String url = "http://localhost:8080/api/login";
 
         final List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("nickname", nickname));
@@ -75,7 +75,7 @@ public class DispatcherServletShould {
     }
 
     private ChatId successfullyCreateChat(SecurityTokenDTO securityTokenDTO, String chatName) throws IOException, ParseException {
-        final String url = "http://localhost:8080/create_chat";
+        final String url = "http://localhost:8080/api/create_chat";
 
 
         final List<NameValuePair> parameters = new ArrayList<>();
@@ -91,7 +91,7 @@ public class DispatcherServletShould {
 
     private void successfullyAddMemberToCHat(Long userId, ChatId chatId, SecurityTokenDTO securityTokenDTO)
             throws IOException, ParseException {
-        final String url = "http://localhost:8080/add_member";
+        final String url = "http://localhost:8080/api/add_member";
 
         final List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("token", String.valueOf(securityTokenDTO.getId())));
@@ -105,7 +105,7 @@ public class DispatcherServletShould {
     @Test
     public void signUpRequestSuccessfulSignUp() throws IOException, ParseException {
 
-        final String url = "http://localhost:8080/registration";
+        final String url = "http://localhost:8080/api/registration";
 
         final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
         final String password = "LETS_DRIVE!!!" + UUID.randomUUID() + "_endOfPassword";
@@ -128,7 +128,7 @@ public class DispatcherServletShould {
 
     @Test
     public void signUpRequestDuplicateSignUpAttempt() throws IOException, ParseException {
-        final String url = "http://localhost:8080/registration";
+        final String url = "http://localhost:8080/api/registration";
 
         final String nickname = "YuriGagarin" + UUID.randomUUID();
         final String password = "LETS_DRIVE!!!" + UUID.randomUUID();
@@ -151,7 +151,7 @@ public class DispatcherServletShould {
 
     @Test
     public void signUpRequestInputWasEmpty() throws IOException, ParseException {
-        final String url = "http://localhost:8080/registration";
+        final String url = "http://localhost:8080/api/registration";
 
         final String nickname = "";
         final String password = "LETS_DRIVE!!!" + UUID.randomUUID();
@@ -173,7 +173,7 @@ public class DispatcherServletShould {
 
     @Test
     public void signUpRequestSignUpPasswordsNotMuch() throws IOException, ParseException {
-        final String url = "http://localhost:8080/registration";
+        final String url = "http://localhost:8080/api/registration";
 
         final String nickname = "YuriGagarin" + UUID.randomUUID();
         final String password = "LETS_DRIVE!!!" + UUID.randomUUID();
@@ -195,7 +195,7 @@ public class DispatcherServletShould {
 
     @Test
     public void loginRequestLoginSuccessful() throws IOException, ParseException {
-        final String url = "http://localhost:8080/login";
+        final String url = "http://localhost:8080/api/login";
 
         final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
         final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
@@ -219,7 +219,7 @@ public class DispatcherServletShould {
 
     @Test
     public void loginRequestLoginEmptyInput() throws IOException, ParseException {
-        final String url = "http://localhost:8080/login";
+        final String url = "http://localhost:8080/api/login";
 
         final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
         final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
@@ -240,7 +240,7 @@ public class DispatcherServletShould {
 
     @Test
     public void loginRequestLoginWithWrongPassword() throws IOException, ParseException {
-        final String url = "http://localhost:8080/login";
+        final String url = "http://localhost:8080/api/login";
 
         final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
         final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
@@ -261,7 +261,7 @@ public class DispatcherServletShould {
 
     @Test
     public void loginRequestLoginNonSignUpUser() throws IOException, ParseException {
-        final String url = "http://localhost:8080/login";
+        final String url = "http://localhost:8080/api/login";
 
         final String nickname = "YuriGagarin" + UUID.randomUUID() + "_endOfName";
         final String password = "LETS_GO!!!" + UUID.randomUUID() + "_endOfPassword";
@@ -280,7 +280,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestChatCreation() throws IOException, ParseException {
-        final String url = "http://localhost:8080/create_chat";
+        final String url = "http://localhost:8080/api/create_chat";
 
         final UUID random = UUID.randomUUID();
 
@@ -306,7 +306,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestEmptyChatNameRequest() throws IOException, ParseException {
-        final String url = "http://localhost:8080/create_chat";
+        final String url = "http://localhost:8080/api/create_chat";
 
         final UUID random = UUID.randomUUID();
 
@@ -333,7 +333,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestChatNameAlreadyExist() throws IOException, ParseException {
-        final String url = "http://localhost:8080/create_chat";
+        final String url = "http://localhost:8080/api/create_chat";
 
         final UUID random = UUID.randomUUID();
 
@@ -361,7 +361,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestAddMemberToChat() throws IOException, ParseException {
-        final String url = "http://localhost:8080/add_member";
+        final String url = "http://localhost:8080/api/add_member";
 
         final UUID random = UUID.randomUUID();
 
@@ -387,7 +387,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestAddMemberToChatFail() throws IOException, ParseException {
-        final String url = "http://localhost:8080/add_member";
+        final String url = "http://localhost:8080/api/add_member";
 
         final UUID random = UUID.randomUUID();
 
@@ -417,7 +417,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestRemoveMemberFromChat() throws IOException, ParseException {
-        final String url = "http://localhost:8080/remove_member";
+        final String url = "http://localhost:8080/api/remove_member";
 
         final UUID random = UUID.randomUUID();
 
@@ -444,7 +444,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestRemoveMemberFromChatFail() throws IOException, ParseException {
-        final String url = "http://localhost:8080/remove_member";
+        final String url = "http://localhost:8080/api/remove_member";
 
         final UUID random = UUID.randomUUID();
 
@@ -473,7 +473,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestSendMessageToChat() throws IOException, ParseException {
-        final String url = "http://localhost:8080/send_message";
+        final String url = "http://localhost:8080/api/send_message";
 
         final UUID random = UUID.randomUUID();
 
@@ -503,7 +503,7 @@ public class DispatcherServletShould {
 
     @Test
     public void chatRequestSendMessageToChatFail() throws IOException, ParseException {
-        final String url = "http://localhost:8080/send_message";
+        final String url = "http://localhost:8080/api/send_message";
 
         final UUID random = UUID.randomUUID();
 
@@ -531,6 +531,5 @@ public class DispatcherServletShould {
         assertEquals("Unexpected response status", expectedStatus, postResponse.getStatusLine().getStatusCode());
         assertEquals("Post request failed", expectedMessage, NOT_A_CHAT_MEMBER.getMessage());
     }
-
 
 }

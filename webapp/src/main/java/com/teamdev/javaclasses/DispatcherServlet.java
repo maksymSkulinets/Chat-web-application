@@ -25,10 +25,9 @@ public class DispatcherServlet extends HttpServlet {
 
         final String uri = request.getRequestURI();
         final String method = request.getMethod();
-
         final RequestContext requestContext = new RequestContext(uri, method);
 
-        final Handler handler = HandlerContainer.getHandler(requestContext);
+        final Handler handler = new HandlerContainer().getHandler(requestContext);
 
         final JSONObject transferContent = handler.process(request, response);
         response.getWriter().write(transferContent.toJSONString());
