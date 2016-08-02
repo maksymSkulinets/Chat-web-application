@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Implementation {@link Handler} for remove members from chat.
  */
-public class RemoveMemberFromChat implements Handler {
+public class RemoveMemberHandler implements Handler {
     private final ChatServiceImpl chatService = ChatServiceImpl.getInstance();
     private final UserServiceImpl userService = UserServiceImpl.getInstance();
 
@@ -39,6 +39,7 @@ public class RemoveMemberFromChat implements Handler {
             try {
                 chatService.removeMember(memberChatDto);
             } catch (MemberException e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 content.put("message", e.getMessage());
             }
         }

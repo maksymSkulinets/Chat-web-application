@@ -17,7 +17,6 @@ public class SignUpHandler implements Handler {
 
     @Override
     public JSONObject process(HttpServletRequest request, HttpServletResponse response) {
-
         final JSONObject content = new JSONObject();
 
         final String nickname = request.getParameter("nickname");

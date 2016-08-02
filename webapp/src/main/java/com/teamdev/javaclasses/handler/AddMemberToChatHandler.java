@@ -27,7 +27,6 @@ public class AddMemberToChatHandler implements Handler {
         final String token = request.getParameter("token");
         final UserId memberId = new UserId(Long.valueOf(request.getParameter("userId")));
         final ChatId chatId = new ChatId(Long.valueOf(request.getParameter("chatId")));
-
         final UserId userId = userService.findUserIdByToken(new SecurityToken(Long.valueOf(token)));
 
         if (userId == null) {
@@ -40,6 +39,7 @@ public class AddMemberToChatHandler implements Handler {
                 chatService.addMember(memberChatDto);
             } catch (MemberException e) {
                 content.put("message", e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         }
         return content;

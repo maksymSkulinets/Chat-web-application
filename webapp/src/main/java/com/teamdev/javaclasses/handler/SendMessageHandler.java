@@ -40,6 +40,7 @@ public class SendMessageHandler implements Handler {
                 chatService.sendMessage(messageDTO);
             } catch (MessageException e) {
                 content.put("message", e.getMessage());
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         }
         return content;

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Implementation {@link Handler} for create chat.
  */
-public class ChatCreateHandler implements Handler {
+public class ChatCreationHandler implements Handler {
     private final ChatServiceImpl chatService = ChatServiceImpl.getInstance();
     private final UserServiceImpl userService = UserServiceImpl.getInstance();
 
@@ -27,8 +27,7 @@ public class ChatCreateHandler implements Handler {
 
         final UserId chatOwnerId = new UserId(Long.valueOf(request.getParameter("userId")));
         final String chatName = request.getParameter("chatName");
-        final String token = request.getParameter("token");
-
+        String token = request.getParameter("token");
         final UserId userId = userService.findUserIdByToken(new SecurityToken(Long.valueOf(token)));
 
         if (userId == null) {

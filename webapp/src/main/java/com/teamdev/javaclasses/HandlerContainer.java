@@ -12,9 +12,9 @@ class HandlerContainer {
             new HashMap<RequestContext, Handler>() {{
                 put(new RequestContext("/registration", "POST"), new SignUpHandler());
                 put(new RequestContext("/login", "POST"), new LoginHandler());
-                put(new RequestContext("/create_chat", "POST"), new ChatCreateHandler());
+                put(new RequestContext("/create_chat", "POST"), new ChatCreationHandler());
                 put(new RequestContext("/add_member", "POST"), new AddMemberToChatHandler());
-                put(new RequestContext("/create_chat", "POST"), new ChatCreateHandler());
+                put(new RequestContext("/remove_member", "POST"), new RemoveMemberHandler());
                 put(new RequestContext("/send_message", "POST"), new SendMessageHandler());
             }};
 
