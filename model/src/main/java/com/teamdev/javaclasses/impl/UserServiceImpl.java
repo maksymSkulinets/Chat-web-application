@@ -23,20 +23,23 @@ import static com.teamdev.javaclasses.UserServiceFailCases.*;
  * Implementation {@link UserService}
  */
 public class UserServiceImpl implements UserService {
-
-    private final static UserServiceImpl userServiceImpl = new UserServiceImpl();
+    private static UserService userService = UserServiceImpl.getInstance();
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-    private final String lineSeparator = System.getProperty("line.separator");
     private final UserRepository userRepository = UserRepository.getInstance();
     private final TokenRepository tokenRepository = TokenRepository.getInstance();
+    private final String lineSeparator = System.getProperty("line.separator");
 
-    public UserServiceImpl() {
+    private UserServiceImpl() {
     }
 
-    public static UserServiceImpl getInstance() {
-        return userServiceImpl;
+    public static UserService getInstance() {
+        if (userService == null) {
+            userService = new UserServiceImpl();
+        }
+        return userService;
     }
 
+    @Override
     public UserDTO signUp(SignUpDTO signUpData) throws SignUpException {
         if (log.isInfoEnabled()) {
             log.info("Attempt to sign up.");
@@ -84,6 +87,7 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
     public SecurityTokenDTO login(LoginDTO loginData) throws LoginException {
         if (log.isInfoEnabled()) {
             log.info("Attempt to login.");
@@ -118,10 +122,13 @@ public class UserServiceImpl implements UserService {
         return currentDTOToken;
     }
 
+
+    @Override
     public User getUser(UserId userId) {
         return userRepository.find(userId);
     }
 
+    @Override
     public UserId findUserIdByToken(SecurityToken securityToken) {
         return tokenRepository.find(securityToken).getUserId();
     }

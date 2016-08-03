@@ -21,14 +21,18 @@ import static com.teamdev.javaclasses.ChatServiceFailCases.NOT_A_CHAT_MEMBER;
  * Implementation of {@link ChatService}.
  */
 public class ChatServiceImpl implements ChatService {
+    private static ChatService chatService;
     private final ChatRepository chatRepository = ChatRepository.getInstance();
     private final Logger log = LoggerFactory.getLogger(ChatServiceImpl.class);
 
-    public ChatServiceImpl() {
+    private ChatServiceImpl() {
     }
 
-    public static ChatServiceImpl getInstance() {
-        return new ChatServiceImpl();
+    public static ChatService getInstance() {
+        if (chatService == null) {
+            chatService = new ChatServiceImpl();
+        }
+        return chatService;
     }
 
     @Override

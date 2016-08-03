@@ -14,8 +14,8 @@ import static org.junit.Assert.*;
 
 public class ChatServiceShould {
 
-    private final UserServiceImpl userService = new UserServiceImpl();
-    private final ChatService chatService = new ChatServiceImpl();
+    private final UserService userService = UserServiceImpl.getInstance();
+    private final ChatService chatService = ChatServiceImpl.getInstance();
 
     private UserDTO successfulSignUp(SignUpDTO signUpData) {
         UserDTO result = null;

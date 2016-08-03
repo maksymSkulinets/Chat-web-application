@@ -4,6 +4,7 @@ import com.teamdev.javaclasses.DTO.SignUpDTO;
 import com.teamdev.javaclasses.DTO.UserDTO;
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
+import com.teamdev.javaclasses.UserService;
 import com.teamdev.javaclasses.entities.SecurityToken;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
@@ -23,7 +24,7 @@ import static org.junit.Assert.fail;
 
 public class UserServiceShould {
 
-    private final UserServiceImpl userService = UserServiceImpl.getInstance();
+    private final UserService userService = UserServiceImpl.getInstance();
     private String nickname;
     private String password;
     private Callable<SecurityTokenDTO> securityTokenDTOCallable;
