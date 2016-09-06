@@ -34,7 +34,7 @@ public interface UserService {
      */
     UserDTO findUser(UserIdDTO userId);
 
-    UserDTO findUserId(TokenIdDTO token);
+    UserDTO findUser(TokenIdDTO token);
 
     void deleteUser(UserIdDTO userId);
 

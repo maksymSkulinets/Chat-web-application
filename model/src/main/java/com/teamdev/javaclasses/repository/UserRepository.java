@@ -36,7 +36,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
         return userId;
     }
 
-    public User get(String nickname) {
+    public User getUser(String nickname) {
         final Collection<User> allUsers = findAll();
         User user = null;
 
@@ -50,18 +50,4 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
         return user;
     }
 
-    public UserId get(User user) {
-        final Collection<User> allUsers = findAll();
-        UserId userId = null;
-
-        for (User currentUser : allUsers) {
-            if (currentUser.getNickname().equals(user.getNickname())
-                    && currentUser.getPassword().equals(user.getPassword())) {
-                userId = currentUser.getId();
-                break;
-            }
-        }
-
-        return userId;
-    }
 }

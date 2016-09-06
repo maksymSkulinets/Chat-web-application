@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
             throw new SignUpException(PASSWORDS_NOT_MATCH);
         }
 
-        final User user = userRepository.get(trimmedNickname);
+        final User user = userRepository.getUser(trimmedNickname);
 
         if (user != null) {
             log.warn(EXIST_USER.getMessage());
@@ -103,23 +103,36 @@ public class UserServiceImpl implements UserService {
         final String trimmedNickname = loginData.getNickname().trim();
         final String password = loginData.getPassword();
 
+        checkNotNull(trimmedNickname);
+        checkNotNull(password);
+
         if (trimmedNickname.isEmpty() || password.isEmpty()) {
             log.warn(EMPTY_INPUT.getMessage());
             throw new LoginException(EMPTY_INPUT);
         }
 
-        final UserId currentUserId = userRepository.get(new User(new UserName(trimmedNickname), new Password(password)));
+        final User currentUser = userRepository.getUser(trimmedNickname);
 
-        if (currentUserId == null) {
+        if (currentUser == null) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
+            log.warn("Cause: User with nickname: " + trimmedNickname + " - not registered yet.");
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
-        final Token currentUserToken = new Token(currentUserId);
+        final String existUserPassword = currentUser.getPassword().getPassword();
+
+        if (!password.equals(existUserPassword)) {
+            log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
+            log.warn("Cause: User with nickname: " + trimmedNickname + " - wrong password input.");
+            throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
+        }
+
+
+        final Token currentUserToken = new Token(currentUser.getId());
         tokenRepository.add(currentUserToken);
 
         if (log.isInfoEnabled()) {
-            log.info("User login  with id: " + currentUserId.getValue() + "is successful.");
+            log.info("User login  with id: " + currentUser.getId().getValue() + " is successful.");
         }
 
         return new TokenDTO(currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
@@ -129,12 +142,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUser(UserIdDTO userId) {
         final User user = userRepository.find(new UserId(userId.getId()));
-        System.out.println("!а" + user.getId());
         return new UserDTO(user.getNickname().getName(), user.getId().getValue());
     }
 
     @Override
-    public UserDTO findUserId(TokenIdDTO token) {
+    public UserDTO findUser(TokenIdDTO token) {
         final Token userToken = tokenRepository.find(new TokenId(token.getId()));
         final User user = userRepository.find(userToken.getUserId());
         return new UserDTO(user.getNickname().getName(), userToken.getUserId().getValue());
@@ -144,7 +156,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(UserIdDTO userId) {
 
         userRepository.remove(new UserId(userId.getId()));
-
+        /*TODO also remove token*/
         if (log.isInfoEnabled()) {
             log.info("Delete user user with id:" + userId);
         }
