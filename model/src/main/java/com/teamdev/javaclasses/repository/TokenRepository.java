@@ -1,13 +1,13 @@
 package com.teamdev.javaclasses.repository;
 
-import com.teamdev.javaclasses.dto.SecurityTokenDTO;
+import com.teamdev.javaclasses.dto.TokenDTO;
 import com.teamdev.javaclasses.entities.Token;
 import com.teamdev.javaclasses.entities.TokenId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation {@link InMemoryRepository} for SecurityTokenDTO entity keeping.
+ * Implementation {@link InMemoryRepository} for TokenDTO entity keeping.
  */
 public class TokenRepository extends InMemoryRepository<Token, TokenId> {
     private static TokenRepository tokenRepository = TokenRepository.getInstance();
@@ -32,7 +32,7 @@ public class TokenRepository extends InMemoryRepository<Token, TokenId> {
         return new TokenId(System.nanoTime());
     }
 
-    public void remove(SecurityTokenDTO token) {
+    public void remove(TokenDTO token) {
         /*TODO implements*/
     }
 }

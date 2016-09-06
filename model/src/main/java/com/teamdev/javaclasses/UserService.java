@@ -21,10 +21,10 @@ public interface UserService {
      * Login already sign up users.
      *
      * @param loginData client login data
-     * @return SecurityTokenDTO for access
+     * @return TokenDTO for access
      * @throws LoginException if login fail
      */
-    SecurityTokenDTO login(LoginDTO loginData) throws LoginException;
+    TokenDTO login(LoginDTO loginData) throws LoginException;
 
     /**
      * Get user.

@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SecurityTokenDTO login(LoginDTO loginData) throws LoginException {
+    public TokenDTO login(LoginDTO loginData) throws LoginException {
         if (log.isInfoEnabled()) {
             log.info("Attempt to login.");
         }
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
             log.info("User login  with id: " + currentUserId.getValue() + "is successful.");
         }
 
-        return new SecurityTokenDTO(currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
+        return new TokenDTO(currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
     }
 
 
