@@ -2,7 +2,7 @@ package com.teamdev.javaclasses.repository;
 
 import com.teamdev.javaclasses.dto.TokenDTO;
 import com.teamdev.javaclasses.entities.Token;
-import com.teamdev.javaclasses.entities.TokenId;
+import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -6,7 +6,7 @@ import com.teamdev.javaclasses.UserService;
 import com.teamdev.javaclasses.UserServiceFailCases;
 import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Token;
-import com.teamdev.javaclasses.entities.TokenId;
+import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.tinyTypes.Password;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
