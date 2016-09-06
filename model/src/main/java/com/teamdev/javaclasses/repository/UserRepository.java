@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses.repository;
 
 import com.teamdev.javaclasses.entities.User;
-import com.teamdev.javaclasses.entities.UserId;
+import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

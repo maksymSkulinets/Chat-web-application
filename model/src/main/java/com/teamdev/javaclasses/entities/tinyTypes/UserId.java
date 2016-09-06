@@ -1,4 +1,6 @@
-package com.teamdev.javaclasses.entities;
+package com.teamdev.javaclasses.entities.tinyTypes;
+
+import com.teamdev.javaclasses.entities.EntityId;
 
 /**
  * User unique identifier.

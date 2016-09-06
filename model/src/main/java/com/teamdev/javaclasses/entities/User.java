@@ -1,5 +1,7 @@
 package com.teamdev.javaclasses.entities;
 
+import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+
 /**
  * User entity
  */

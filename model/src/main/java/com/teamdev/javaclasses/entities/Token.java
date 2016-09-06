@@ -1,5 +1,7 @@
 package com.teamdev.javaclasses.entities;
 
+import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+
 public class Token implements Entity<TokenId> {
     private TokenId token;
     private UserId userId;

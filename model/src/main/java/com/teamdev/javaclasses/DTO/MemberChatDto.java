@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses.dto;
 
 import com.teamdev.javaclasses.entities.ChatId;
-import com.teamdev.javaclasses.entities.UserId;
+import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 
 /**
  * dto for join and un join chats.

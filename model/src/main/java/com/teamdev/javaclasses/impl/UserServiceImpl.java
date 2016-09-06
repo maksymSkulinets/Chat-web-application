@@ -8,7 +8,7 @@ import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Token;
 import com.teamdev.javaclasses.entities.TokenId;
 import com.teamdev.javaclasses.entities.User;
-import com.teamdev.javaclasses.entities.UserId;
+import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.TokenRepository;
 import com.teamdev.javaclasses.repository.UserRepository;
 import org.slf4j.Logger;
