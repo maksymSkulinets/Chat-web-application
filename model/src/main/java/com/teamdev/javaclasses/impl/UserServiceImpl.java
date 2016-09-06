@@ -8,7 +8,9 @@ import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Token;
 import com.teamdev.javaclasses.entities.TokenId;
 import com.teamdev.javaclasses.entities.User;
+import com.teamdev.javaclasses.entities.tinyTypes.Password;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+import com.teamdev.javaclasses.entities.tinyTypes.UserName;
 import com.teamdev.javaclasses.repository.TokenRepository;
 import com.teamdev.javaclasses.repository.UserRepository;
 import org.slf4j.Logger;
@@ -75,10 +77,10 @@ public class UserServiceImpl implements UserService {
             throw new SignUpException(EXIST_USER);
         }
 
-        final User currentUser = new User(trimmedNickname, password);
+        final User currentUser = new User(new UserName(trimmedNickname), new Password(password));
         userRepository.add(currentUser);
 
-        final UserDTO result = new UserDTO(currentUser.getNickname(), currentUser.getId().getValue());
+        final UserDTO result = new UserDTO(currentUser.getNickname().getName(), currentUser.getId().getValue());
 
         if (log.isInfoEnabled()) {
             log.info("User sign up with nickname: " + currentUser.getNickname() + " is successful.");
@@ -106,7 +108,7 @@ public class UserServiceImpl implements UserService {
             throw new LoginException(EMPTY_INPUT);
         }
 
-        final UserId currentUserId = userRepository.get(new User(trimmedNickname, password));
+        final UserId currentUserId = userRepository.get(new User(new UserName(trimmedNickname), new Password(password)));
 
         if (currentUserId == null) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
@@ -128,14 +130,14 @@ public class UserServiceImpl implements UserService {
     public UserDTO findUser(UserIdDTO userId) {
         final User user = userRepository.find(new UserId(userId.getId()));
         System.out.println("!а" + user.getId());
-        return new UserDTO(user.getNickname(), user.getId().getValue());
+        return new UserDTO(user.getNickname().getName(), user.getId().getValue());
     }
 
     @Override
     public UserDTO findUserId(TokenIdDTO token) {
         final Token userToken = tokenRepository.find(new TokenId(token.getId()));
         final User user = userRepository.find(userToken.getUserId());
-        return new UserDTO(user.getNickname(), userToken.getUserId().getValue());
+        return new UserDTO(user.getNickname().getName(), userToken.getUserId().getValue());
     }
 
     @Override

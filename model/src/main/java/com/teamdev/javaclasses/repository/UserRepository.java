@@ -41,7 +41,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
         User user = null;
 
         for (User currentUser : allUsers) {
-            if (currentUser.getNickname().equals(nickname)) {
+            if (currentUser.getNickname().getName().equals(nickname)) {
                 user = currentUser;
                 break;
             }

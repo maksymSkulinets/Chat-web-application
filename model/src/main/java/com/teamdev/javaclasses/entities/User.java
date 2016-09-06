@@ -1,25 +1,27 @@
 package com.teamdev.javaclasses.entities;
 
+import com.teamdev.javaclasses.entities.tinyTypes.Password;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+import com.teamdev.javaclasses.entities.tinyTypes.UserName;
 
 /**
- * User entity
+ * User entity.
  */
 public class User implements Entity<UserId> {
-    private String nickname;
-    private String password;
+    private UserName nickname;
+    private Password password;
     private UserId id;
 
-    public User(String nickname, String password) {
+    public User(UserName nickname, Password password) {
         this.nickname = nickname;
         this.password = password;
     }
 
-    public String getNickname() {
+    public UserName getNickname() {
         return nickname;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 
