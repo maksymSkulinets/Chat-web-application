@@ -1,10 +1,10 @@
 package com.teamdev.javaclasses.impl;
 
 import com.teamdev.javaclasses.*;
-import com.teamdev.javaclasses.DTO.ChatCreationDto;
-import com.teamdev.javaclasses.DTO.ChatId;
-import com.teamdev.javaclasses.DTO.MemberChatDto;
-import com.teamdev.javaclasses.DTO.MessageDTO;
+import com.teamdev.javaclasses.dto.ChatCreationDto;
+import com.teamdev.javaclasses.entities.ChatId;
+import com.teamdev.javaclasses.dto.MemberChatDto;
+import com.teamdev.javaclasses.dto.MessageDTO;
 import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.UserId;

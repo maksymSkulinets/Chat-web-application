@@ -1,4 +1,4 @@
-package com.teamdev.javaclasses.DTO;
+package com.teamdev.javaclasses.dto;
 
 import com.teamdev.javaclasses.entities.UserId;
 
@@ -7,7 +7,7 @@ public class ChatCreationDto {
     private final UserId userId;
     private final String chatName;
 
-    public ChatCreationDto(UserId userId, String chatName) {
+    public ChatCreationDto(String chatName, UserId userId) {
         this.userId = userId;
         this.chatName = chatName;
     }

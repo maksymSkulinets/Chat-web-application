@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses;
 
 /**
- * Throws if sign up fail.
+ * А
  */
 public class SignUpException extends Exception {
 

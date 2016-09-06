@@ -1,14 +1,12 @@
 package com.teamdev.javaclasses.impl;
 
-import com.teamdev.javaclasses.DTO.LoginDTO;
-import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
-import com.teamdev.javaclasses.DTO.SignUpDTO;
-import com.teamdev.javaclasses.DTO.UserDTO;
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.UserService;
 import com.teamdev.javaclasses.UserServiceFailCases;
-import com.teamdev.javaclasses.entities.SecurityToken;
+import com.teamdev.javaclasses.dto.*;
+import com.teamdev.javaclasses.entities.Token;
+import com.teamdev.javaclasses.entities.TokenId;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.repository.TokenRepository;
@@ -23,6 +21,7 @@ import static com.teamdev.javaclasses.UserServiceFailCases.*;
  * Implementation {@link UserService}
  */
 public class UserServiceImpl implements UserService {
+
     private static UserService userService = UserServiceImpl.getInstance();
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository = UserRepository.getInstance();
@@ -50,6 +49,7 @@ public class UserServiceImpl implements UserService {
                     "verify password: " + signUpData.getVerifyPassword());
 
         }
+
         String trimmedNickname = signUpData.getNickname().trim();
         String password = signUpData.getPassword();
         String verifyPassword = signUpData.getVerifyPassword();
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         final User currentUser = new User(trimmedNickname, password);
         userRepository.add(currentUser);
 
-        final UserDTO result = new UserDTO(currentUser.getId().getValue(), currentUser.getNickname());
+        final UserDTO result = new UserDTO(currentUser.getNickname(), currentUser.getId().getValue());
 
         if (log.isInfoEnabled()) {
             log.info("User sign up with nickname: " + currentUser.getNickname() + " is successful.");
@@ -106,50 +106,54 @@ public class UserServiceImpl implements UserService {
             throw new LoginException(EMPTY_INPUT);
         }
 
-        final User currentUser = new User(trimmedNickname, password);
-        final UserId userId = userRepository.get(currentUser);
-        if (userId == null) {
+        final UserId currentUserId = userRepository.get(new User(trimmedNickname, password));
+
+        if (currentUserId == null) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
-        SecurityTokenDTO currentDTOToken = new SecurityTokenDTO(userId);
-        tokenRepository.add(currentDTOToken);
+        final Token currentUserToken = new Token(currentUserId);
+        tokenRepository.add(currentUserToken);
 
         if (log.isInfoEnabled()) {
-            log.info("User login  with nickname: " + currentUser.getNickname() + "is successful.");
+            log.info("User login  with id: " + currentUserId.getValue() + "is successful.");
         }
-        return currentDTOToken;
+
+        return new SecurityTokenDTO(currentUserToken.getId().getValue(),currentUserToken.getUserId().getValue());
     }
 
 
     @Override
-    public User getUser(UserId userId) {
-        return userRepository.find(userId);
+    public UserDTO findUser(UserIdDTO userId) {
+        final User user = userRepository.find(new UserId(userId.getId()));
+        System.out.println("!а" + user.getId());
+        return new UserDTO(user.getNickname(), user.getId().getValue());
     }
 
     @Override
-    public UserId findUserIdByToken(SecurityToken securityToken) {
-        return tokenRepository.find(securityToken).getUserId();
+    public UserIdDTO findUserId(TokenIdDTO token) {
+        final Token userToken = tokenRepository.find(new TokenId(token.getId()));
+        return new UserIdDTO(userToken.getUserId().getValue());
     }
 
     @Override
-    public void deleteUser(UserId id) {
+    public void deleteUser(UserIdDTO userId) {
 
-        userRepository.remove(id);
+        userRepository.remove(new UserId(userId.getId()));
 
         if (log.isInfoEnabled()) {
-            log.info("Delete user user with id:" + id.getValue());
+            log.info("Delete user user with id:" + userId);
         }
     }
 
     @Override
-    public void logout(SecurityTokenDTO token) {
+    public void logout(TokenIdDTO token) {
 
-        tokenRepository.remove(token);
+        final Token userToken = tokenRepository.remove(new TokenId(token.getId()));
 
         if (log.isInfoEnabled()) {
-            log.info("Logged out user with id:" + token.getUserId().getValue());
+            log.info("Logged out user with id:" + userToken.getUserId());
         }
 
     }

@@ -1,11 +1,13 @@
-package com.teamdev.javaclasses.DTO;
+package com.teamdev.javaclasses.dto;
 
+import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.UserId;
 
 /**
- * DTO for post messages to chat.
+ * dto for post messages to chat.
  */
 public class MessageDTO {
+    /*TODO simplify MessageDTO structure with raw types*/
     private final UserId userId;
     private final ChatId chatId;
     private final String message;

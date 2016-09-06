@@ -3,9 +3,9 @@ package com.teamdev.javaclasses.entities;
 /**
  * Security token identifier.
  */
-public class SecurityToken extends EntityId {
+public class TokenId extends EntityId {
 
-    public SecurityToken(long tokenId) {
+    public TokenId(long tokenId) {
         super(tokenId);
     }
 }

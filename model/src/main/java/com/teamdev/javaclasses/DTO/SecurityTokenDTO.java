@@ -1,26 +1,25 @@
-
-package com.teamdev.javaclasses.DTO;
-
-import com.teamdev.javaclasses.entities.Entity;
-import com.teamdev.javaclasses.entities.SecurityToken;
-import com.teamdev.javaclasses.entities.UserId;
+package com.teamdev.javaclasses.dto;
 
 /**
  * Unique token for access to system.
  */
-public class SecurityTokenDTO implements Entity<SecurityToken> {
-    private SecurityToken token;
-    private UserId userId;
+public class SecurityTokenDTO {
 
-    public SecurityTokenDTO(UserId userId) {
+    private Long token;
+    private Long userId;
+
+    public SecurityTokenDTO(Long token, Long userId) {
+        this.token = token;
         this.userId = userId;
     }
 
-    public UserId getUserId() {
-        return userId;
+    public Long getToken() {
+        return token;
     }
 
-
+    public Long getUserId() {
+        return userId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -39,15 +38,5 @@ public class SecurityTokenDTO implements Entity<SecurityToken> {
         int result = token != null ? token.hashCode() : 0;
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public SecurityToken getId() {
-        return token;
-    }
-
-    @Override
-    public void setId(SecurityToken id) {
-        token = id;
     }
 }

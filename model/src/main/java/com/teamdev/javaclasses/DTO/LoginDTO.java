@@ -1,4 +1,4 @@
-package com.teamdev.javaclasses.DTO;
+package com.teamdev.javaclasses.dto;
 
 /**
  * Data transfer object for login personal information.

@@ -1,4 +1,4 @@
-package com.teamdev.javaclasses.DTO;
+package com.teamdev.javaclasses.entities;
 
 import com.teamdev.javaclasses.entities.EntityId;
 

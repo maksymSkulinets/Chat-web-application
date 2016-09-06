@@ -1,14 +1,16 @@
-package com.teamdev.javaclasses.DTO;
+package com.teamdev.javaclasses.dto;
 
+import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.UserId;
 
 import java.util.List;
 
 /**
- * DTO for transfer chats data.
+ * dto for transfer chats data.
  */
 class ChatDto {
+    /*TODO simplify chatDTO structure with raw types*/
     private final ChatId chatId;
     private final String chatName;
     private final UserId owner;

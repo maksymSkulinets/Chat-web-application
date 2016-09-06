@@ -1,7 +1,5 @@
 package com.teamdev.javaclasses.entities;
 
-import com.teamdev.javaclasses.DTO.ChatId;
-
 import java.util.ArrayList;
 import java.util.List;
 

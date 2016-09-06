@@ -1,12 +1,6 @@
 package com.teamdev.javaclasses;
 
-import com.teamdev.javaclasses.DTO.LoginDTO;
-import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
-import com.teamdev.javaclasses.DTO.SignUpDTO;
-import com.teamdev.javaclasses.DTO.UserDTO;
-import com.teamdev.javaclasses.entities.SecurityToken;
-import com.teamdev.javaclasses.entities.User;
-import com.teamdev.javaclasses.entities.UserId;
+import com.teamdev.javaclasses.dto.*;
 
 /**
  * User service public API.
@@ -31,12 +25,18 @@ public interface UserService {
      */
     SecurityTokenDTO login(LoginDTO loginData) throws LoginException;
 
-/*TODO add javadoc*/
-    User getUser(UserId userId);
+    /**
+     * Get user.
+     *
+     * @param userId user id
+     * @return user.
+     */
+    UserDTO findUser(UserIdDTO userId);
 
-    UserId findUserIdByToken(SecurityToken securityToken);
+    UserIdDTO findUserId(TokenIdDTO token);
 
-    void deleteUser(UserId id);
+    void deleteUser(UserIdDTO id);
 
-    void logout(SecurityTokenDTO token);
+    void logout(TokenIdDTO token);
+
 }

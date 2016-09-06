@@ -1,12 +1,8 @@
-import com.teamdev.javaclasses.DTO.LoginDTO;
-import com.teamdev.javaclasses.DTO.SecurityTokenDTO;
-import com.teamdev.javaclasses.DTO.SignUpDTO;
-import com.teamdev.javaclasses.DTO.UserDTO;
+import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.UserService;
-import com.teamdev.javaclasses.entities.SecurityToken;
-import com.teamdev.javaclasses.entities.User;
+import com.teamdev.javaclasses.entities.TokenId;
 import com.teamdev.javaclasses.entities.UserId;
 import com.teamdev.javaclasses.impl.UserServiceImpl;
 import org.junit.Test;
@@ -34,18 +30,17 @@ public class UserServiceShould {
         nickname = "Luk";
         password = "qwerty";
 
-        final UserDTO actualUserDTO = userService
+        final UserDTO expectedUser = userService
                 .signUp(new SignUpDTO(nickname, password, password));
 
-        final User actualUser = userService.getUser(new UserId(actualUserDTO.getUserId()));
+        final UserDTO actualUser  = userService.findUser(
+                new UserIdDTO(expectedUser.getId()));
 
         assertEquals("User with current nickname is not registered",
-                nickname, actualUserDTO.getNickname());
-        assertEquals("User with current password is not registered",
-                password, actualUser.getPassword());
+                nickname, actualUser.getNickname());
 
         assertEquals("Id keep in server storage and id which return are different",
-                actualUserDTO.getUserId(), actualUser.getId().getValue());
+                actualUser.getId(), expectedUser.getId());
     }
 
 
@@ -95,17 +90,14 @@ public class UserServiceShould {
         nickname = "Anna";
         password = "anna_password";
 
-        final UserDTO currentUserDTO = userService.signUp(new SignUpDTO(nickname, password, password));
-        final SecurityTokenDTO currentTokenDTO = userService.login(new LoginDTO(nickname, password));
-        final User actualUser = userService.getUser(currentTokenDTO.getUserId());
+        final UserDTO actualUserDTO = userService.signUp(new SignUpDTO(nickname, password, password));
+        final SecurityTokenDTO actualTokenDTO = userService.login(new LoginDTO(nickname, password));
+        final UserDTO actualUser = userService.findUser(new UserIdDTO(actualTokenDTO.getUserId()));
 
         assertEquals("User ID after registration and user ID after login are difference ,",
-                currentUserDTO.getUserId(), currentTokenDTO.getUserId().getValue());
+                actualUserDTO.getId(), actualTokenDTO.getUserId());
         assertEquals("User with current nickname is not login",
                 nickname, actualUser.getNickname());
-        assertEquals("User with current password is not login",
-                password, actualUser.getPassword());
-
     }
 
     @Test
@@ -143,7 +135,7 @@ public class UserServiceShould {
 
     @Test
     public void loginWithWrongPasswordFail() throws SignUpException {
-        nickname = "Mike";
+        nickname = "John";
         password = "you_shall_not_pass";
 
         userService.signUp(new SignUpDTO(nickname, password, password));
@@ -186,11 +178,11 @@ public class UserServiceShould {
         }
 
         final Set<UserId> userIds = new HashSet<>();
-        final Set<SecurityToken> tokens = new HashSet<>();
+        final Set<TokenId> tokens = new HashSet<>();
 
         for (Future<SecurityTokenDTO> future : results) {
-            userIds.add(future.get().getUserId());
-            tokens.add(future.get().getId());
+            userIds.add(new UserId(future.get().getUserId()));
+            tokens.add(new TokenId(future.get().getToken()));
         }
 
         if (userIds.size() != count) {

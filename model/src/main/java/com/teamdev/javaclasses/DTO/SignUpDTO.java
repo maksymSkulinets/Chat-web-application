@@ -1,4 +1,4 @@
-package com.teamdev.javaclasses.DTO;
+package com.teamdev.javaclasses.dto;
 
 /**
  * Data transfer object for sign up personal information.
