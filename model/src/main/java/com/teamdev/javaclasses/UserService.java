@@ -1,6 +1,7 @@
 package com.teamdev.javaclasses;
 
 import com.teamdev.javaclasses.dto.*;
+import com.teamdev.javaclasses.dto.UserIdDTO;
 
 /**
  * User service public API.
@@ -33,9 +34,9 @@ public interface UserService {
      */
     UserDTO findUser(UserIdDTO userId);
 
-    UserIdDTO findUserId(TokenIdDTO token);
+    UserDTO findUserId(TokenIdDTO token);
 
-    void deleteUser(UserIdDTO id);
+    void deleteUser(UserIdDTO userId);
 
     void logout(TokenIdDTO token);
 

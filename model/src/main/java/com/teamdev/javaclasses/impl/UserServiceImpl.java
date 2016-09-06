@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
             log.info("User login  with id: " + currentUserId.getValue() + "is successful.");
         }
 
-        return new SecurityTokenDTO(currentUserToken.getId().getValue(),currentUserToken.getUserId().getValue());
+        return new SecurityTokenDTO(currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
     }
 
 
@@ -132,9 +132,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserIdDTO findUserId(TokenIdDTO token) {
+    public UserDTO findUserId(TokenIdDTO token) {
         final Token userToken = tokenRepository.find(new TokenId(token.getId()));
-        return new UserIdDTO(userToken.getUserId().getValue());
+        final User user = userRepository.find(userToken.getUserId());
+        return new UserDTO(user.getNickname(), userToken.getUserId().getValue());
     }
 
     @Override

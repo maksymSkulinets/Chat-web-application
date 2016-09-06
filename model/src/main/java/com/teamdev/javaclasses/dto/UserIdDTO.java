@@ -18,8 +18,9 @@ public class UserIdDTO {
 
         UserIdDTO userIdDTO = (UserIdDTO) o;
 
-        return id != null ? id.equals(userIdDTO.id) : userIdDTO.id == null;
+        if (id != null ? !id.equals(userIdDTO.id) : userIdDTO.id != null) return false;
 
+        return true;
     }
 
     @Override
