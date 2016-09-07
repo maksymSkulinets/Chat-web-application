@@ -177,12 +177,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UserIdDto userId) {
         final User user = userRepository.remove(new UserId(userId.getId()));
-        /*TODO also delete owner chats, chats membership*/
+
+        if (user == null) {
+            return;
+        }
+
         TokenId tokenByUserId = tokenRepository.findTokenId(user.getId());
 
-        if (tokenByUserId != null) {
-            tokenRepository.remove(tokenByUserId);
+        if (tokenByUserId == null) {
+            return;
         }
+
+        tokenRepository.remove(tokenByUserId);
+
+        /*TODO also delete owner chats, chats membership*/
 
         if (log.isInfoEnabled()) {
             log.info("Delete user entity with id:" + userId);
@@ -191,7 +199,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void logout(TokenIdDto token) {
-
+        /*TODO test logout user*/
         final Token userToken = tokenRepository.remove(new TokenId(token.getId()));
 
         if (log.isInfoEnabled()) {
