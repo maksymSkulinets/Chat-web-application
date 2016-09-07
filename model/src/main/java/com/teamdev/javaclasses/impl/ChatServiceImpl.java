@@ -8,7 +8,7 @@ import com.teamdev.javaclasses.dto.MemberChatDto;
 import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
-import com.teamdev.javaclasses.repository.ChatRepository;
+import com.teamdev.javaclasses.repository.impl.ChatRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

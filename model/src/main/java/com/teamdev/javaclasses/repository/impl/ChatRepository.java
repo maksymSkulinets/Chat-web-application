@@ -1,7 +1,8 @@
-package com.teamdev.javaclasses.repository;
+package com.teamdev.javaclasses.repository.impl;
 
 import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.Chat;
+import com.teamdev.javaclasses.repository.InMemoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
