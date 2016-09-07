@@ -2,9 +2,9 @@ package com.teamdev.javaclasses.impl;
 
 import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.dto.ChatCreationDto;
+import com.teamdev.javaclasses.dto.MessageDto;
 import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.dto.MemberChatDto;
-import com.teamdev.javaclasses.dto.MessageDTO;
 import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
@@ -115,7 +115,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void sendMessage(MessageDTO messageDto) throws MessageException {
+    public void sendMessage(MessageDto messageDto) throws MessageException {
         final Chat chat = chatRepository.find(messageDto.getChatId());
 
         final List<UserId> chatMembers = chat.getMembers();

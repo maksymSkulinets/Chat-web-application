@@ -1,9 +1,9 @@
 package com.teamdev.javaclasses.dto;
 
-public class TokenIdDTO {
+public class TokenIdDto {
     private Long id;
 
-    public TokenIdDTO(Long id) {
+    public TokenIdDto(Long id) {
         this.id = id;
     }
 
@@ -16,7 +16,7 @@ public class TokenIdDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TokenIdDTO that = (TokenIdDTO) o;
+        TokenIdDto that = (TokenIdDto) o;
 
         return id != null ? id.equals(that.id) : that.id == null;
 

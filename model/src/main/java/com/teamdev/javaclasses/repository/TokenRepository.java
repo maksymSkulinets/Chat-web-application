@@ -1,8 +1,6 @@
 package com.teamdev.javaclasses.repository;
 
-import com.teamdev.javaclasses.dto.TokenDTO;
 import com.teamdev.javaclasses.entities.Token;
-import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import org.slf4j.Logger;
@@ -11,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 
 /**
- * Implementation {@link InMemoryRepository} for TokenDTO entity keeping.
+ * Implementation {@link InMemoryRepository} for TokenDto entity keeping.
  */
 public class TokenRepository extends InMemoryRepository<Token, TokenId> {
     private static TokenRepository tokenRepository = TokenRepository.getInstance();

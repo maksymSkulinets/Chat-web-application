@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses;
 
 import com.teamdev.javaclasses.dto.*;
-import com.teamdev.javaclasses.dto.UserIdDTO;
+import com.teamdev.javaclasses.dto.UserIdDto;
 
 /**
  * User service public API.
@@ -15,16 +15,16 @@ public interface UserService {
      * @return unique user id and unique nickname
      * @throws SignUpException if sign up fail
      */
-    UserDTO signUp(SignUpDTO signUpData) throws SignUpException;
+    UserDto signUp(SignUpDto signUpData) throws SignUpException;
 
     /**
      * Login already sign up users.
      *
      * @param loginData client login data
-     * @return TokenDTO for access
+     * @return TokenDto for access
      * @throws LoginException if login fail
      */
-    TokenDTO login(LoginDTO loginData) throws LoginException;
+    TokenDto login(LoginDto loginData) throws LoginException;
 
     /**
      * Get user.
@@ -32,12 +32,12 @@ public interface UserService {
      * @param userId user id
      * @return user.
      */
-    UserDTO findUser(UserIdDTO userId);
+    UserDto findUser(UserIdDto userId);
 
-    UserDTO findUser(TokenIdDTO token);
+    UserDto findUser(TokenIdDto token);
 
-    void deleteUser(UserIdDTO userId);
+    void deleteUser(UserIdDto userId);
 
-    void logout(TokenIdDTO token);
+    void logout(TokenIdDto token);
 
 }

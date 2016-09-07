@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO signUp(SignUpDTO signUpData) throws SignUpException {
+    public UserDto signUp(SignUpDto signUpData) throws SignUpException {
         if (log.isInfoEnabled()) {
             log.info("Attempt to sign up.");
         }
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         final User currentUser = new User(new UserName(trimmedNickname), new Password(password));
         userRepository.add(currentUser);
 
-        final UserDTO result = new UserDTO(currentUser.getNickname().getName(), currentUser.getId().getValue());
+        final UserDto result = new UserDto(currentUser.getNickname().getName(), currentUser.getId().getValue());
 
         if (log.isInfoEnabled()) {
             log.info("User sign up with nickname: " + currentUser.getNickname() + " is successful.");
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDTO login(LoginDTO loginData) throws LoginException {
+    public TokenDto login(LoginDto loginData) throws LoginException {
         if (log.isInfoEnabled()) {
             log.info("Attempt to login.");
         }
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
         final Token currentUserToken = new Token(userByNickname.getId());
         tokenRepository.add(currentUserToken);
 
-        final TokenDTO result = new TokenDTO(
+        final TokenDto result = new TokenDto(
                 currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
 
         if (log.isInfoEnabled()) {
@@ -143,20 +143,20 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDTO findUser(UserIdDTO userId) {
+    public UserDto findUser(UserIdDto userId) {
         final User user = userRepository.find(new UserId(userId.getId()));
-        return new UserDTO(user.getNickname().getName(), user.getId().getValue());
+        return new UserDto(user.getNickname().getName(), user.getId().getValue());
     }
 
     @Override
-    public UserDTO findUser(TokenIdDTO token) {
+    public UserDto findUser(TokenIdDto token) {
         final Token userToken = tokenRepository.find(new TokenId(token.getId()));
         final User userByToken = userRepository.find(userToken.getUserId());
-        return new UserDTO(userByToken.getNickname().getName(), userToken.getUserId().getValue());
+        return new UserDto(userByToken.getNickname().getName(), userToken.getUserId().getValue());
     }
 
     @Override
-    public void deleteUser(UserIdDTO userId) {
+    public void deleteUser(UserIdDto userId) {
         final User user = userRepository.remove(new UserId(userId.getId()));
         /*TODO also delete owner chats, chats membership*/
         TokenId tokenByUserId = tokenRepository.findTokenId(user.getId());
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void logout(TokenIdDTO token) {
+    public void logout(TokenIdDto token) {
 
         final Token userToken = tokenRepository.remove(new TokenId(token.getId()));
 
