@@ -4,8 +4,6 @@ import com.teamdev.javaclasses.entities.Token;
 import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.InMemoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
@@ -14,7 +12,6 @@ import java.util.Collection;
  */
 public class TokenRepository extends InMemoryRepository<Token, TokenId> {
     private static TokenRepository tokenRepository = TokenRepository.getInstance();
-    private final Logger log = LoggerFactory.getLogger(TokenRepository.class);
 
     private TokenRepository() {
     }
@@ -29,9 +26,6 @@ public class TokenRepository extends InMemoryRepository<Token, TokenId> {
 
     @Override
     public TokenId getNextId() {
-        if (log.isDebugEnabled()) {
-            log.debug("Security token produce");
-        }
         return new TokenId(System.nanoTime());
     }
 

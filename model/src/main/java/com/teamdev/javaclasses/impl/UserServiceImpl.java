@@ -44,38 +44,44 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto signUp(SignUpDto signUpData) throws SignUpException {
-        if (log.isInfoEnabled()) {
-            log.info("Attempt to sign up.");
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("nickname: " + signUpData.getNickname() + lineSeparator +
-                    "password: " + signUpData.getPassword() + lineSeparator +
-                    "verify password: " + signUpData.getVerifyPassword());
 
+        checkNotNull(signUpData.getNickname());
+        checkNotNull(signUpData.getPassword());
+        checkNotNull(signUpData.getVerifyPassword());
+
+        if (log.isInfoEnabled()) {
+            log.info("Sign up attempting.");
         }
 
         String trimmedNickname = signUpData.getNickname().trim();
         String password = signUpData.getPassword();
         String verifyPassword = signUpData.getVerifyPassword();
 
-        checkNotNull(trimmedNickname);
-        checkNotNull(password);
-        checkNotNull(verifyPassword);
+        final String failLogTemplate = "User with nickname: " + trimmedNickname +
+                " registration failed." + lineSeparator +
+                "Cause: ";
+
+        if (log.isDebugEnabled()) {
+            log.debug("Sign up attributes:" + lineSeparator +
+                    "nickname: " + trimmedNickname + lineSeparator +
+                    "password: " + password + lineSeparator +
+                    "verify password: " + verifyPassword);
+        }
 
         if (trimmedNickname.isEmpty() || password.isEmpty() || verifyPassword.isEmpty()) {
-            log.warn(EMPTY_INPUT.getMessage());
+            log.warn(failLogTemplate + EMPTY_INPUT.getMessage());
             throw new SignUpException(EMPTY_INPUT);
         }
 
         if (!password.equals(verifyPassword)) {
-            log.warn(PASSWORDS_NOT_MATCH.getMessage());
+            log.warn(failLogTemplate + PASSWORDS_NOT_MATCH.getMessage());
             throw new SignUpException(PASSWORDS_NOT_MATCH);
         }
 
         final User userByNickname = userRepository.getUser(trimmedNickname);
 
         if (userByNickname != null) {
-            log.warn(EXIST_USER.getMessage());
+            log.warn(failLogTemplate + EXIST_USER.getMessage());
             throw new SignUpException(EXIST_USER);
         }
 
@@ -84,8 +90,12 @@ public class UserServiceImpl implements UserService {
 
         final UserDto result = new UserDto(currentUser.getNickname().getName(), currentUser.getId().getValue());
 
+        if (log.isDebugEnabled()) {
+            log.debug("User: " + trimmedNickname + " id: " + result.getId());
+        }
+
         if (log.isInfoEnabled()) {
-            log.info("User sign up with nickname: " + currentUser.getNickname() + " is successful.");
+            log.info("User with nickname: " + trimmedNickname + " successfully registered.");
         }
 
         return result;
@@ -93,23 +103,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenDto login(LoginDto loginData) throws LoginException {
-        if (log.isInfoEnabled()) {
-            log.info("Attempt to login.");
-        }
 
-        if (log.isDebugEnabled()) {
-            log.debug("nickname: " + loginData.getNickname() + lineSeparator +
-                    "password: " + loginData.getPassword() + lineSeparator);
+        checkNotNull(loginData.getNickname());
+        checkNotNull(loginData.getPassword());
+
+        if (log.isInfoEnabled()) {
+            log.info("Login attempting.");
         }
 
         final String trimmedNickname = loginData.getNickname().trim();
         final String password = loginData.getPassword();
 
-        checkNotNull(trimmedNickname);
-        checkNotNull(password);
+        final String failLogTemplate = "User with nickname: " + trimmedNickname +
+                " login failed." + lineSeparator +
+                "Cause: ";
+
+        if (log.isDebugEnabled()) {
+            log.debug("Login attributes:" + lineSeparator +
+                    "nickname: " + trimmedNickname + lineSeparator +
+                    "password: " + password);
+        }
 
         if (trimmedNickname.isEmpty() || password.isEmpty()) {
-            log.warn(EMPTY_INPUT.getMessage());
+            log.warn(failLogTemplate + EMPTY_INPUT.getMessage());
             throw new LoginException(EMPTY_INPUT);
         }
 
@@ -117,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
         if (userByNickname == null) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
-            log.warn("Cause: User with nickname: " + trimmedNickname + " - not registered yet.");
+            log.warn(failLogTemplate + NON_SIGN_UP_USER.getMessage());
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
@@ -125,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
         if (!password.equals(existUserPassword)) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
-            log.warn("Cause: User with nickname: " + trimmedNickname + " - wrong password input.");
+            log.warn(failLogTemplate + NON_SIGN_UP_USER.getMessage());
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
@@ -136,8 +152,12 @@ public class UserServiceImpl implements UserService {
         final TokenDto result = new TokenDto(
                 currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
 
+        if (log.isDebugEnabled()) {
+            log.debug("User: " + trimmedNickname + " token: " + result.getToken());
+        }
+
         if (log.isInfoEnabled()) {
-            log.info("User login  with id: " + result.getUserId() + " is successful.");
+            log.info("User with nickname: " + trimmedNickname + " successfully logged.");
         }
 
         return result;
@@ -183,7 +203,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (log.isInfoEnabled()) {
-            log.info("Delete user entity with id:" + user.getId().getValue());
+            log.info("Delete user entity with id: " + user.getId().getValue());
         }
 
         TokenId tokenByUserId = tokenRepository.findTokenId(user.getId());
@@ -195,7 +215,7 @@ public class UserServiceImpl implements UserService {
         tokenRepository.remove(tokenByUserId);
 
         if (log.isInfoEnabled()) {
-            log.info("Delete token entity with user id:" + user.getId().getValue());
+            log.info("Delete token entity with user id: " + user.getId().getValue());
         }
 
         /*TODO also delete owner chats, chats membership*/
@@ -208,7 +228,7 @@ public class UserServiceImpl implements UserService {
         final Token userToken = tokenRepository.remove(new TokenId(token.getId()));
 
         if (log.isInfoEnabled()) {
-            log.info("Logged out user with id:" + userToken.getUserId());
+            log.info("Logged out user with id: " + userToken.getUserId());
         }
 
     }

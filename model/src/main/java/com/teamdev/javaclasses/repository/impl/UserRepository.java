@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class UserRepository extends InMemoryRepository<User, UserId> {
     private static UserRepository userRepository = UserRepository.getInstance();
-    private final Logger log = LoggerFactory.getLogger(UserRepository.class);
     private final AtomicLong idCounter = new AtomicLong(0);
 
     private UserRepository() {
@@ -29,12 +28,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
 
     @Override
     public UserId getNextId() {
-
-        final UserId userId = new UserId(idCounter.getAndIncrement());
-        if (log.isDebugEnabled()) {
-            log.debug("User idCounter with value: " + userId.getValue() + " produce.");
-        }
-        return userId;
+        return new UserId(idCounter.getAndIncrement());
     }
 
     public User getUser(String nickname) {
