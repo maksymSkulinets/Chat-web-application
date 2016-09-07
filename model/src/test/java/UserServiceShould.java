@@ -153,9 +153,12 @@ public class UserServiceShould {
         userService.signUp(new SignUpDto(nickname, password, password));
         final TokenDto userToken = userService.login(new LoginDto(nickname, password));
         final Optional<UserDto> user = userService.findUser(new TokenIdDto(userToken.getToken()));
-        assertTrue("Current user was not created.", user.isPresent());
+        assertTrue("Current user is not keep in repository.", user.isPresent());
+
         userService.deleteUser(new UserIdDto(userToken.getUserId()));
-        /*TODO delete chats ownership, membership, token also*/
+        final Optional<UserDto> notExistUser = userService.findUser(new TokenIdDto(userToken.getToken()));
+        assertFalse("Current user keep in repository but was deleted.", notExistUser.isPresent());
+        System.out.println(notExistUser.isPresent());
     }
 
 
