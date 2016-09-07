@@ -16,6 +16,8 @@ import com.teamdev.javaclasses.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.teamdev.javaclasses.UserServiceFailCases.*;
 
@@ -143,16 +145,33 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDto findUser(UserIdDto userId) {
+    public Optional<UserDto> findUser(UserIdDto userId) {
         final User user = userRepository.find(new UserId(userId.getId()));
-        return new UserDto(user.getNickname().getName(), user.getId().getValue());
+
+        if (user == null) {
+            return Optional.empty();
+        }
+
+        UserDto result = new UserDto(user.getNickname().getName(), user.getId().getValue());
+        return Optional.of(result);
     }
 
     @Override
-    public UserDto findUser(TokenIdDto token) {
+    public Optional<UserDto> findUser(TokenIdDto token) {
         final Token userToken = tokenRepository.find(new TokenId(token.getId()));
+
+        if (userToken == null) {
+            return Optional.empty();
+        }
+
         final User userByToken = userRepository.find(userToken.getUserId());
-        return new UserDto(userByToken.getNickname().getName(), userToken.getUserId().getValue());
+
+        if (userByToken == null) {
+            return Optional.empty();
+        }
+
+        final UserDto result = new UserDto(userByToken.getNickname().getName(), userToken.getUserId().getValue());
+        return Optional.of(result);
     }
 
     @Override
@@ -160,7 +179,11 @@ public class UserServiceImpl implements UserService {
         final User user = userRepository.remove(new UserId(userId.getId()));
         /*TODO also delete owner chats, chats membership*/
         TokenId tokenByUserId = tokenRepository.findTokenId(user.getId());
-        tokenRepository.remove(tokenByUserId);
+
+        if (tokenByUserId != null) {
+            tokenRepository.remove(tokenByUserId);
+        }
+
         if (log.isInfoEnabled()) {
             log.info("Delete user entity with id:" + userId);
         }

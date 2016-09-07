@@ -1,40 +1,38 @@
-import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.UserService;
-import com.teamdev.javaclasses.dto.UserIdDto;
+import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.impl.UserServiceImpl;
 import org.junit.Test;
 
-import java.util.concurrent.*;
+import java.util.Optional;
+import java.util.concurrent.Callable;
 
 import static com.teamdev.javaclasses.UserServiceFailCases.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class UserServiceShould {
 
     private final UserService userService = UserServiceImpl.getInstance();
     private String nickname;
     private String password;
-    private Callable<TokenDto> securityTokenDTOCallable;
 
     @Test
     public void signUpUser() throws SignUpException {
         nickname = "Luk";
         password = "qwerty";
 
-        final UserDto expectedUser = userService
+        final UserDto user = userService
                 .signUp(new SignUpDto(nickname, password, password));
 
-        final UserDto actualUser  = userService.findUser(
-                new UserIdDto(expectedUser.getId()));
+        final Optional<UserDto> userById = userService.findUser(
+                new UserIdDto(user.getId()));
 
-        assertEquals("User with current nickname is not registered",
-                nickname, actualUser.getNickname());
+        assertTrue("Current user is not keep in repository.",userById.isPresent());
 
-        assertEquals("Id keep in server storage and id which return are different",
-                actualUser.getId(), expectedUser.getId());
+        assertEquals("Nickname of registered user is not equal expected.",
+                nickname, userById.get().getNickname());
+
     }
 
 
@@ -86,12 +84,15 @@ public class UserServiceShould {
 
         final UserDto actualUserDto = userService.signUp(new SignUpDto(nickname, password, password));
         final TokenDto actualTokenDto = userService.login(new LoginDto(nickname, password));
-        final UserDto actualUser = userService.findUser(new UserIdDto(actualTokenDto.getUserId()));
+        final Optional<UserDto> actualUser = userService.findUser(new UserIdDto(actualTokenDto.getUserId()));
+
+        assertTrue("Current user is not keep in repository.",actualUser.isPresent());
 
         assertEquals("User ID after registration and user ID after login are difference ,",
                 actualUserDto.getId(), actualTokenDto.getUserId());
+
         assertEquals("User with current nickname is not login",
-                nickname, actualUser.getNickname());
+                nickname, actualUser.get().getNickname());
     }
 
     @Test
@@ -142,6 +143,19 @@ public class UserServiceShould {
                     NON_SIGN_UP_USER.getMessage(), e.getMessage());
 
         }
+    }
+
+    @Test
+    public void deleteUser() throws SignUpException, LoginException {
+        nickname = "Elizabet";
+        password = "elizabet_password";
+
+        userService.signUp(new SignUpDto(nickname, password, password));
+        final TokenDto userToken = userService.login(new LoginDto(nickname, password));
+        final Optional<UserDto> user = userService.findUser(new TokenIdDto(userToken.getToken()));
+        assertTrue("Current user was not created.", user.isPresent());
+        userService.deleteUser(new UserIdDto(userToken.getUserId()));
+        /*TODO delete chats ownership, membership, token also*/
     }
 
 
