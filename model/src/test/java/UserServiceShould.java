@@ -13,17 +13,14 @@ import static org.junit.Assert.*;
 public class UserServiceShould {
 
     private final UserService userService = UserServiceImpl.getInstance();
-    private String nickname;
-    private String password;
+    private String nickname = "Darth_Wader";
+    private String password = "Luk,i_am_your_father";
 
     @Test
     public void signUpUser() throws SignUpException {
-        nickname = "Luk";
-        password = "qwerty";
 
         final UserDto user = userService
                 .signUp(new SignUpDto(nickname, password, password));
-
         final Optional<UserDto> userById = userService.findUser(
                 new UserIdDto(user.getId()));
 
@@ -32,15 +29,14 @@ public class UserServiceShould {
         assertEquals("Nickname of registered user is not equal expected.",
                 nickname, userById.get().getNickname());
 
+        userService.deleteUser(new UserIdDto(userById.get().getId()));
     }
 
 
     @Test
     public void failInDuplicateUserSignUp() throws SignUpException {
-        nickname = "Bill";
-        password = "just_young_alcoholic";
 
-        userService.signUp(new SignUpDto(nickname, password, password));
+        final UserDto user = userService.signUp(new SignUpDto(nickname, password, password));
 
         try {
             userService.signUp(new SignUpDto(nickname, password, password));
@@ -48,15 +44,16 @@ public class UserServiceShould {
         } catch (SignUpException e) {
             assertEquals("Sign up fail messages are not match", EXIST_USER.getMessage(), e.getMessage());
         }
+
+        userService.deleteUser(new UserIdDto(user.getId()));
+
     }
 
     @Test
     public void passwordsNonMatchingSignUpFail() {
-        nickname = "DartWader";
-        password = "Luk_i_am_you_father!";
 
         try {
-            userService.signUp(new SignUpDto(nickname, password, password + "NO!!!"));
+            userService.signUp(new SignUpDto(nickname, password,"NOT_MATCH"));
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
             assertEquals("Sign up fail messages are not match", PASSWORDS_NOT_MATCH.getMessage(), e.getMessage());
@@ -65,11 +62,9 @@ public class UserServiceShould {
 
     @Test
     public void emptyInputSignUpFail() {
-        nickname = "unknown";
-        password = "";
 
         try {
-            userService.signUp(new SignUpDto(nickname, password, password));
+            userService.signUp(new SignUpDto(nickname, "", password));
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
             assertEquals("Sign up with not filled input", EMPTY_INPUT.getMessage(), e.getMessage());
@@ -78,48 +73,39 @@ public class UserServiceShould {
 
     @Test
     public void loginUser() throws SignUpException, LoginException {
-        nickname = "Anna";
-        password = "anna_password";
 
-        final UserDto actualUserDto = userService.signUp(new SignUpDto(nickname, password, password));
-        final TokenDto actualTokenDto = userService.login(new LoginDto(nickname, password));
-        final Optional<UserDto> actualUser = userService.findUser(new UserIdDto(actualTokenDto.getUserId()));
+        final UserDto user = userService.signUp(new SignUpDto(nickname, password, password));
+        final TokenDto userToken = userService.login(new LoginDto(nickname, password));
+        final Optional<UserDto> userByToken = userService.findUser(new UserIdDto(userToken.getUserId()));
 
-        assertTrue("Current user is not keep in repository.", actualUser.isPresent());
+        assertTrue("User token is not keep in repository but was logged.", userByToken.isPresent());
 
-        assertEquals("User ID after registration and user ID after login are difference ,",
-                actualUserDto.getId(), actualTokenDto.getUserId());
+        assertEquals("User with current nickname is not logged.",
+                nickname, userByToken.get().getNickname());
 
-        assertEquals("User with current nickname is not login",
-                nickname, actualUser.get().getNickname());
+        userService.deleteUser(new UserIdDto(user.getId()));
     }
 
     @Test
     public void emptyInputLoginFail() throws SignUpException, LoginException {
-        nickname = "Peter";
-        password = "piece_of_text";
 
-        final SignUpDto signUpData = new SignUpDto(nickname, password, password);
-        final LoginDto loginData = new LoginDto("", password);
+        final UserDto user = userService.signUp(new SignUpDto(nickname, password, password));
 
-        userService.signUp(signUpData);
         try {
-            userService.login(loginData);
+            userService.login(new LoginDto("", password));
             fail("LoginException was not thrown");
         } catch (LoginException e) {
             assertEquals("Sign up fail messages are not match", EMPTY_INPUT.getMessage(), e.getMessage());
         }
+
+        userService.deleteUser(new UserIdDto(user.getId()));
     }
 
     @Test
     public void nonSignUpUserLoginFail() throws SignUpException {
-        nickname = "Joan";
-        password = "i_am_not_sign_up_yet";
-
-        final LoginDto loginData = new LoginDto(nickname, password);
 
         try {
-            userService.login(loginData);
+            userService.login(new LoginDto(nickname, password));
             fail("LoginException was not thrown");
         } catch (LoginException e) {
             assertEquals("Login fail messages are not match",
@@ -129,25 +115,22 @@ public class UserServiceShould {
 
     @Test
     public void loginWithWrongPasswordFail() throws SignUpException {
-        nickname = "John";
-        password = "you_shall_not_pass";
 
-        userService.signUp(new SignUpDto(nickname, password, password));
+        final UserDto user = userService.signUp(new SignUpDto(nickname, password, password));
 
         try {
-            userService.login(new LoginDto(nickname, password + "_WRONG!"));
+            userService.login(new LoginDto(nickname, "_WRONG_PASS"));
             fail("LoginException was not thrown");
         } catch (LoginException e) {
             assertEquals("User with non correct password was login",
                     NON_SIGN_UP_USER.getMessage(), e.getMessage());
-
         }
+
+        userService.deleteUser(new UserIdDto(user.getId()));
     }
 
     @Test
     public void deleteUser() throws SignUpException, LoginException {
-        nickname = "Elizabet";
-        password = "elizabet_password";
 
         userService.signUp(new SignUpDto(nickname, password, password));
         final TokenDto userToken = userService.login(new LoginDto(nickname, password));
@@ -161,8 +144,6 @@ public class UserServiceShould {
 
     @Test
     public void logoutUser() throws SignUpException, LoginException {
-        nickname = "Joan";
-        password = "joan_password";
 
         userService.signUp(new SignUpDto(nickname, password, password));
         final TokenDto userToken = userService.login(new LoginDto(nickname, password));
@@ -172,5 +153,7 @@ public class UserServiceShould {
         userService.logout(new TokenIdDto(userToken.getToken()));
         final Optional<UserDto> logoutUser = userService.findUser(new TokenIdDto(userToken.getToken()));
         assertFalse("Current user token keep in repository but user was logout.", logoutUser.isPresent());
+
+        userService.deleteUser(new UserIdDto(userToken.getUserId()));
     }
 }

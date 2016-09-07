@@ -182,6 +182,10 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
+        if (log.isInfoEnabled()) {
+            log.info("Delete user entity with id:" + user.getId().getValue());
+        }
+
         TokenId tokenByUserId = tokenRepository.findTokenId(user.getId());
 
         if (tokenByUserId == null) {
@@ -190,11 +194,12 @@ public class UserServiceImpl implements UserService {
 
         tokenRepository.remove(tokenByUserId);
 
+        if (log.isInfoEnabled()) {
+            log.info("Delete token entity with user id:" + user.getId().getValue());
+        }
+
         /*TODO also delete owner chats, chats membership*/
 
-        if (log.isInfoEnabled()) {
-            log.info("Delete user entity with id:" + userId);
-        }
     }
 
     @Override
