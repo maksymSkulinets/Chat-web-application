@@ -6,9 +6,9 @@ import com.teamdev.javaclasses.UserService;
 import com.teamdev.javaclasses.UserServiceFailCases;
 import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Token;
-import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.tinyTypes.Password;
+import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserName;
 import com.teamdev.javaclasses.repository.TokenRepository;
@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
             throw new SignUpException(PASSWORDS_NOT_MATCH);
         }
 
-        final User user = userRepository.getUser(trimmedNickname);
+        final User userByNickname = userRepository.getUser(trimmedNickname);
 
-        if (user != null) {
+        if (userByNickname != null) {
             log.warn(EXIST_USER.getMessage());
             throw new SignUpException(EXIST_USER);
         }
@@ -111,15 +111,15 @@ public class UserServiceImpl implements UserService {
             throw new LoginException(EMPTY_INPUT);
         }
 
-        final User currentUser = userRepository.getUser(trimmedNickname);
+        final User userByNickname = userRepository.getUser(trimmedNickname);
 
-        if (currentUser == null) {
+        if (userByNickname == null) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
             log.warn("Cause: User with nickname: " + trimmedNickname + " - not registered yet.");
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
-        final String existUserPassword = currentUser.getPassword().getPassword();
+        final String existUserPassword = userByNickname.getPassword().getPassword();
 
         if (!password.equals(existUserPassword)) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
@@ -128,14 +128,17 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        final Token currentUserToken = new Token(currentUser.getId());
+        final Token currentUserToken = new Token(userByNickname.getId());
         tokenRepository.add(currentUserToken);
 
+        final TokenDTO result = new TokenDTO(
+                currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
+
         if (log.isInfoEnabled()) {
-            log.info("User login  with id: " + currentUser.getId().getValue() + " is successful.");
+            log.info("User login  with id: " + result.getUserId() + " is successful.");
         }
 
-        return new TokenDTO(currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
+        return result;
     }
 
 
@@ -148,17 +151,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUser(TokenIdDTO token) {
         final Token userToken = tokenRepository.find(new TokenId(token.getId()));
-        final User user = userRepository.find(userToken.getUserId());
-        return new UserDTO(user.getNickname().getName(), userToken.getUserId().getValue());
+        final User userByToken = userRepository.find(userToken.getUserId());
+        return new UserDTO(userByToken.getNickname().getName(), userToken.getUserId().getValue());
     }
 
     @Override
     public void deleteUser(UserIdDTO userId) {
-
-        userRepository.remove(new UserId(userId.getId()));
-        /*TODO also remove token*/
+        final User user = userRepository.remove(new UserId(userId.getId()));
+        /*TODO also delete owner chats, chats membership*/
+        TokenId tokenByUserId = tokenRepository.findTokenId(user.getId());
+        tokenRepository.remove(tokenByUserId);
         if (log.isInfoEnabled()) {
-            log.info("Delete user user with id:" + userId);
+            log.info("Delete user entity with id:" + userId);
         }
     }
 
