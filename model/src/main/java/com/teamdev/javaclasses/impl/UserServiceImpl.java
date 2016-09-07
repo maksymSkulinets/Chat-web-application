@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void logout(TokenIdDto token) {
-        /*TODO test logout user*/
+
         final Token userToken = tokenRepository.remove(new TokenId(token.getId()));
 
         if (log.isInfoEnabled()) {

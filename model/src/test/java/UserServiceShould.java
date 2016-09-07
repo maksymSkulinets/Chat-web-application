@@ -6,7 +6,6 @@ import com.teamdev.javaclasses.impl.UserServiceImpl;
 import org.junit.Test;
 
 import java.util.Optional;
-import java.util.concurrent.Callable;
 
 import static com.teamdev.javaclasses.UserServiceFailCases.*;
 import static org.junit.Assert.*;
@@ -28,7 +27,7 @@ public class UserServiceShould {
         final Optional<UserDto> userById = userService.findUser(
                 new UserIdDto(user.getId()));
 
-        assertTrue("Current user is not keep in repository.",userById.isPresent());
+        assertTrue("Current user is not keep in repository.", userById.isPresent());
 
         assertEquals("Nickname of registered user is not equal expected.",
                 nickname, userById.get().getNickname());
@@ -86,7 +85,7 @@ public class UserServiceShould {
         final TokenDto actualTokenDto = userService.login(new LoginDto(nickname, password));
         final Optional<UserDto> actualUser = userService.findUser(new UserIdDto(actualTokenDto.getUserId()));
 
-        assertTrue("Current user is not keep in repository.",actualUser.isPresent());
+        assertTrue("Current user is not keep in repository.", actualUser.isPresent());
 
         assertEquals("User ID after registration and user ID after login are difference ,",
                 actualUserDto.getId(), actualTokenDto.getUserId());
@@ -153,13 +152,25 @@ public class UserServiceShould {
         userService.signUp(new SignUpDto(nickname, password, password));
         final TokenDto userToken = userService.login(new LoginDto(nickname, password));
         final Optional<UserDto> user = userService.findUser(new TokenIdDto(userToken.getToken()));
-        assertTrue("Current user is not keep in repository.", user.isPresent());
+        assertTrue("Current user entity is not keep in repository.", user.isPresent());
 
         userService.deleteUser(new UserIdDto(userToken.getUserId()));
-        final Optional<UserDto> notExistUser = userService.findUser(new TokenIdDto(userToken.getToken()));
-        assertFalse("Current user keep in repository but was deleted.", notExistUser.isPresent());
-        System.out.println(notExistUser.isPresent());
+        final Optional<UserDto> deletedUser = userService.findUser(new TokenIdDto(userToken.getToken()));
+        assertFalse("Current user entity keep in repository but was deleted.", deletedUser.isPresent());
     }
 
+    @Test
+    public void logoutUser() throws SignUpException, LoginException {
+        nickname = "Joan";
+        password = "joan_password";
 
+        userService.signUp(new SignUpDto(nickname, password, password));
+        final TokenDto userToken = userService.login(new LoginDto(nickname, password));
+        final Optional<UserDto> userByToken = userService.findUser(new TokenIdDto(userToken.getToken()));
+        assertTrue("Current user entity is not keep in repository.", userByToken.isPresent());
+
+        userService.logout(new TokenIdDto(userToken.getToken()));
+        final Optional<UserDto> logoutUser = userService.findUser(new TokenIdDto(userToken.getToken()));
+        assertFalse("Current user token keep in repository but user was logout.", logoutUser.isPresent());
+    }
 }
