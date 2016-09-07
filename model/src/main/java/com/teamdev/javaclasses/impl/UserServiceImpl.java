@@ -12,7 +12,7 @@ import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserName;
 import com.teamdev.javaclasses.repository.TokenRepository;
-import com.teamdev.javaclasses.repository.UserRepository;
+import com.teamdev.javaclasses.repository.impl.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

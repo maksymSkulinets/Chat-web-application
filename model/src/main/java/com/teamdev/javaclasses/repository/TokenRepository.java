@@ -27,7 +27,7 @@ public class TokenRepository extends InMemoryRepository<Token, TokenId> {
 
 
     @Override
-    TokenId getNextId() {
+    public TokenId getNextId() {
         if (log.isDebugEnabled()) {
             log.debug("Security token produce");
         }

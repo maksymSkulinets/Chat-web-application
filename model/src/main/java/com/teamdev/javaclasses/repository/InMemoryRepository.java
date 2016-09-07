@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <TYPE>    raw type for any inheritance entity
  * @param <TYPE_ID> raw type for any inheritance entity id
  */
-abstract class InMemoryRepository<TYPE extends Entity, TYPE_ID extends EntityId> implements Repository<TYPE, TYPE_ID> {
+public abstract class InMemoryRepository<TYPE extends Entity, TYPE_ID extends EntityId> implements Repository<TYPE, TYPE_ID> {
     private Map<TYPE_ID, TYPE> storage = new ConcurrentHashMap<>();
 
     @Override
@@ -33,7 +33,7 @@ abstract class InMemoryRepository<TYPE extends Entity, TYPE_ID extends EntityId>
         return storage.values();
     }
 
-    abstract TYPE_ID getNextId();
+    public abstract TYPE_ID getNextId();
 
     @Override
     public TYPE remove(TYPE_ID id) {

@@ -1,7 +1,8 @@
-package com.teamdev.javaclasses.repository;
+package com.teamdev.javaclasses.repository.impl;
 
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+import com.teamdev.javaclasses.repository.InMemoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
     }
 
     @Override
-    UserId getNextId() {
+    public UserId getNextId() {
 
         final UserId userId = new UserId(idCounter.getAndIncrement());
         if (log.isDebugEnabled()) {

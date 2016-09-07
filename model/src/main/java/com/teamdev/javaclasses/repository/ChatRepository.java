@@ -24,7 +24,7 @@ public class ChatRepository extends InMemoryRepository<Chat, ChatId> {
     }
 
     @Override
-    ChatId getNextId() {
+    public ChatId getNextId() {
         if (log.isDebugEnabled()) {
             log.debug("Chat id produce");
         }
