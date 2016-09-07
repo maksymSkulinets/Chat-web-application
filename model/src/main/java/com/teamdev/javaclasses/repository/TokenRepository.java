@@ -2,9 +2,13 @@ package com.teamdev.javaclasses.repository;
 
 import com.teamdev.javaclasses.dto.TokenDTO;
 import com.teamdev.javaclasses.entities.Token;
+import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
+import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 /**
  * Implementation {@link InMemoryRepository} for TokenDTO entity keeping.
@@ -32,7 +36,16 @@ public class TokenRepository extends InMemoryRepository<Token, TokenId> {
         return new TokenId(System.nanoTime());
     }
 
-    public void remove(TokenDTO token) {
-        /*TODO implements*/
+    public TokenId findTokenId(UserId id) {
+        final Collection<Token> allTokens = tokenRepository.findAll();
+        TokenId tokenId = null;
+
+        for (Token current : allTokens) {
+            if (current.getUserId().equals(id)) {
+                tokenId = current.getId();
+                break;
+            }
+        }
+        return tokenId;
     }
 }
