@@ -1,8 +1,9 @@
-package com.teamdev.javaclasses.repository;
+package com.teamdev.javaclasses.repository.impl;
 
 import com.teamdev.javaclasses.entities.Token;
 import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+import com.teamdev.javaclasses.repository.InMemoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
