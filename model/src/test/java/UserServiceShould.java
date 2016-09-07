@@ -34,7 +34,7 @@ public class UserServiceShould {
 
 
     @Test
-    public void failInDuplicateUserSignUp() throws SignUpException {
+    public void duplicateUserSignUpFail() throws SignUpException {
 
         final UserDto user = userService.signUp(new SignUpDto(nickname, password, password));
 
@@ -130,7 +130,7 @@ public class UserServiceShould {
     }
 
     @Test
-    public void deleteUser() throws SignUpException, LoginException {
+    public void removeUser() throws SignUpException, LoginException {
 
         userService.signUp(new SignUpDto(nickname, password, password));
         final TokenDto userToken = userService.login(new LoginDto(nickname, password));

@@ -20,7 +20,7 @@ public class MultithreadingTest {
     private final UserService userService = UserServiceImpl.getInstance();
 
     @Test
-    public void SafeLoggingInMultithreading() throws ExecutionException, InterruptedException {
+    public void SafeLoggingInMultithreadingTest() throws ExecutionException, InterruptedException {
 
         final int count = 100;
         final ExecutorService executor = Executors.newFixedThreadPool(count);
