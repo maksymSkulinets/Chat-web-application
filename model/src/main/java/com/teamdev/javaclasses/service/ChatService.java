@@ -16,6 +16,7 @@ public interface ChatService {
      * @return chat id
      * @throws ChatCreationException throws if chat creation is fail
      */
+    /*TODO return DTO*/
     ChatId createChat(ChatCreationDto chatCreationDto) throws ChatCreationException;
 
     /**
@@ -40,6 +41,7 @@ public interface ChatService {
      * @param postMessageDto - contains user id, chat id and message
      * @throws MessageException if sending message fails
      */
+    /*TODO rename post message*/
     void sendMessage(MessageDto postMessageDto) throws MessageException;
 
     /**
@@ -49,6 +51,7 @@ public interface ChatService {
      * @return Chat dto
      */
     Chat getChat(ChatId id);
-    /*TODO change method signature return data transfer object*/
+    /*TODO change method signature  > use data transfer object*/
 
+    /*TODO add remove chat to use it in tests*/
 }

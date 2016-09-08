@@ -4,8 +4,9 @@ import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 
 public class ChatCreationDto {
 
-    private final UserId userId;
     private final String chatName;
+    /*TODO simplify user id var with raw type*/
+    private final UserId userId;
 
     public ChatCreationDto(String chatName, UserId userId) {
         this.userId = userId;

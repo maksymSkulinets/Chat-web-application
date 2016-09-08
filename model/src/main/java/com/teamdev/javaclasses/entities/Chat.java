@@ -9,6 +9,8 @@ import java.util.List;
  * Chat entity
  */
 public class Chat implements Entity {
+    /*TODO remove final vars*/
+    /*TODO for chatName var - use tiny type variable*/
     private final String chatName;
     private final UserId owner;
     private ChatId chatId;

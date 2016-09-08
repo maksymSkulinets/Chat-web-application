@@ -218,8 +218,6 @@ public class UserServiceImpl implements UserService {
             log.info("Delete token entity with user id: " + user.getId().getValue());
         }
 
-        /*TODO also delete owner chats, chats membership*/
-
     }
 
     @Override

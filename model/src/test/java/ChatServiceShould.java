@@ -18,6 +18,7 @@ public class ChatServiceShould {
     private final UserService userService = UserServiceImpl.getInstance();
     private final ChatService chatService = ChatServiceImpl.getInstance();
 
+    /*TODO move utils methods at bottom*/
     private UserDto successfulSignUp(SignUpDto signUpData) {
         UserDto result = null;
         try {
@@ -51,6 +52,8 @@ public class ChatServiceShould {
 
     @Test
     public void addNewChat() {
+        /*TODO move user attributes to global scope*/
+        /*TODO user deleteUser to clean repositories*/
         final String nickName = "Mike";
         final String password = "mike_password";
         final String chatName = "box";
