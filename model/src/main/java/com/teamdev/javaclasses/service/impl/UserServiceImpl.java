@@ -3,7 +3,7 @@ package com.teamdev.javaclasses.service.impl;
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.service.UserService;
-import com.teamdev.javaclasses.UserServiceFailCases;
+import com.teamdev.javaclasses.service.UserServiceFailCases;
 import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Token;
 import com.teamdev.javaclasses.entities.User;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.teamdev.javaclasses.UserServiceFailCases.*;
+import static com.teamdev.javaclasses.service.UserServiceFailCases.*;
 
 /**
  * Implementation {@link UserService}

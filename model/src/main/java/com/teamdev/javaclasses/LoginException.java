@@ -1,5 +1,7 @@
 package com.teamdev.javaclasses;
 
+import com.teamdev.javaclasses.service.UserServiceFailCases;
+
 /**
  * Throws if login fail.
  */

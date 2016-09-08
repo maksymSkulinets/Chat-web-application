@@ -1,4 +1,4 @@
-package com.teamdev.javaclasses;
+package com.teamdev.javaclasses.service;
 
 /**
  * User login wrong scenarios.

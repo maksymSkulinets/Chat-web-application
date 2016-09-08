@@ -10,13 +10,14 @@ import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.impl.ChatRepository;
 import com.teamdev.javaclasses.service.ChatService;
+import com.teamdev.javaclasses.service.ChatServiceFailCases;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.teamdev.javaclasses.ChatServiceFailCases.CHAT_MEMBER_ALREADY_JOIN;
-import static com.teamdev.javaclasses.ChatServiceFailCases.NOT_A_CHAT_MEMBER;
+import static com.teamdev.javaclasses.service.ChatServiceFailCases.CHAT_MEMBER_ALREADY_JOIN;
+import static com.teamdev.javaclasses.service.ChatServiceFailCases.NOT_A_CHAT_MEMBER;
 
 /**
  * Implementation of {@link ChatService}.

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.teamdev.javaclasses.UserServiceFailCases.*;
+import static com.teamdev.javaclasses.service.UserServiceFailCases.*;
 import static org.junit.Assert.*;
 
 public class UserServiceShould {
