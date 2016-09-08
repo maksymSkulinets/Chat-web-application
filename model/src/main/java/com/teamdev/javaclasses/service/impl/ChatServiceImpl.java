@@ -1,6 +1,7 @@
 package com.teamdev.javaclasses.service.impl;
 
 import com.teamdev.javaclasses.dto.ChatCreationDto;
+import com.teamdev.javaclasses.dto.ChatIdDto;
 import com.teamdev.javaclasses.dto.MessageDto;
 import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.dto.MemberChatDto;
@@ -134,6 +135,11 @@ public class ChatServiceImpl implements ChatService {
         }
 
 
+    }
+
+    @Override
+    public void removeChat(ChatIdDto id) {
+        /*TODO to implement*/
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.teamdev.javaclasses.service;
 
 import com.teamdev.javaclasses.dto.*;
-import com.teamdev.javaclasses.entities.Chat;
-import com.teamdev.javaclasses.entities.ChatId;
 
 /**
  * Public API of chat service.
@@ -13,11 +11,11 @@ public interface ChatService {
      * Create new chat.
      *
      * @param chatCreationDto contain owner userId and chat name
-     * @return chat id
+     * @return chat id data transfer object
      * @throws ChatCreationException throws if chat creation is fail
      */
-    /*TODO return DTO*/
-    ChatId createChat(ChatCreationDto chatCreationDto) throws ChatCreationException;
+
+    ChatIdDto createChat(ChatCreationDto chatCreationDto) throws ChatCreationException;
 
     /**
      * Add member to chat.
@@ -47,11 +45,10 @@ public interface ChatService {
     /**
      * Get chat by id
      *
-     * @param id - chat id
-     * @return Chat dto
+     * @param id - chat id data transfer object
+     * @return Chat data transfer object
      */
-    Chat getChat(ChatId id);
-    /*TODO change method signature  > use data transfer object*/
+    ChatDto getChat(ChatIdDto id);
 
-    /*TODO add remove chat to use it in tests*/
+    void removeChat(ChatIdDto id);
 }
