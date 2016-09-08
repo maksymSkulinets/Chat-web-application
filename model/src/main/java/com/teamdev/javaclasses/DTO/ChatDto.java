@@ -1,31 +1,28 @@
 package com.teamdev.javaclasses.dto;
 
-import com.teamdev.javaclasses.entities.ChatId;
-import com.teamdev.javaclasses.entities.Message;
-import com.teamdev.javaclasses.entities.tinyTypes.UserId;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * dto for transfer chats data.
  */
 public class ChatDto {
-    /*TODO simplify chatDTO structure with raw types*/
-    private final ChatId chatId;
+    private final Long chatId;
+    private final Long ownerId;
     private final String chatName;
-    private final UserId owner;
-    private final List<UserId> members;
-    private final List<Message> messages;
+    private List<Long> members = new ArrayList<>();
+    private List<MessageDto> messages = new ArrayList<>();
 
-    public ChatDto(List<Message> messages, List<UserId> members, UserId owner, String chatName, ChatId chatId) {
-        this.messages = messages;
-        this.members = members;
-        this.owner = owner;
-        this.chatName = chatName;
+    public ChatDto(Long chatId, Long ownerId, String chatName,
+                   List<Long> members, List<MessageDto> messages) {
         this.chatId = chatId;
+        this.ownerId = ownerId;
+        this.chatName = chatName;
+        this.members = members;
+        this.messages = messages;
     }
 
-    public ChatId getChatId() {
+    public Long getChatId() {
         return chatId;
     }
 
@@ -33,15 +30,15 @@ public class ChatDto {
         return chatName;
     }
 
-    public UserId getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public List<UserId> getMembers() {
+    public List<Long> getMembers() {
         return members;
     }
 
-    public List<Message> getMessages() {
+    public List<MessageDto> getMessages() {
         return messages;
     }
 
@@ -54,7 +51,7 @@ public class ChatDto {
 
         if (chatId != null ? !chatId.equals(chatDto.chatId) : chatDto.chatId != null) return false;
         if (chatName != null ? !chatName.equals(chatDto.chatName) : chatDto.chatName != null) return false;
-        if (owner != null ? !owner.equals(chatDto.owner) : chatDto.owner != null) return false;
+        if (ownerId != null ? !ownerId.equals(chatDto.ownerId) : chatDto.ownerId != null) return false;
         if (members != null ? !members.equals(chatDto.members) : chatDto.members != null) return false;
         return messages != null ? messages.equals(chatDto.messages) : chatDto.messages == null;
 
@@ -64,7 +61,7 @@ public class ChatDto {
     public int hashCode() {
         int result = chatId != null ? chatId.hashCode() : 0;
         result = 31 * result + (chatName != null ? chatName.hashCode() : 0);
-        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
         result = 31 * result + (members != null ? members.hashCode() : 0);
         result = 31 * result + (messages != null ? messages.hashCode() : 0);
         return result;

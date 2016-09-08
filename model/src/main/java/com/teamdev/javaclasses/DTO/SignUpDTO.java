@@ -3,12 +3,12 @@ package com.teamdev.javaclasses.dto;
 /**
  * Data transfer object for sign up personal information.
  */
-public class SignUpDTO {
-    private String nickname;
-    private String password;
-    private String verifyPassword;
+public class SignUpDto {
+    private final String nickname;
+    private final String password;
+    private final String verifyPassword;
 
-    public SignUpDTO(String nickname, String password, String verifyPassword) {
+    public SignUpDto(String nickname, String password, String verifyPassword) {
         this.nickname = nickname;
         this.password = password;
         this.verifyPassword = verifyPassword;
@@ -31,11 +31,11 @@ public class SignUpDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SignUpDTO signUpDTO = (SignUpDTO) o;
+        SignUpDto signUpDto = (SignUpDto) o;
 
-        if (nickname != null ? !nickname.equals(signUpDTO.nickname) : signUpDTO.nickname != null) return false;
-        if (password != null ? !password.equals(signUpDTO.password) : signUpDTO.password != null) return false;
-        return verifyPassword != null ? verifyPassword.equals(signUpDTO.verifyPassword) : signUpDTO.verifyPassword == null;
+        if (nickname != null ? !nickname.equals(signUpDto.nickname) : signUpDto.nickname != null) return false;
+        if (password != null ? !password.equals(signUpDto.password) : signUpDto.password != null) return false;
+        return verifyPassword != null ? verifyPassword.equals(signUpDto.verifyPassword) : signUpDto.verifyPassword == null;
 
     }
 

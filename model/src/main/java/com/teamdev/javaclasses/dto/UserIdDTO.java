@@ -1,9 +1,9 @@
 package com.teamdev.javaclasses.dto;
 
-public class UserIdDTO {
-    private Long id;
+public class UserIdDto {
+    private final Long id;
 
-    public UserIdDTO(Long id) {
+    public UserIdDto(Long id) {
         this.id = id;
     }
 
@@ -16,9 +16,9 @@ public class UserIdDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserIdDTO userIdDTO = (UserIdDTO) o;
+        UserIdDto userIdDto = (UserIdDto) o;
 
-        if (id != null ? !id.equals(userIdDTO.id) : userIdDTO.id != null) return false;
+        if (id != null ? !id.equals(userIdDto.id) : userIdDto.id != null) return false;
 
         return true;
     }

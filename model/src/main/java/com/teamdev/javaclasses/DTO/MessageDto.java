@@ -1,39 +1,20 @@
 package com.teamdev.javaclasses.dto;
 
-import com.teamdev.javaclasses.entities.ChatId;
-import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+public class MessageDto {
+    private final String authorName;
+    private final String content;
 
-/**
- * dto for post messages to chat.
- */
-public class MessageDTO {
-    /*TODO simplify MessageDTO structure with raw types*/
-    private final UserId userId;
-    private final ChatId chatId;
-    private final String message;
-    private final String nickName;
-
-    public MessageDTO(UserId userId, ChatId chatId, String message, String nickName) {
-        this.userId = userId;
-        this.chatId = chatId;
-        this.message = message;
-        this.nickName = nickName;
+    public MessageDto(String authorName, String content) {
+        this.authorName = authorName;
+        this.content = content;
     }
 
-    public UserId getUserId() {
-        return userId;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public ChatId getChatId() {
-        return chatId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getNickName() {
-        return nickName;
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -41,21 +22,17 @@ public class MessageDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MessageDTO that = (MessageDTO) o;
+        MessageDto that = (MessageDto) o;
 
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        if (chatId != null ? !chatId.equals(that.chatId) : that.chatId != null) return false;
-        if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        return nickName != null ? nickName.equals(that.nickName) : that.nickName == null;
+        if (authorName != null ? !authorName.equals(that.authorName) : that.authorName != null) return false;
+        return content != null ? content.equals(that.content) : that.content == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result + (chatId != null ? chatId.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (nickName != null ? nickName.hashCode() : 0);
+        int result = authorName != null ? authorName.hashCode() : 0;
+        result = 31 * result + (content != null ? content.hashCode() : 0);
         return result;
     }
 }

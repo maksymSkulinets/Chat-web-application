@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses.dto;
 
 public class TokenIdDto {
-    private Long id;
+    private final Long id;
 
     public TokenIdDto(Long id) {
         this.id = id;

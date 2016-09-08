@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses.dto;
 
 public class ChatIdDto {
-    private long id;
+    private final long id;
 
     public ChatIdDto(long id) {
         this.id = id;

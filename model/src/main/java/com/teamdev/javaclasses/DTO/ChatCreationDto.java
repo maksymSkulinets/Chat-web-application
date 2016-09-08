@@ -1,20 +1,20 @@
 package com.teamdev.javaclasses.dto;
 
 public class ChatCreationDto {
-    private String chatName;
-    private Long userId;
+    private final String chatName;
+    private final Long userId;
 
     public ChatCreationDto(String chatName, Long userId) {
-        this.userId = userId;
         this.chatName = chatName;
-    }
-
-    public Long getUserId() {
-        return userId;
+        this.userId = userId;
     }
 
     public String getChatName() {
         return chatName;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     @Override

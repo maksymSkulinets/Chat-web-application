@@ -5,8 +5,8 @@ package com.teamdev.javaclasses.dto;
  */
 public class TokenDto {
 
-    private Long token;
-    private Long userId;
+    private final Long token;
+    private final Long userId;
 
     public TokenDto(Long token, Long userId) {
         this.token = token;
