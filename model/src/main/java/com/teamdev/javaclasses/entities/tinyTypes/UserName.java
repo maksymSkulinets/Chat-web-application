@@ -1,14 +1,14 @@
 package com.teamdev.javaclasses.entities.tinyTypes;
 
 public class UserName {
-    private final String name;
+    private final String value;
 
-    public UserName(String name) {
-        this.name = name;
+    public UserName(String value) {
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -19,12 +19,12 @@ public class UserName {
 
         UserName userName = (UserName) o;
 
-        return name != null ? name.equals(userName.name) : userName.name == null;
+        return value != null ? value.equals(userName.value) : userName.value == null;
 
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return value != null ? value.hashCode() : 0;
     }
 }

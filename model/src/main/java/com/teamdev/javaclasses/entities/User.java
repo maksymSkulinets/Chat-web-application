@@ -8,8 +8,8 @@ import com.teamdev.javaclasses.entities.tinyTypes.UserName;
  * User entity.
  */
 public class User implements Entity<UserId> {
-    private UserName nickname;
-    private Password password;
+    private final UserName nickname;
+    private final Password password;
     private UserId id;
 
     public User(UserName nickname, Password password) {

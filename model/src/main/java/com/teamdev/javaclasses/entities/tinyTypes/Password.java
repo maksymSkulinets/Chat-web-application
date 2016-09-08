@@ -1,14 +1,14 @@
 package com.teamdev.javaclasses.entities.tinyTypes;
 
 public class Password {
-    private final String password;
+    private final String value;
 
-    public Password(String password) {
-        this.password = password;
+    public Password(String value) {
+        this.value = value;
     }
 
-    public String getPassword() {
-        return password;
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -18,12 +18,12 @@ public class Password {
 
         Password password1 = (Password) o;
 
-        return password != null ? password.equals(password1.password) : password1.password == null;
+        return value != null ? value.equals(password1.value) : password1.value == null;
 
     }
 
     @Override
     public int hashCode() {
-        return password != null ? password.hashCode() : 0;
+        return value != null ? value.hashCode() : 0;
     }
 }

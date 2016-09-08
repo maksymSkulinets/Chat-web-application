@@ -5,7 +5,7 @@ import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 
 public class Token implements Entity<TokenId> {
     private TokenId token;
-    private UserId userId;
+    private final UserId userId;
 
     public Token(UserId userId) {
         this.userId = userId;
