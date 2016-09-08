@@ -1,8 +1,5 @@
 package com.teamdev.javaclasses.service;
 
-import com.teamdev.javaclasses.ChatCreationException;
-import com.teamdev.javaclasses.MemberException;
-import com.teamdev.javaclasses.MessageException;
 import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.ChatId;

@@ -1,7 +1,5 @@
 package com.teamdev.javaclasses.service;
 
-import com.teamdev.javaclasses.LoginException;
-import com.teamdev.javaclasses.SignUpException;
 import com.teamdev.javaclasses.dto.*;
 
 import java.util.Optional;

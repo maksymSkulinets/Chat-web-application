@@ -1,4 +1,4 @@
-package com.teamdev.javaclasses;
+package com.teamdev.javaclasses.service;
 
 public class MemberException extends Exception {
     public MemberException(String message) {

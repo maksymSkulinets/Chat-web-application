@@ -1,13 +1,11 @@
-import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+import com.teamdev.javaclasses.service.*;
 import com.teamdev.javaclasses.service.impl.ChatServiceImpl;
 import com.teamdev.javaclasses.service.impl.UserServiceImpl;
-import com.teamdev.javaclasses.service.ChatService;
-import com.teamdev.javaclasses.service.UserService;
 import org.junit.Test;
 
 import java.util.List;

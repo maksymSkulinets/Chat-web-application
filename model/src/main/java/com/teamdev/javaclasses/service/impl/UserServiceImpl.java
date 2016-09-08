@@ -1,7 +1,7 @@
 package com.teamdev.javaclasses.service.impl;
 
-import com.teamdev.javaclasses.LoginException;
-import com.teamdev.javaclasses.SignUpException;
+import com.teamdev.javaclasses.service.LoginException;
+import com.teamdev.javaclasses.service.SignUpException;
 import com.teamdev.javaclasses.service.UserService;
 import com.teamdev.javaclasses.service.UserServiceFailCases;
 import com.teamdev.javaclasses.dto.*;

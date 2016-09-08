@@ -1,6 +1,4 @@
-package com.teamdev.javaclasses;
-
-import com.teamdev.javaclasses.service.UserServiceFailCases;
+package com.teamdev.javaclasses.service;
 
 /**
  * А

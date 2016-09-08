@@ -1,6 +1,5 @@
 package com.teamdev.javaclasses.service.impl;
 
-import com.teamdev.javaclasses.*;
 import com.teamdev.javaclasses.dto.ChatCreationDto;
 import com.teamdev.javaclasses.dto.MessageDto;
 import com.teamdev.javaclasses.entities.ChatId;
@@ -9,8 +8,7 @@ import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.impl.ChatRepository;
-import com.teamdev.javaclasses.service.ChatService;
-import com.teamdev.javaclasses.service.ChatServiceFailCases;
+import com.teamdev.javaclasses.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
