@@ -1,8 +1,8 @@
 import com.teamdev.javaclasses.LoginException;
 import com.teamdev.javaclasses.SignUpException;
-import com.teamdev.javaclasses.UserService;
 import com.teamdev.javaclasses.dto.*;
-import com.teamdev.javaclasses.impl.UserServiceImpl;
+import com.teamdev.javaclasses.service.UserService;
+import com.teamdev.javaclasses.service.impl.UserServiceImpl;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -53,7 +53,7 @@ public class UserServiceShould {
     public void passwordsNonMatchingSignUpFail() {
 
         try {
-            userService.signUp(new SignUpDto(nickname, password,"NOT_MATCH"));
+            userService.signUp(new SignUpDto(nickname, password, "NOT_MATCH"));
             fail("SignUpException was not thrown");
         } catch (SignUpException e) {
             assertEquals("Sign up fail messages are not match", PASSWORDS_NOT_MATCH.getMessage(), e.getMessage());
