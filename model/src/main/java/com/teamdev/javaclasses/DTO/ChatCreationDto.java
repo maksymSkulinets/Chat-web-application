@@ -1,19 +1,15 @@
 package com.teamdev.javaclasses.dto;
 
-import com.teamdev.javaclasses.entities.tinyTypes.UserId;
-
 public class ChatCreationDto {
+    private String chatName;
+    private Long userId;
 
-    private final String chatName;
-    /*TODO simplify user id var with raw type*/
-    private final UserId userId;
-
-    public ChatCreationDto(String chatName, UserId userId) {
+    public ChatCreationDto(String chatName, Long userId) {
         this.userId = userId;
         this.chatName = chatName;
     }
 
-    public UserId getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -28,17 +24,15 @@ public class ChatCreationDto {
 
         ChatCreationDto that = (ChatCreationDto) o;
 
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        return chatName != null ? chatName.equals(that.chatName) : that.chatName == null;
+        if (chatName != null ? !chatName.equals(that.chatName) : that.chatName != null) return false;
+        return userId != null ? userId.equals(that.userId) : that.userId == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result + (chatName != null ? chatName.hashCode() : 0);
+        int result = chatName != null ? chatName.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
     }
-
-
 }

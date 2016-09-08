@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * dto for transfer chats data.
  */
-class ChatDto {
+public class ChatDto {
     /*TODO simplify chatDTO structure with raw types*/
     private final ChatId chatId;
     private final String chatName;

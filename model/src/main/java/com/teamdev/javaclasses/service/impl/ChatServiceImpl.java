@@ -1,10 +1,7 @@
 package com.teamdev.javaclasses.service.impl;
 
-import com.teamdev.javaclasses.dto.ChatCreationDto;
-import com.teamdev.javaclasses.dto.ChatIdDto;
-import com.teamdev.javaclasses.dto.MessageDto;
+import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.ChatId;
-import com.teamdev.javaclasses.dto.MemberChatDto;
 import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
@@ -143,8 +140,8 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat getChat(ChatId id) {
-        return chatRepository.find(id);
+    public ChatDto getChat(ChatIdDto id) {
+        return  null;
     }
 
 }
