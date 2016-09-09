@@ -1,11 +1,13 @@
 package com.teamdev.javaclasses.repository.impl;
 
-import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.Chat;
+import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.repository.InMemoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ChatRepository extends InMemoryRepository<Chat, ChatId> {
@@ -26,9 +28,19 @@ public class ChatRepository extends InMemoryRepository<Chat, ChatId> {
 
     @Override
     public ChatId getNextId() {
-        if (log.isDebugEnabled()) {
-            log.debug("Chat id produce");
-        }
         return new ChatId(idCounter.getAndIncrement());
+    }
+
+    public Optional<Chat> getChat(String chatName) {
+        final Collection<Chat> allChats = findAll();
+        Optional<Chat> result = Optional.empty();
+
+        for (Chat current : allChats) {
+            if (current.getChatName().getValue().equals(chatName)) {
+                result = Optional.of(current);
+                break;
+            }
+        }
+        return result;
     }
 }
