@@ -1,14 +1,14 @@
 package com.teamdev.javaclasses.dto;
 
 public class ChatIdDto {
-    private final Long id;
+    private final Long value;
 
-    public ChatIdDto(Long id) {
-        this.id = id;
+    public ChatIdDto(Long value) {
+        this.value = value;
     }
 
-    public Long getId() {
-        return id;
+    public Long getValue() {
+        return value;
     }
 
     @Override
@@ -18,11 +18,11 @@ public class ChatIdDto {
 
         ChatIdDto chatIdDto = (ChatIdDto) o;
 
-        return id != null ? id.equals(chatIdDto.id) : chatIdDto.id == null;
+        return value != null ? value.equals(chatIdDto.value) : chatIdDto.value == null;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return value != null ? value.hashCode() : 0;
     }
 }

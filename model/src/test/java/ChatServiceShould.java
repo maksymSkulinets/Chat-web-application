@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.teamdev.javaclasses.service.ChatServiceFailCases.*;
@@ -40,12 +41,12 @@ public class ChatServiceShould {
         final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
         final Optional<ChatDto> chatById = chatService.findChat(chatId);
 
-        assertTrue("Current chat entity does not keep in repository.", chatById.isPresent());
+        assertTrue("User was not created.", chatById.isPresent());
 
         assertEquals("Created chat name is not equal expected.",
                 chatName, chatById.get().getChatName());
 
-        chatService.removeChat(new ChatIdDto(chatId.getId()));
+        chatService.removeChat(new ChatIdDto(chatId.getValue()));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class ChatServiceShould {
             chatService.create(new ChatCreationDto("", userId));
             fail("Chat creation exception was not thrown.");
         } catch (ChatCreationException e) {
-            assertEquals("Chat creation fail messages are not match.",
+            assertEquals("Chat creation exception messages are not match.",
                     EMPTY_CHAT_NAME.getMessage(), e.getMessage());
         }
     }
@@ -69,45 +70,79 @@ public class ChatServiceShould {
             chatService.create(new ChatCreationDto(chatName, userId));
             fail("Chat creation exception was not thrown.");
         } catch (ChatCreationException e) {
-            assertEquals("Chat creation fail message are not match.",
+            assertEquals("Chat creation exception messages are not match.",
                     NON_UNIQUE_CHAT_NAME.getMessage(), e.getMessage());
+        } finally {
+            chatService.removeChat(new ChatIdDto(chatId.getValue()));
         }
-
-        chatService.removeChat(new ChatIdDto(chatId.getId()));
     }
 
     @Test
     public void joinUserToChat() throws ChatCreationException, ChatMemberException {
 
         final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
-        chatService.joinChat(new MemberChatDto(userId, chatId.getId()));
+        chatService.joinChat(new MemberChatDto(userId, chatId.getValue()));
 
         final Optional<ChatDto> chat = chatService.findChat(chatId);
-        assertTrue("Current chat entity does not keep in repository.", chat.isPresent());
+        assertTrue("Chat was not created.", chat.isPresent());
 
         final Long chatMemberId = chat.get().getMembers().get(0);
-        assertEquals("Current user is not member of current chat.", userId, chatMemberId);
+        assertEquals("User is not member of current chat.", userId, chatMemberId);
 
-        chatService.removeChat(new ChatIdDto(chatId.getId()));
+        chatService.removeChat(new ChatIdDto(chatId.getValue()));
     }
 
     @Test
     public void failToJoinAlreadyJoinedChat() throws ChatCreationException, ChatMemberException {
 
         final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
-        chatService.joinChat(new MemberChatDto(userId, chatId.getId()));
+        chatService.joinChat(new MemberChatDto(userId, chatId.getValue()));
 
         try {
-            chatService.joinChat(new MemberChatDto(userId, chatId.getId()));
-            fail("Member exception was not thrown");
+            chatService.joinChat(new MemberChatDto(userId, chatId.getValue()));
+            fail("Chat member exception was not thrown.");
         } catch (ChatMemberException e) {
-            assertEquals("Add chat member fail message are not match",
+            assertEquals("Chat member exception messages are not match.",
                     CHAT_MEMBER_ALREADY_JOIN.getMessage(), e.getMessage());
+        } finally {
+            chatService.removeChat(new ChatIdDto(chatId.getValue()));
         }
-
-        chatService.removeChat(new ChatIdDto(chatId.getId()));
     }
 
+    @Test
+    public void leaveUserFromChat() throws ChatCreationException, ChatMemberException {
+
+        final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
+        chatService.joinChat(new MemberChatDto(userId, chatId.getValue()));
+
+        List<UserIdDto> chatMembers = chatService.findChatMembers(chatId);
+        assertEquals("User is not member of chat, but was joined.", userId, chatMembers.get(0).getId());
+
+        chatService.leaveChat(new MemberChatDto(userId, chatId.getValue()));
+        chatMembers = chatService.findChatMembers(chatId);
+        assertTrue("User did not leave chat.", chatMembers.isEmpty());
+
+        chatService.removeChat(new ChatIdDto(chatId.getValue()));
+    }
+
+    @Test
+    public void failToLeaveChatIfNotAChatMember() throws ChatCreationException {
+
+        final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
+
+        List<UserIdDto> chatMembers = chatService.findChatMembers(chatId);
+        assertTrue("User is a member of chat, but was not joined.", chatMembers.isEmpty());
+
+        try {
+            chatService.leaveChat(new MemberChatDto(userId, chatId.getValue()));
+            fail("Chat member exception was not thrown.");
+        } catch (ChatMemberException e) {
+            assertEquals("Chat creation exception messages are not match.",
+                    NOT_A_CHAT_MEMBER.getMessage(), e.getMessage());
+        } finally {
+            chatService.removeChat(new ChatIdDto(chatId.getValue()));
+        }
+    }
 }
 
 

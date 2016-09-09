@@ -85,11 +85,11 @@ public class ChatServiceImpl implements ChatService {
 
         final Chat chat = chatRepository.get(new ChatId(memberChatDto.getChatId()));
 
-        for (UserId current : chat.getMembers()) {
-            if (memberChatDto.getUserId().equals(current.getValue())) {
-                log.warn(CHAT_MEMBER_ALREADY_JOIN.getMessage());
-                throw new ChatMemberException(CHAT_MEMBER_ALREADY_JOIN.getMessage());
-            }
+        final List<UserId> members = chat.getMembers();
+        final UserId userId = new UserId(memberChatDto.getUserId());
+        if (members.contains(userId)) {
+            log.warn(CHAT_MEMBER_ALREADY_JOIN.getMessage());
+            throw new ChatMemberException(CHAT_MEMBER_ALREADY_JOIN.getMessage());
         }
 
         chat.getMembers().add(new UserId(memberChatDto.getUserId()));
@@ -103,22 +103,26 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void leaveChat(MemberChatDto memberChatDto) throws ChatMemberException {
+        /*TODO update logs*/
+
+        checkNotNull(memberChatDto.getUserId());
+        checkNotNull(memberChatDto.getChatId());
+
         final Chat chat = chatRepository.get(new ChatId(memberChatDto.getChatId()));
 
         final List<UserId> chatMembers = chat.getMembers();
-
-        if (!chatMembers.contains(memberChatDto.getUserId())) {
+        final UserId userId = new UserId(memberChatDto.getUserId());
+        if (!chatMembers.contains(userId)) {
             log.warn("Remove chat member fail: user not a chat member.");
             throw new ChatMemberException(NOT_A_CHAT_MEMBER.getMessage());
-        } else {
-            chatMembers.remove(memberChatDto.getUserId());
+        }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Chat member was removed." +
-                        " Chat id is: " + memberChatDto.getChatId() +
-                        " Member id is : " + memberChatDto.getUserId());
-            }
-
+        boolean remove = chatMembers.remove(userId);
+        System.out.println(remove);
+        if (log.isDebugEnabled()) {
+            log.debug("Chat member was removed." +
+                    " Chat id is: " + memberChatDto.getChatId() +
+                    " Member id is : " + memberChatDto.getUserId());
         }
     }
 
@@ -147,13 +151,26 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void removeChat(ChatIdDto chatIdDto) {
         /*TODO add logs*/
-        chatRepository.remove(new ChatId(chatIdDto.getId()));
+        chatRepository.remove(new ChatId(chatIdDto.getValue()));
+    }
+
+    @Override
+    public List<UserIdDto> findChatMembers(ChatIdDto chatIdDto) {
+        /*TODO add logs*/
+        final Chat chat = chatRepository.get(new ChatId(chatIdDto.getValue()));
+        final List<UserIdDto> membersDto = new ArrayList<>();
+
+        for (UserId current : chat.getMembers()) {
+            membersDto.add(new UserIdDto(current.getValue()));
+        }
+
+        return membersDto;
     }
 
     @Override
     public Optional<ChatDto> findChat(ChatIdDto chatIdDto) {
         /*TODO add logs*/
-        final Chat chat = chatRepository.get(new ChatId(chatIdDto.getId()));
+        final Chat chat = chatRepository.get(new ChatId(chatIdDto.getValue()));
 
         if (chat == null) {
             return Optional.empty();

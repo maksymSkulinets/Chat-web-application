@@ -2,6 +2,7 @@ package com.teamdev.javaclasses.service;
 
 import com.teamdev.javaclasses.dto.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,9 +49,17 @@ public interface ChatService {
      * Find chat by chat id.
      *
      * @param chatIdDto - chat id data transfer object
-     * @return Chat data transfer object
+     * @return chat data transfer object
      */
     Optional<ChatDto> findChat(ChatIdDto chatIdDto);
+
+    /**
+     *Find chat members by chat id.
+     *
+     * @param chatIdDto - chat id data transfer object
+     * @return user id data transfer object
+     */
+    List<UserIdDto> findChatMembers(ChatIdDto chatIdDto);
 
     void removeChat(ChatIdDto chatIdDto);
 }
