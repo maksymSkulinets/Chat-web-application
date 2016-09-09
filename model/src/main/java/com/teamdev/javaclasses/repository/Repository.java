@@ -14,7 +14,7 @@ import java.util.Collection;
 interface Repository<TYPE extends Entity, TYPE_ID extends EntityId> {
     void add(TYPE type);
 
-    TYPE find(TYPE_ID type_id);
+    TYPE get(TYPE_ID type_id);
 
     Collection<TYPE> findAll();
 

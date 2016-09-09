@@ -24,7 +24,7 @@ public abstract class InMemoryRepository<TYPE extends Entity, TYPE_ID extends En
     }
 
     @Override
-    public TYPE find(TYPE_ID type_id) {
+    public TYPE get(TYPE_ID type_id) {
         return storage.get(type_id);
     }
 
