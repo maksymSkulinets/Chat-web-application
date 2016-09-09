@@ -3,8 +3,6 @@ package com.teamdev.javaclasses.repository.impl;
 import com.teamdev.javaclasses.entities.User;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.InMemoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,11 +30,12 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
     }
 
     public User getUser(String nickname) {
+        /*TODO use optional, rename method to get*/
         final Collection<User> allUsers = findAll();
         User user = null;
 
         for (User currentUser : allUsers) {
-            if (currentUser.getNickname().getName().equals(nickname)) {
+            if (currentUser.getNickname().getValue().equals(nickname)) {
                 user = currentUser;
                 break;
             }
