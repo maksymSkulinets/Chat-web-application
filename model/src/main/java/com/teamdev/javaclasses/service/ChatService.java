@@ -23,17 +23,17 @@ public interface ChatService {
      * Add member to chat.
      *
      * @param memberChatDto contain user id and chat id
-     * @throws MemberException if member cannot join the chat
+     * @throws ChatMemberException if member cannot join the chat
      */
-    void addMember(MemberChatDto memberChatDto) throws MemberException;
+    void joinChat(MemberChatDto memberChatDto) throws ChatMemberException;
 
     /**
      * Removes member from chat.
      *
      * @param memberChatDto - contains user id and chat id
-     * @throws MemberException if member not join in chat
+     * @throws ChatMemberException if member not join in chat
      */
-    void removeMember(MemberChatDto memberChatDto) throws MemberException;
+    void leaveChat(MemberChatDto memberChatDto) throws ChatMemberException;
 
     /**
      * Post a message.

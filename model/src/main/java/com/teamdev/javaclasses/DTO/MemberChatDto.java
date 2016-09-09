@@ -1,26 +1,22 @@
 package com.teamdev.javaclasses.dto;
 
-import com.teamdev.javaclasses.entities.ChatId;
-import com.teamdev.javaclasses.entities.tinyTypes.UserId;
-
 /**
  * dto for join and un join chats.
  */
 public class MemberChatDto {
-    /*TODO simplify MemberChatDto structure with raw types*/
-    private final UserId userId;
-    private final ChatId chatId;
+    private final Long userId;
+    private final Long chatId;
 
-    public MemberChatDto(UserId userId, ChatId chatId) {
+    public MemberChatDto(Long userId, Long chatId) {
         this.userId = userId;
         this.chatId = chatId;
     }
 
-    public UserId getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public ChatId getChatId() {
+    public Long getChatId() {
         return chatId;
     }
 

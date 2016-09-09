@@ -8,8 +8,8 @@ import com.teamdev.javaclasses.entities.tinyTypes.ChatName;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.impl.ChatRepository;
 import com.teamdev.javaclasses.service.ChatCreationException;
+import com.teamdev.javaclasses.service.ChatMemberException;
 import com.teamdev.javaclasses.service.ChatService;
-import com.teamdev.javaclasses.service.MemberException;
 import com.teamdev.javaclasses.service.MessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,42 +77,46 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void addMember(MemberChatDto memberChatDto) throws MemberException {
-        final Chat chat = chatRepository.get(memberChatDto.getChatId());
+    public void joinChat(MemberChatDto memberChatDto) throws ChatMemberException {
+        /*TODO update logs*/
 
-        for (UserId memberId : chat.getMembers()) {
-            if (memberChatDto.getUserId().equals(memberId)) {
-                log.warn("Add chat member fail: chat member already join.");
-                throw new MemberException(CHAT_MEMBER_ALREADY_JOIN.getMessage());
+        checkNotNull(memberChatDto.getUserId());
+        checkNotNull(memberChatDto.getChatId());
+
+        final Chat chat = chatRepository.get(new ChatId(memberChatDto.getChatId()));
+
+        for (UserId current : chat.getMembers()) {
+            if (memberChatDto.getUserId().equals(current.getValue())) {
+                log.warn(CHAT_MEMBER_ALREADY_JOIN.getMessage());
+                throw new ChatMemberException(CHAT_MEMBER_ALREADY_JOIN.getMessage());
             }
         }
 
-        chat.getMembers().add(memberChatDto.getUserId());
+        chat.getMembers().add(new UserId(memberChatDto.getUserId()));
 
         if (log.isDebugEnabled()) {
             log.debug("Chat member was added." +
-                    " Chat id:" + memberChatDto.getChatId().getValue() +
-                    " Member id: " + memberChatDto.getUserId().getValue());
+                    " Chat id:" + memberChatDto.getChatId() +
+                    " Member id: " + memberChatDto.getUserId());
         }
-
     }
 
     @Override
-    public void removeMember(MemberChatDto memberChatDto) throws MemberException {
-        final Chat chat = chatRepository.get(memberChatDto.getChatId());
+    public void leaveChat(MemberChatDto memberChatDto) throws ChatMemberException {
+        final Chat chat = chatRepository.get(new ChatId(memberChatDto.getChatId()));
 
         final List<UserId> chatMembers = chat.getMembers();
 
         if (!chatMembers.contains(memberChatDto.getUserId())) {
             log.warn("Remove chat member fail: user not a chat member.");
-            throw new MemberException(NOT_A_CHAT_MEMBER.getMessage());
+            throw new ChatMemberException(NOT_A_CHAT_MEMBER.getMessage());
         } else {
             chatMembers.remove(memberChatDto.getUserId());
 
             if (log.isDebugEnabled()) {
                 log.debug("Chat member was removed." +
-                        " Chat id is: " + memberChatDto.getChatId().getValue() +
-                        " Member id is : " + memberChatDto.getUserId().getValue());
+                        " Chat id is: " + memberChatDto.getChatId() +
+                        " Member id is : " + memberChatDto.getUserId());
             }
 
         }

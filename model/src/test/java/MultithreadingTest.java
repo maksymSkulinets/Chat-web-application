@@ -5,6 +5,7 @@ import com.teamdev.javaclasses.dto.TokenDto;
 import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.service.impl.UserServiceImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import static org.junit.Assert.fail;
 public class MultithreadingTest {
     private final UserService userService = UserServiceImpl.getInstance();
 
+    @Ignore
     @Test
     public void SafeLoggingInMultithreadingTest() throws ExecutionException, InterruptedException {
 
