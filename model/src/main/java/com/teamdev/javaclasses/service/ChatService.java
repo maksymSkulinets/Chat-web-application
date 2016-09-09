@@ -2,6 +2,8 @@ package com.teamdev.javaclasses.service;
 
 import com.teamdev.javaclasses.dto.*;
 
+import java.util.Optional;
+
 /**
  * Public API of chat service.
  */
@@ -15,7 +17,7 @@ public interface ChatService {
      * @throws ChatCreationException throws if chat creation is fail
      */
 
-    ChatIdDto createChat(ChatCreationDto chatCreationDto) throws ChatCreationException;
+    ChatIdDto create(ChatCreationDto chatCreationDto) throws ChatCreationException;
 
     /**
      * Add member to chat.
@@ -39,16 +41,16 @@ public interface ChatService {
      * @param postMessageDto - contains user id, chat id and message
      * @throws MessageException if sending message fails
      */
-    /*TODO rename post message*/
-    void sendMessage(MessageDto postMessageDto) throws MessageException;
+
+    void sendMessage(PostMessageDto postMessageDto) throws MessageException;
 
     /**
-     * Get chat by id
+     * Find chat by chat id.
      *
-     * @param id - chat id data transfer object
+     * @param chatIdDto - chat id data transfer object
      * @return Chat data transfer object
      */
-    ChatDto getChat(ChatIdDto id);
+    Optional<ChatDto> findChat(ChatIdDto chatIdDto);
 
-    void removeChat(ChatIdDto id);
+    void removeChat(ChatIdDto chatIdDto);
 }

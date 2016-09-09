@@ -1,9 +1,5 @@
 package com.teamdev.javaclasses.service.impl;
 
-import com.teamdev.javaclasses.service.LoginException;
-import com.teamdev.javaclasses.service.SignUpException;
-import com.teamdev.javaclasses.service.UserService;
-import com.teamdev.javaclasses.service.UserServiceFailCases;
 import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.entities.Token;
 import com.teamdev.javaclasses.entities.User;
@@ -13,6 +9,10 @@ import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserName;
 import com.teamdev.javaclasses.repository.impl.TokenRepository;
 import com.teamdev.javaclasses.repository.impl.UserRepository;
+import com.teamdev.javaclasses.service.LoginException;
+import com.teamdev.javaclasses.service.SignUpException;
+import com.teamdev.javaclasses.service.UserService;
+import com.teamdev.javaclasses.service.UserServiceFailCases;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
         final User currentUser = new User(new UserName(trimmedNickname), new Password(password));
         userRepository.add(currentUser);
 
-        final UserDto result = new UserDto(currentUser.getNickname().getName(), currentUser.getId().getValue());
+        final UserDto result = new UserDto(currentUser.getNickname().getValue(), currentUser.getId().getValue());
 
         if (log.isDebugEnabled()) {
             log.debug("User: " + trimmedNickname + " id: " + result.getId());
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
-        final String existUserPassword = userByNickname.getPassword().getPassword();
+        final String existUserPassword = userByNickname.getPassword().getValue();
 
         if (!password.equals(existUserPassword)) {
             log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
@@ -163,34 +163,33 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-
     @Override
     public Optional<UserDto> findUser(UserIdDto userId) {
-        final User user = userRepository.find(new UserId(userId.getId()));
+        final User user = userRepository.get(new UserId(userId.getId()));
 
         if (user == null) {
             return Optional.empty();
         }
 
-        UserDto result = new UserDto(user.getNickname().getName(), user.getId().getValue());
+        UserDto result = new UserDto(user.getNickname().getValue(), user.getId().getValue());
         return Optional.of(result);
     }
 
     @Override
     public Optional<UserDto> findUser(TokenIdDto token) {
-        final Token userToken = tokenRepository.find(new TokenId(token.getId()));
+        final Token userToken = tokenRepository.get(new TokenId(token.getId()));
 
         if (userToken == null) {
             return Optional.empty();
         }
 
-        final User userByToken = userRepository.find(userToken.getUserId());
+        final User userByToken = userRepository.get(userToken.getUserId());
 
         if (userByToken == null) {
             return Optional.empty();
         }
 
-        final UserDto result = new UserDto(userByToken.getNickname().getName(), userToken.getUserId().getValue());
+        final UserDto result = new UserDto(userByToken.getNickname().getValue(), userToken.getUserId().getValue());
         return Optional.of(result);
     }
 

@@ -1,19 +1,25 @@
 package com.teamdev.javaclasses.service.impl;
 
 import com.teamdev.javaclasses.dto.*;
-import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.Chat;
+import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.Message;
+import com.teamdev.javaclasses.entities.tinyTypes.ChatName;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.impl.ChatRepository;
-import com.teamdev.javaclasses.service.*;
+import com.teamdev.javaclasses.service.ChatCreationException;
+import com.teamdev.javaclasses.service.ChatService;
+import com.teamdev.javaclasses.service.MemberException;
+import com.teamdev.javaclasses.service.MessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static com.teamdev.javaclasses.service.ChatServiceFailCases.CHAT_MEMBER_ALREADY_JOIN;
-import static com.teamdev.javaclasses.service.ChatServiceFailCases.NOT_A_CHAT_MEMBER;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.teamdev.javaclasses.service.ChatServiceFailCases.*;
 
 /**
  * Implementation of {@link ChatService}.
@@ -34,45 +40,45 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatId createChat(ChatCreationDto chatCreationDto) throws ChatCreationException {
+    public ChatIdDto create(ChatCreationDto chatCreationDto) throws ChatCreationException {
+        /*TODO update logs, except warn level*/
 
-        String trimmedChatName = chatCreationDto.getChatName().trim();
+        checkNotNull(chatCreationDto.getChatName());
+        checkNotNull(chatCreationDto.getUserId());
+
+        final String trimmedChatName = chatCreationDto.getChatName().trim();
+        final Long chatOwnerId = chatCreationDto.getUserId();
 
         if (trimmedChatName.isEmpty()) {
-            log.warn("Fail chat creation: chat name input is empty");
-            throw new ChatCreationException(ChatServiceFailCases.EMPTY_CHAT_NAME.getMessage());
+            log.warn(EMPTY_CHAT_NAME.getMessage());
+            throw new ChatCreationException(EMPTY_CHAT_NAME.getMessage());
         }
 
-        for (Chat current : chatRepository.findAll()) {
+        final Optional<Chat> chatEntity = chatRepository.getChat(trimmedChatName);
 
-            if (current.getChatName().equals(trimmedChatName)) {
-                log.warn("Fail chat creation: " + trimmedChatName + " - chat name is exist.");
-                throw new ChatCreationException(ChatServiceFailCases.NON_UNIQUE_CHAT_NAME.getMessage());
-            }
-
+        if (chatEntity.isPresent()) {
+            log.warn(NON_UNIQUE_CHAT_NAME.getMessage());
+            throw new ChatCreationException(NON_UNIQUE_CHAT_NAME.getMessage());
         }
 
-        chatRepository.add(new Chat(trimmedChatName, chatCreationDto.getUserId()));
+        final Chat currentChat = new Chat(new ChatName(trimmedChatName), new UserId(chatOwnerId));
 
-        ChatId newChatId = null;
-        for (Chat current : chatRepository.findAll()) {
-
-            if (current.getChatName().equals(trimmedChatName)) {
-                newChatId = current.getChatId();
-            }
-        }
+        chatRepository.add(currentChat);
 
         if (log.isDebugEnabled()) {
-            log.debug("Chat was created. Chat name: " + trimmedChatName +
-                    " Chat id: " + newChatId.getValue());
+            log.debug("Chat name: " + trimmedChatName + " id: " + currentChat.getId().getValue());
         }
 
-        return newChatId;
+        if (log.isInfoEnabled()) {
+            log.info("Chat with name: " + trimmedChatName + " successfully created.");
+        }
+
+        return new ChatIdDto(currentChat.getId().getValue());
     }
 
     @Override
     public void addMember(MemberChatDto memberChatDto) throws MemberException {
-        final Chat chat = chatRepository.find(memberChatDto.getChatId());
+        final Chat chat = chatRepository.get(memberChatDto.getChatId());
 
         for (UserId memberId : chat.getMembers()) {
             if (memberChatDto.getUserId().equals(memberId)) {
@@ -93,7 +99,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void removeMember(MemberChatDto memberChatDto) throws MemberException {
-        final Chat chat = chatRepository.find(memberChatDto.getChatId());
+        final Chat chat = chatRepository.get(memberChatDto.getChatId());
 
         final List<UserId> chatMembers = chat.getMembers();
 
@@ -113,21 +119,21 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void sendMessage(MessageDto messageDto) throws MessageException {
-        final Chat chat = chatRepository.find(messageDto.getChatId());
+    public void sendMessage(PostMessageDto postMessageDto) throws MessageException {
+        final Chat chat = chatRepository.get(new ChatId(postMessageDto.getUserId()));
 
         final List<UserId> chatMembers = chat.getMembers();
 
-        if (!chatMembers.contains(messageDto.getUserId())) {
+        if (!chatMembers.contains(postMessageDto.getUserId())) {
             log.warn("Post message chat member fail: user not a chat member.");
             throw new MessageException(NOT_A_CHAT_MEMBER.getMessage());
         } else {
-            chat.getMessages().add(new Message(messageDto.getNickName(), messageDto.getMessage()));
+            chat.getMessages().add(new Message(postMessageDto.getNickName(), postMessageDto.getMessage()));
 
             if (log.isDebugEnabled()) {
                 log.debug("Message was sent successfully." +
-                        " To chat with id:" + messageDto.getChatId().getValue() +
-                        " Message author:  " + messageDto.getNickName());
+                        " To chat with id:" + postMessageDto.getChatId() +
+                        " Message author:  " + postMessageDto.getNickName());
             }
         }
 
@@ -135,13 +141,37 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void removeChat(ChatIdDto id) {
-        /*TODO to implement*/
+    public void removeChat(ChatIdDto chatIdDto) {
+        /*TODO add logs*/
+        chatRepository.remove(new ChatId(chatIdDto.getId()));
     }
 
     @Override
-    public ChatDto getChat(ChatIdDto id) {
-        return  null;
+    public Optional<ChatDto> findChat(ChatIdDto chatIdDto) {
+        /*TODO add logs*/
+        final Chat chat = chatRepository.get(new ChatId(chatIdDto.getId()));
+
+        if (chat == null) {
+            return Optional.empty();
+        }
+
+
+        final List<MessageDto> messagesDto = new ArrayList<>();
+        final List<Message> messages = chat.getMessages();
+        for (Message current : messages) {
+            messagesDto.add(new MessageDto(current.getAuthorName(), current.getContent()));
+        }
+
+        final List<Long> membersDto = new ArrayList<>();
+        final List<UserId> members = chat.getMembers();
+        for (UserId current : members) {
+            membersDto.add(current.getValue());
+        }
+
+        final Long chatId = chat.getId().getValue();
+        final Long ownerId = chat.getOwnerId().getValue();
+        final String chatName = chat.getChatName().getValue();
+        return Optional.of(new ChatDto(chatId, ownerId, chatName, membersDto, messagesDto));
     }
 
 }
