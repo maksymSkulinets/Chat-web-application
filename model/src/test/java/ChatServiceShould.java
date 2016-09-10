@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import static com.teamdev.javaclasses.service.ChatServiceFailCases.*;
 import static org.junit.Assert.*;
-import static org.testng.Assert.fail;
 
 public class ChatServiceShould {
 
@@ -198,6 +197,18 @@ public class ChatServiceShould {
         }
     }
 
+    @Test
+    public void removeChatTest() throws ChatCreationException {
+        final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
+        Optional<ChatDto> chatById = chatService.findChat(chatId);
+
+        assertTrue("Chat was not created.", chatById.isPresent());
+
+        chatService.removeChat(new ChatIdDto(chatId.getValue()));
+        chatById = chatService.findChat(chatId);
+
+        assertFalse("Chat was not removed.", chatById.isPresent());
+    }
 
 }
 
