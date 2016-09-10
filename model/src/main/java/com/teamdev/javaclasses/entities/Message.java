@@ -1,22 +1,25 @@
 package com.teamdev.javaclasses.entities;
 
+import com.teamdev.javaclasses.entities.tinyTypes.MessageContent;
+import com.teamdev.javaclasses.entities.tinyTypes.UserName;
+
 /**
  * Sending message data.
  */
 public class Message {
-    private final String authorName;
-    private final String content;
+    private final UserName userName;
+    private final MessageContent content;
 
-    public Message(String authorName, String content) {
-        this.authorName = authorName;
+    public Message(UserName userName, MessageContent content) {
+        this.userName = userName;
         this.content = content;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public UserName getUserName() {
+        return userName;
     }
 
-    public String getContent() {
+    public MessageContent getContent() {
         return content;
     }
 
@@ -27,14 +30,13 @@ public class Message {
 
         Message message = (Message) o;
 
-        if (authorName != null ? !authorName.equals(message.authorName) : message.authorName != null) return false;
+        if (userName != null ? !userName.equals(message.userName) : message.userName != null) return false;
         return content != null ? content.equals(message.content) : message.content == null;
-
     }
 
     @Override
     public int hashCode() {
-        int result = authorName != null ? authorName.hashCode() : 0;
+        int result = userName != null ? userName.hashCode() : 0;
         result = 31 * result + (content != null ? content.hashCode() : 0);
         return result;
     }

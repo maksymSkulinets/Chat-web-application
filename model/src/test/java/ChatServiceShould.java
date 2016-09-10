@@ -10,22 +10,20 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.teamdev.javaclasses.service.ChatServiceFailCases.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.testng.Assert.fail;
 
 public class ChatServiceShould {
 
+    private final String nickName = "Jimmy_Page";
+    private final String password = "valid_password";
     private final UserService userService = UserServiceImpl.getInstance();
     private final ChatService chatService = ChatServiceImpl.getInstance();
-
     private final String chatName = "guitars";
     private Long userId;
 
     @Before
     public void setUpUser() throws SignUpException, LoginException {
-        final String nickName = "Jimmy_Page";
-        final String password = "valid_password";
         userId = userService.signUp(new SignUpDto(nickName, password, password)).getId();
         userService.login(new LoginDto(nickName, password));
     }
@@ -143,6 +141,64 @@ public class ChatServiceShould {
             chatService.removeChat(new ChatIdDto(chatId.getValue()));
         }
     }
+
+    @Test
+    public void postMessageToChat() throws ChatMemberException, ChatCreationException, PostMessageException {
+        String message = "Message content";
+
+        final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
+        chatService.joinChat(new MemberChatDto(userId, chatId.getValue()));
+        chatService.postMessage(new PostMessageDto(chatId.getValue(), userId, nickName, message));
+
+        List<MessageDto> messages = chatService.findChatMessages(chatId);
+
+        assertFalse("Message was not posted.", messages.isEmpty());
+
+        final String authorName = messages.get(0).getAuthorName();
+        assertEquals("Posted message author name is not equal expected.", nickName, authorName);
+
+        final String messageContent = messages.get(0).getContent();
+        assertEquals("Posted message content is not equal expected.", message, messageContent);
+
+        chatService.removeChat(new ChatIdDto(chatId.getValue()));
+    }
+
+    @Test
+    public void failToPostEmptyMessage() throws ChatCreationException, ChatMemberException {
+        String emptyMessage = "";
+
+        final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
+        chatService.joinChat(new MemberChatDto(userId, chatId.getValue()));
+
+        try {
+            chatService.postMessage(new PostMessageDto(chatId.getValue(), userId, nickName, emptyMessage));
+            fail("Post message exception was not thrown.");
+        } catch (PostMessageException e) {
+            assertEquals("Post message exception messages are not match.",
+                    EMPTY_MESSAGE.getMessage(), e.getMessage());
+        } finally {
+            chatService.removeChat(new ChatIdDto(chatId.getValue()));
+        }
+    }
+
+    @Test
+    public void failToPostMessageWithoutJoiningToChat() throws ChatCreationException {
+        String message = "Message content";
+
+        final ChatIdDto chatId = chatService.create(new ChatCreationDto(chatName, userId));
+
+        try {
+            chatService.postMessage(new PostMessageDto(chatId.getValue(), userId, nickName, message));
+            fail("Post message exception was not thrown.");
+        } catch (PostMessageException e) {
+            assertEquals("Post message exception messages are not match.",
+                    NOT_A_CHAT_MEMBER.getMessage(), e.getMessage());
+        } finally {
+            chatService.removeChat(new ChatIdDto(chatId.getValue()));
+        }
+    }
+
+
 }
 
 

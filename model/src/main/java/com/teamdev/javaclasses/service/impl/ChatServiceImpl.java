@@ -5,12 +5,14 @@ import com.teamdev.javaclasses.entities.Chat;
 import com.teamdev.javaclasses.entities.ChatId;
 import com.teamdev.javaclasses.entities.Message;
 import com.teamdev.javaclasses.entities.tinyTypes.ChatName;
+import com.teamdev.javaclasses.entities.tinyTypes.MessageContent;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+import com.teamdev.javaclasses.entities.tinyTypes.UserName;
 import com.teamdev.javaclasses.repository.impl.ChatRepository;
 import com.teamdev.javaclasses.service.ChatCreationException;
 import com.teamdev.javaclasses.service.ChatMemberException;
 import com.teamdev.javaclasses.service.ChatService;
-import com.teamdev.javaclasses.service.MessageException;
+import com.teamdev.javaclasses.service.PostMessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,36 +129,51 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void sendMessage(PostMessageDto postMessageDto) throws MessageException {
-        final Chat chat = chatRepository.get(new ChatId(postMessageDto.getUserId()));
+    public void postMessage(PostMessageDto postMessageDto) throws PostMessageException {
+        /*TODO update logs*/
 
-        final List<UserId> chatMembers = chat.getMembers();
+        checkNotNull(postMessageDto.getChatId());
+        checkNotNull(postMessageDto.getUserName());
+        checkNotNull(postMessageDto.getMessage());
 
-        if (!chatMembers.contains(postMessageDto.getUserId())) {
-            log.warn("Post message chat member fail: user not a chat member.");
-            throw new MessageException(NOT_A_CHAT_MEMBER.getMessage());
-        } else {
-            chat.getMessages().add(new Message(postMessageDto.getNickName(), postMessageDto.getMessage()));
+        final Chat chat = chatRepository.get(new ChatId(postMessageDto.getChatId()));
 
-            if (log.isDebugEnabled()) {
-                log.debug("Message was sent successfully." +
-                        " To chat with id:" + postMessageDto.getChatId() +
-                        " Message author:  " + postMessageDto.getNickName());
-            }
+        if (!chat.getMembers().contains(new UserId(postMessageDto.getUserId()))) {
+            log.warn(NOT_A_CHAT_MEMBER.getMessage());
+            throw new PostMessageException(NOT_A_CHAT_MEMBER.getMessage());
         }
 
+        if (postMessageDto.getMessage().isEmpty()) {
+            log.warn(EMPTY_MESSAGE.getMessage());
+            throw new PostMessageException(EMPTY_MESSAGE.getMessage());
+        }
 
+        final UserName userName = new UserName(postMessageDto.getUserName());
+        final MessageContent content = new MessageContent(postMessageDto.getMessage());
+        chat.getMessages().add(new Message(userName, content));
+
+        if (log.isDebugEnabled()) {
+            log.debug("Message was sent successfully." +
+                    " To chat with id:" + postMessageDto.getChatId() +
+                    " Message author id" + postMessageDto.getUserId());
+        }
     }
 
     @Override
     public void removeChat(ChatIdDto chatIdDto) {
         /*TODO add logs*/
+
+        checkNotNull(chatIdDto.getValue());
+
         chatRepository.remove(new ChatId(chatIdDto.getValue()));
     }
 
     @Override
     public List<UserIdDto> findChatMembers(ChatIdDto chatIdDto) {
         /*TODO add logs*/
+
+        checkNotNull(chatIdDto.getValue());
+
         final Chat chat = chatRepository.get(new ChatId(chatIdDto.getValue()));
         final List<UserIdDto> membersDto = new ArrayList<>();
 
@@ -168,8 +185,30 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public List<MessageDto> findChatMessages(ChatIdDto chatIdDto) {
+        /*TODO add logs*/
+
+        checkNotNull(chatIdDto.getValue());
+
+        final Chat chat = chatRepository.get(new ChatId(chatIdDto.getValue()));
+        final List<Message> messages = chat.getMessages();
+        final List<MessageDto> messagesDto = new ArrayList<>();
+
+        for (Message current : messages) {
+            final String owerNameValue = current.getUserName().getValue();
+            final String messageContentValue = current.getContent().getValue();
+            messagesDto.add(new MessageDto(owerNameValue, messageContentValue));
+        }
+
+        return messagesDto;
+    }
+
+    @Override
     public Optional<ChatDto> findChat(ChatIdDto chatIdDto) {
         /*TODO add logs*/
+
+        checkNotNull(chatIdDto.getValue());
+
         final Chat chat = chatRepository.get(new ChatId(chatIdDto.getValue()));
 
         if (chat == null) {
@@ -180,7 +219,7 @@ public class ChatServiceImpl implements ChatService {
         final List<MessageDto> messagesDto = new ArrayList<>();
         final List<Message> messages = chat.getMessages();
         for (Message current : messages) {
-            messagesDto.add(new MessageDto(current.getAuthorName(), current.getContent()));
+            messagesDto.add(new MessageDto(current.getUserName().getValue(), current.getContent().getValue()));
         }
 
         final List<Long> membersDto = new ArrayList<>();
@@ -192,6 +231,7 @@ public class ChatServiceImpl implements ChatService {
         final Long chatId = chat.getId().getValue();
         final Long ownerId = chat.getOwnerId().getValue();
         final String chatName = chat.getChatName().getValue();
+
         return Optional.of(new ChatDto(chatId, ownerId, chatName, membersDto, messagesDto));
     }
 

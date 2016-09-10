@@ -26,7 +26,6 @@ public class MessageDto {
 
         if (authorName != null ? !authorName.equals(that.authorName) : that.authorName != null) return false;
         return content != null ? content.equals(that.content) : that.content == null;
-
     }
 
     @Override

@@ -4,32 +4,32 @@ package com.teamdev.javaclasses.dto;
  * dto for post messages to chat.
  */
 public class PostMessageDto {
-    private final Long userId;
     private final Long chatId;
+    private final Long userId;
+    private final String userName;
     private final String message;
-    private final String nickName;
 
-    public PostMessageDto(Long userId, Long chatId, String message, String nickName) {
-        this.userId = userId;
+    public PostMessageDto(Long chatId, Long userId, String userName, String message) {
         this.chatId = chatId;
+        this.userId = userId;
+        this.userName = userName;
         this.message = message;
-        this.nickName = nickName;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     public Long getChatId() {
         return chatId;
     }
 
-    public String getMessage() {
-        return message;
+    public Long getUserId() {
+        return userId;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override
@@ -39,20 +39,18 @@ public class PostMessageDto {
 
         PostMessageDto that = (PostMessageDto) o;
 
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (chatId != null ? !chatId.equals(that.chatId) : that.chatId != null) return false;
-        if (message != null ? !message.equals(that.message) : that.message != null) return false;
-        if (nickName != null ? !nickName.equals(that.nickName) : that.nickName != null) return false;
-
-        return true;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
+        return message != null ? message.equals(that.message) : that.message == null;
     }
 
     @Override
     public int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result + (chatId != null ? chatId.hashCode() : 0);
+        int result = chatId != null ? chatId.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (userName != null ? userName.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (nickName != null ? nickName.hashCode() : 0);
         return result;
     }
 }

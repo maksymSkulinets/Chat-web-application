@@ -36,14 +36,14 @@ public interface ChatService {
      */
     void leaveChat(MemberChatDto memberChatDto) throws ChatMemberException;
 
-    /**
-     * Post a message.
-     *
-     * @param postMessageDto - contains user id, chat id and message
-     * @throws MessageException if sending message fails
-     */
 
-    void sendMessage(PostMessageDto postMessageDto) throws MessageException;
+    /**
+     * Post message to chat.
+     *
+     * @param postMessageDto - contains chat id, owner id and message content.
+     * @throws PostMessageException throws if message is empty
+     */
+    void postMessage(PostMessageDto postMessageDto) throws PostMessageException;
 
     /**
      * Find chat by chat id.
@@ -62,4 +62,6 @@ public interface ChatService {
     List<UserIdDto> findChatMembers(ChatIdDto chatIdDto);
 
     void removeChat(ChatIdDto chatIdDto);
+
+    List<MessageDto> findChatMessages(ChatIdDto chatId);
 }
