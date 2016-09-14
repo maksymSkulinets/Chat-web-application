@@ -53,14 +53,14 @@ public class ChatServiceImpl implements ChatService {
 
         if (trimmedChatName.isEmpty()) {
             log.warn(EMPTY_CHAT_NAME.getMessage());
-            throw new ChatCreationException(EMPTY_CHAT_NAME.getMessage());
+            throw new ChatCreationException(EMPTY_CHAT_NAME);
         }
 
         final Optional<Chat> chatEntity = chatRepository.getChat(trimmedChatName);
 
         if (chatEntity.isPresent()) {
             log.warn(NON_UNIQUE_CHAT_NAME.getMessage());
-            throw new ChatCreationException(NON_UNIQUE_CHAT_NAME.getMessage());
+            throw new ChatCreationException(NON_UNIQUE_CHAT_NAME);
         }
 
         final Chat currentChat = new Chat(new ChatName(trimmedChatName), new UserId(chatOwnerId));
@@ -91,7 +91,7 @@ public class ChatServiceImpl implements ChatService {
         final UserId userId = new UserId(memberChatDto.getUserId());
         if (members.contains(userId)) {
             log.warn(CHAT_MEMBER_ALREADY_JOIN.getMessage());
-            throw new ChatMemberException(CHAT_MEMBER_ALREADY_JOIN.getMessage());
+            throw new ChatMemberException(CHAT_MEMBER_ALREADY_JOIN);
         }
 
         chat.getMembers().add(new UserId(memberChatDto.getUserId()));
@@ -115,7 +115,7 @@ public class ChatServiceImpl implements ChatService {
         final List<UserId> chatMembers = chat.getMembers();
         final UserId userId = new UserId(memberChatDto.getUserId());
         if (!chatMembers.contains(userId)) {
-            throw new ChatMemberException(NOT_A_CHAT_MEMBER.getMessage());
+            throw new ChatMemberException(NOT_A_CHAT_MEMBER);
         }
 
         chat.getMembers().remove(new UserId(memberChatDto.getUserId()));
@@ -139,12 +139,12 @@ public class ChatServiceImpl implements ChatService {
 
         if (!chat.getMembers().contains(new UserId(postMessageDto.getUserId()))) {
             log.warn(NOT_A_CHAT_MEMBER.getMessage());
-            throw new PostMessageException(NOT_A_CHAT_MEMBER.getMessage());
+            throw new PostMessageException(NOT_A_CHAT_MEMBER);
         }
 
         if (postMessageDto.getMessage().isEmpty()) {
             log.warn(EMPTY_MESSAGE.getMessage());
-            throw new PostMessageException(EMPTY_MESSAGE.getMessage());
+            throw new PostMessageException(EMPTY_MESSAGE);
         }
 
         final UserName userName = new UserName(postMessageDto.getUserName());
