@@ -5,6 +5,7 @@ import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.InMemoryRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -29,19 +30,18 @@ public class UserRepository extends InMemoryRepository<User, UserId> {
         return new UserId(idCounter.getAndIncrement());
     }
 
-    public User getUser(String nickname) {
-        /*TODO use optional, rename method to get*/
+    public Optional<User> getUser(String nickname) {
         final Collection<User> allUsers = findAll();
-        User user = null;
+        Optional<User> result = Optional.empty();
 
         for (User currentUser : allUsers) {
             if (currentUser.getNickname().getValue().equals(nickname)) {
-                user = currentUser;
+                result = Optional.of(currentUser);
                 break;
             }
         }
 
-        return user;
+        return result;
     }
 
 }

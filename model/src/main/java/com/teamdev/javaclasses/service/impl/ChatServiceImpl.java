@@ -97,7 +97,7 @@ public class ChatServiceImpl implements ChatService {
         chat.getMembers().add(new UserId(memberChatDto.getUserId()));
 
         if (log.isDebugEnabled()) {
-            log.debug("Chat member was added." +
+            log.debug("Member was added to chat." +
                     " Chat id:" + memberChatDto.getChatId() +
                     " Member id: " + memberChatDto.getUserId());
         }
@@ -115,14 +115,13 @@ public class ChatServiceImpl implements ChatService {
         final List<UserId> chatMembers = chat.getMembers();
         final UserId userId = new UserId(memberChatDto.getUserId());
         if (!chatMembers.contains(userId)) {
-            log.warn("Remove chat member fail: user not a chat member.");
             throw new ChatMemberException(NOT_A_CHAT_MEMBER.getMessage());
         }
 
-        boolean remove = chatMembers.remove(userId);
-        System.out.println(remove);
+        chat.getMembers().remove(new UserId(memberChatDto.getUserId()));
+
         if (log.isDebugEnabled()) {
-            log.debug("Chat member was removed." +
+            log.debug("Member was removed from chat." +
                     " Chat id is: " + memberChatDto.getChatId() +
                     " Member id is : " + memberChatDto.getUserId());
         }
@@ -153,7 +152,7 @@ public class ChatServiceImpl implements ChatService {
         chat.getMessages().add(new Message(userName, content));
 
         if (log.isDebugEnabled()) {
-            log.debug("Message was sent successfully." +
+            log.debug("Message was posted successfully." +
                     " To chat with id:" + postMessageDto.getChatId() +
                     " Message author id" + postMessageDto.getUserId());
         }
@@ -165,12 +164,14 @@ public class ChatServiceImpl implements ChatService {
 
         checkNotNull(chatIdDto.getValue());
 
-        chatRepository.remove(new ChatId(chatIdDto.getValue()));
+        final Chat chat = chatRepository.remove(new ChatId(chatIdDto.getValue()));
+        if (log.isDebugEnabled()) {
+            log.debug("Chat with id " + chat.getId().getValue() + " was removed.");
+        }
     }
 
     @Override
     public List<UserIdDto> findChatMembers(ChatIdDto chatIdDto) {
-        /*TODO add logs*/
 
         checkNotNull(chatIdDto.getValue());
 
@@ -186,7 +187,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<MessageDto> findChatMessages(ChatIdDto chatIdDto) {
-        /*TODO add logs*/
 
         checkNotNull(chatIdDto.getValue());
 
@@ -205,7 +205,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Optional<ChatDto> findChat(ChatIdDto chatIdDto) {
-        /*TODO add logs*/
 
         checkNotNull(chatIdDto.getValue());
 

@@ -78,9 +78,9 @@ public class UserServiceImpl implements UserService {
             throw new SignUpException(PASSWORDS_NOT_MATCH);
         }
 
-        final User userByNickname = userRepository.getUser(trimmedNickname);
+        final Optional<User> userByNickname = userRepository.getUser(trimmedNickname);
 
-        if (userByNickname != null) {
+        if (userByNickname.isPresent()) {
             log.warn(failLogTemplate + EXIST_USER.getMessage());
             throw new SignUpException(EXIST_USER);
         }
@@ -129,24 +129,22 @@ public class UserServiceImpl implements UserService {
             throw new LoginException(EMPTY_INPUT);
         }
 
-        final User userByNickname = userRepository.getUser(trimmedNickname);
+        final Optional<User> userByNickname = userRepository.getUser(trimmedNickname);
 
-        if (userByNickname == null) {
-            log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
+        if (!userByNickname.isPresent()) {
             log.warn(failLogTemplate + NON_SIGN_UP_USER.getMessage());
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
-        final String existUserPassword = userByNickname.getPassword().getValue();
+        final String existUserPassword = userByNickname.get().getPassword().getValue();
 
         if (!password.equals(existUserPassword)) {
-            log.warn(UserServiceFailCases.NON_SIGN_UP_USER.getMessage());
             log.warn(failLogTemplate + NON_SIGN_UP_USER.getMessage());
             throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
         }
 
 
-        final Token currentUserToken = new Token(userByNickname.getId());
+        final Token currentUserToken = new Token(userByNickname.get().getId());
         tokenRepository.add(currentUserToken);
 
         final TokenDto result = new TokenDto(
