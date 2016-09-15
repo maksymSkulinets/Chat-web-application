@@ -12,7 +12,6 @@ import com.teamdev.javaclasses.repository.impl.UserRepository;
 import com.teamdev.javaclasses.service.LoginException;
 import com.teamdev.javaclasses.service.SignUpException;
 import com.teamdev.javaclasses.service.UserService;
-import com.teamdev.javaclasses.service.UserServiceFailCases;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ import static com.teamdev.javaclasses.service.UserServiceFailCases.*;
  */
 public class UserServiceImpl implements UserService {
 
-    private static UserService userService = UserServiceImpl.getInstance();
+    private static UserService userService;
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository = UserRepository.getInstance();
     private final TokenRepository tokenRepository = TokenRepository.getInstance();
@@ -85,10 +84,14 @@ public class UserServiceImpl implements UserService {
             throw new SignUpException(EXIST_USER);
         }
 
-        final User currentUser = new User(new UserName(trimmedNickname), new Password(password));
+        final User currentUser =
+                new User(new UserName(trimmedNickname), new Password(password));
+
         userRepository.add(currentUser);
 
-        final UserDto result = new UserDto(currentUser.getNickname().getValue(), currentUser.getId().getValue());
+        final String nicknameValue = currentUser.getNickname().getValue();
+        final long userIdValue = currentUser.getId().getValue();
+        final UserDto result = new UserDto(nicknameValue, userIdValue);
 
         if (log.isDebugEnabled()) {
             log.debug("User: " + trimmedNickname + " id: " + result.getId());
@@ -133,22 +136,22 @@ public class UserServiceImpl implements UserService {
 
         if (!userByNickname.isPresent()) {
             log.warn(failLogTemplate + NON_SIGN_UP_USER.getMessage());
-            throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
+            throw new LoginException(NON_SIGN_UP_USER);
         }
 
         final String existUserPassword = userByNickname.get().getPassword().getValue();
 
         if (!password.equals(existUserPassword)) {
             log.warn(failLogTemplate + NON_SIGN_UP_USER.getMessage());
-            throw new LoginException(UserServiceFailCases.NON_SIGN_UP_USER);
+            throw new LoginException(NON_SIGN_UP_USER);
         }
-
 
         final Token currentUserToken = new Token(userByNickname.get().getId());
         tokenRepository.add(currentUserToken);
 
-        final TokenDto result = new TokenDto(
-                currentUserToken.getId().getValue(), currentUserToken.getUserId().getValue());
+        final long tokenValue = currentUserToken.getId().getValue();
+        final long userIdValue = currentUserToken.getUserId().getValue();
+        final TokenDto result = new TokenDto(tokenValue, userIdValue);
 
         if (log.isDebugEnabled()) {
             log.debug("User: " + trimmedNickname + " token: " + result.getToken());
@@ -169,7 +172,9 @@ public class UserServiceImpl implements UserService {
             return Optional.empty();
         }
 
-        UserDto result = new UserDto(user.getNickname().getValue(), user.getId().getValue());
+        final String nicknameValue = user.getNickname().getValue();
+        final long userIdValue = user.getId().getValue();
+        UserDto result = new UserDto(nicknameValue, userIdValue);
         return Optional.of(result);
     }
 
@@ -187,7 +192,9 @@ public class UserServiceImpl implements UserService {
             return Optional.empty();
         }
 
-        final UserDto result = new UserDto(userByToken.getNickname().getValue(), userToken.getUserId().getValue());
+        final String nicknameValue = userByToken.getNickname().getValue();
+        final long userIdValue = userToken.getUserId().getValue();
+        final UserDto result = new UserDto(nicknameValue, userIdValue);
         return Optional.of(result);
     }
 
@@ -200,19 +207,19 @@ public class UserServiceImpl implements UserService {
         }
 
         if (log.isInfoEnabled()) {
-            log.info("Delete user entity with id: " + user.getId().getValue());
+            log.info("User entity with id: " + user.getId().getValue() + " was deleted.");
         }
 
-        TokenId tokenByUserId = tokenRepository.findTokenId(user.getId());
+        Optional<TokenId> tokenByUserId = tokenRepository.findTokenId(user.getId());
 
-        if (tokenByUserId == null) {
+        if (!tokenByUserId.isPresent()) {
             return;
         }
 
-        tokenRepository.remove(tokenByUserId);
+        tokenRepository.remove(tokenByUserId.get());
 
         if (log.isInfoEnabled()) {
-            log.info("Delete token entity with user id: " + user.getId().getValue());
+            log.info("Token entity with id: " + user.getId().getValue() + " was deleted.");
         }
 
     }
@@ -223,7 +230,7 @@ public class UserServiceImpl implements UserService {
         final Token userToken = tokenRepository.remove(new TokenId(token.getId()));
 
         if (log.isInfoEnabled()) {
-            log.info("Logged out user with id: " + userToken.getUserId());
+            log.info("User with id: " + userToken.getUserId() + " was logged out.");
         }
 
     }

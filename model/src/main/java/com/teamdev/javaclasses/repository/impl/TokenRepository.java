@@ -6,6 +6,7 @@ import com.teamdev.javaclasses.entities.tinyTypes.UserId;
 import com.teamdev.javaclasses.repository.InMemoryRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Implementation {@link InMemoryRepository} for TokenDto entity keeping.
@@ -29,16 +30,16 @@ public class TokenRepository extends InMemoryRepository<Token, TokenId> {
         return new TokenId(System.nanoTime());
     }
 
-    public TokenId findTokenId(UserId id) {
+    public Optional<TokenId> findTokenId(UserId id) {
         final Collection<Token> allTokens = tokenRepository.findAll();
-        TokenId tokenId = null;
+        Optional<TokenId> result = Optional.empty();
 
         for (Token current : allTokens) {
             if (current.getUserId().equals(id)) {
-                tokenId = current.getId();
+                result = Optional.of(current.getId());
                 break;
             }
         }
-        return tokenId;
+        return result;
     }
 }

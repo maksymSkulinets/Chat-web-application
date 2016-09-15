@@ -195,9 +195,9 @@ public class ChatServiceImpl implements ChatService {
         final List<MessageDto> messagesDto = new ArrayList<>();
 
         for (Message current : messages) {
-            final String owerNameValue = current.getUserName().getValue();
+            final String ownerNameValue = current.getUserName().getValue();
             final String messageContentValue = current.getContent().getValue();
-            messagesDto.add(new MessageDto(owerNameValue, messageContentValue));
+            messagesDto.add(new MessageDto(ownerNameValue, messageContentValue));
         }
 
         return messagesDto;
@@ -214,7 +214,6 @@ public class ChatServiceImpl implements ChatService {
             return Optional.empty();
         }
 
-
         final List<MessageDto> messagesDto = new ArrayList<>();
         final List<Message> messages = chat.getMessages();
         for (Message current : messages) {
@@ -227,11 +226,11 @@ public class ChatServiceImpl implements ChatService {
             membersDto.add(current.getValue());
         }
 
-        final Long chatId = chat.getId().getValue();
-        final Long ownerId = chat.getOwnerId().getValue();
-        final String chatName = chat.getChatName().getValue();
-
-        return Optional.of(new ChatDto(chatId, ownerId, chatName, membersDto, messagesDto));
+        final Long chatIdValue = chat.getId().getValue();
+        final Long ownerIdValue = chat.getOwnerId().getValue();
+        final String chatNameValue = chat.getChatName().getValue();
+        final ChatDto chatDto = new ChatDto(chatIdValue, ownerIdValue, chatNameValue, membersDto, messagesDto);
+        return Optional.of(chatDto);
     }
 
 }
