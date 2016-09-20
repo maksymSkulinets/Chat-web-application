@@ -4,7 +4,6 @@ package com.teamdev.javaclasses;
  * Holder of request data
  */
 class RequestContext {
-
     private final String uri;
     private final String method;
 
