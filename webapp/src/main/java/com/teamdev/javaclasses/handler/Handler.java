@@ -1,6 +1,6 @@
 package com.teamdev.javaclasses.handler;
 
-import org.json.simple.JSONObject;
+import com.teamdev.javaclasses.HandlerProcessingResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,5 +16,5 @@ public interface Handler {
      * @param response http response
      * @return already parse JSON entity
      */
-    JSONObject process(HttpServletRequest request, HttpServletResponse response);
+    HandlerProcessingResult process(HttpServletRequest request, HttpServletResponse response);
 }
