@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.teamdev.javaclasses.constant.Parameters.*;
 import static com.teamdev.javaclasses.constant.Uri.DELETE_ACCOUNT_URI;
+import static com.teamdev.javaclasses.constant.Uri.LOGIN_URI;
 import static com.teamdev.javaclasses.constant.Uri.REGISTRATION_URI;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
@@ -35,6 +36,20 @@ class TestUtils {
 
         return sendRequest(postRequest, parameters);
     }
+
+    static HttpResponse sendLoginRequest(String nickname, String password) throws IOException {
+
+        final String url = host + LOGIN_URI;
+
+        final List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair(NICKNAME, nickname));
+        parameters.add(new BasicNameValuePair(PASSWORD, password));
+
+        HttpPost postRequest = new HttpPost(url);
+
+        return sendRequest(postRequest, parameters);
+    }
+
 
     static HttpResponse sendDeleteAccountRequest(String userIdValue) throws IOException {
 
