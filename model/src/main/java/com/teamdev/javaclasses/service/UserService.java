@@ -36,7 +36,7 @@ public interface UserService {
     Optional<UserDto> findUser(UserIdDto userId);
 
     Optional<UserDto> findUser(TokenIdDto token);
-
+    /*TODO rename to delete account*/
     void deleteUser(UserIdDto userId);
 
     void logout(TokenIdDto token);
