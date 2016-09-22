@@ -19,13 +19,12 @@ import static com.teamdev.javaclasses.constant.Parameters.*;
 import static com.teamdev.javaclasses.service.UserServiceFailCases.NON_SIGN_UP_USER;
 import static javax.servlet.http.HttpServletResponse.*;
 
-public class ChatCreationalHandler implements Handler {
+public class ChatCreationHandler implements Handler {
     private final UserService userService = UserServiceImpl.getInstance();
     private final ChatService chatService = ChatServiceImpl.getInstance();
 
     @Override
     public HandlerProcessingResult process(HttpServletRequest request, HttpServletResponse response) {
-
         HandlerProcessingResult content;
         final Long tokenId = Long.valueOf(request.getParameter(TOKEN_ID));
         final String chatName = request.getParameter(CHAT_NAME);
@@ -35,6 +34,7 @@ public class ChatCreationalHandler implements Handler {
         if (!userByToken.isPresent()) {
             content = new HandlerProcessingResult(SC_FORBIDDEN);
             content.setContent(WARNING_MESSAGE, NON_SIGN_UP_USER.getMessage());
+            return content;
         }
 
         try {

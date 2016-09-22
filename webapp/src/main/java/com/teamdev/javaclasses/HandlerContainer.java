@@ -14,7 +14,7 @@ class HandlerContainer {
                 put(new RequestContext(REGISTRATION_URI, "POST"), new SignUpHandler());
                 put(new RequestContext(DELETE_ACCOUNT_URI, "POST"), new DeleteAccountHandler());
                 put(new RequestContext(LOGIN_URI, "POST"), new LoginHandler());
-                put(new RequestContext(CHAT_CREATION_URI, "POST"), new ChatCreationalHandler());
+                put(new RequestContext(CHAT_CREATION_URI, "POST"), new ChatCreationHandler());
             }};
 
     Optional<Handler> getHandler(RequestContext context) {
