@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.teamdev.javaclasses.constant.Parameters.*;
-import static com.teamdev.javaclasses.constant.Uri.DELETE_ACCOUNT_URI;
-import static com.teamdev.javaclasses.constant.Uri.LOGIN_URI;
-import static com.teamdev.javaclasses.constant.Uri.REGISTRATION_URI;
+import static com.teamdev.javaclasses.constant.Uri.*;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
 class TestUtils {
@@ -63,6 +61,20 @@ class TestUtils {
         return sendRequest(postRequest, parameters);
     }
 
+    static HttpResponse sendCreateChatRequest(String chatName, String userId,String tokenId) throws IOException {
+
+        final String url = host + CHAT_CREATION_URI;
+
+        final List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair(USER_ID, userId));
+        parameters.add(new BasicNameValuePair(CHAT_NAME, chatName));
+        parameters.add(new BasicNameValuePair(TOKEN_ID, tokenId));
+
+        HttpPost postRequest = new HttpPost(url);
+
+        return sendRequest(postRequest, parameters);
+    }
+
     static JSONObject getResponseContent(HttpResponse response) throws IOException {
 
         BufferedReader buffer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -72,7 +84,7 @@ class TestUtils {
         while ((line = buffer.readLine()) != null) {
             result.append(line);
         }
-
+        System.out.println(result.toString());
         return new JSONObject(result.toString());
     }
 

@@ -3,7 +3,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        UserServiceHandlersShould.class
+        UserServiceHandlersShould.class,
+        ChatServiceHandlersShould.class
 })
 
 public class WebAppTestSuite {
