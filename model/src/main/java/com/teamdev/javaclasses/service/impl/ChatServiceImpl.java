@@ -82,8 +82,8 @@ public class ChatServiceImpl implements ChatService {
     public void joinChat(MemberChatDto memberChatDto) throws ChatMemberException {
         /*TODO update logs*/
 
-        checkNotNull(memberChatDto.getUserId());
-        checkNotNull(memberChatDto.getChatId());
+        checkNotNull(memberChatDto.getUserId(),"value of user id can not be null");
+        checkNotNull(memberChatDto.getChatId(),"value of chat id can not be null");
 
         final Chat chat = chatRepository.get(new ChatId(memberChatDto.getChatId()));
 
@@ -94,7 +94,7 @@ public class ChatServiceImpl implements ChatService {
             throw new ChatMemberException(CHAT_MEMBER_ALREADY_JOIN);
         }
 
-        chat.getMembers().add(new UserId(memberChatDto.getUserId()));
+        members.add(new UserId(memberChatDto.getUserId()));
 
         if (log.isDebugEnabled()) {
             log.debug("Member was added to chat." +
