@@ -87,6 +87,19 @@ class TestUtils {
         return sendRequest(postRequest, parameters);
     }
 
+    static HttpResponse sendLeaveChatRequest(String userId, String chatId) throws IOException {
+        final String url = host + LEAVE_CHAT_URI;
+
+        final List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair(USER_ID, userId));
+        parameters.add(new BasicNameValuePair(CHAT_ID, chatId));
+
+        HttpPost postRequest = new HttpPost(url);
+
+        return sendRequest(postRequest, parameters);
+
+    }
+
     static JSONObject getResponseContent(HttpResponse response) throws IOException {
 
         BufferedReader buffer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));

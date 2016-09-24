@@ -12,6 +12,7 @@ import java.util.UUID;
 import static com.teamdev.javaclasses.constant.Parameters.*;
 import static com.teamdev.javaclasses.service.ChatServiceFailCases.EMPTY_CHAT_NAME;
 import static com.teamdev.javaclasses.service.ChatServiceFailCases.NON_UNIQUE_CHAT_NAME;
+import static com.teamdev.javaclasses.service.ChatServiceFailCases.NOT_A_CHAT_MEMBER;
 import static com.teamdev.javaclasses.service.UserServiceFailCases.NON_SIGN_UP_USER;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.junit.Assert.assertEquals;
@@ -107,6 +108,33 @@ public class ChatServiceHandlersShould {
         TestUtils.getResponseContent(secondJoinChatResponse);
 
         assertEquals("Unexpected response status.", SC_INTERNAL_SERVER_ERROR, getStatus(secondJoinChatResponse));
+    }
+
+    @Test
+    public void leaveUserFromChat() throws IOException {
+        String chatName = "newChat_" + UUID.randomUUID();
+        final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
+        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
+        String chatId = chatCreationResult.optString(CHAT_ID);
+
+        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId);
+        TestUtils.getResponseContent(joinChatResponse);
+
+        final HttpResponse leaveChatResponse = TestUtils.sendLeaveChatRequest(userId, chatId);
+        TestUtils.getResponseContent(leaveChatResponse);
+        assertEquals("Unexpected response status.", SC_OK, getStatus(chatCreationResponse));
+    }
+
+    @Test
+    public void failToLeaveChatIfNotAChatMember() throws IOException {
+        String chatName = "newChat_" + UUID.randomUUID();
+        final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
+        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
+        String chatId = chatCreationResult.optString(CHAT_ID);
+
+        final HttpResponse leaveChatResponse = TestUtils.sendLeaveChatRequest(userId, chatId);
+        final JSONObject leaveChatResponseResult = TestUtils.getResponseContent(leaveChatResponse);
+        assertEquals("Unexpected message.", NOT_A_CHAT_MEMBER.getMessage(), leaveChatResponseResult.optString(WARNING_MESSAGE));
     }
 
     private int getStatus(HttpResponse postResponse) {
