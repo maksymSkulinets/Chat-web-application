@@ -61,7 +61,7 @@ class TestUtils {
         return sendRequest(postRequest, parameters);
     }
 
-    static HttpResponse sendCreateChatRequest(String chatName, String userId,String tokenId) throws IOException {
+    static HttpResponse sendCreateChatRequest(String chatName, String userId, String tokenId) throws IOException {
 
         final String url = host + CHAT_CREATION_URI;
 
@@ -69,6 +69,18 @@ class TestUtils {
         parameters.add(new BasicNameValuePair(USER_ID, userId));
         parameters.add(new BasicNameValuePair(CHAT_NAME, chatName));
         parameters.add(new BasicNameValuePair(TOKEN_ID, tokenId));
+
+        HttpPost postRequest = new HttpPost(url);
+
+        return sendRequest(postRequest, parameters);
+    }
+
+    static HttpResponse sendJoinChatRequest(String userId, String chatId) throws IOException {
+        final String url = host + JOIN_CHAT_URI;
+
+        final List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair(USER_ID, userId));
+        parameters.add(new BasicNameValuePair(CHAT_ID, chatId));
 
         HttpPost postRequest = new HttpPost(url);
 

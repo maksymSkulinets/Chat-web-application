@@ -80,6 +80,34 @@ public class ChatServiceHandlersShould {
 
     }
 
+    @Test
+    public void joinChat() throws IOException {
+        /*TODO check is chat is joined*/
+        String chatName = "newChat_" + UUID.randomUUID();
+        final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
+        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
+        String chatId = chatCreationResult.optString(CHAT_ID);
+
+        final HttpResponse joinCreationResponse = TestUtils.sendJoinChatRequest(userId, chatId);
+        TestUtils.getResponseContent(joinCreationResponse);
+
+        assertEquals("Unexpected response status.", SC_OK, getStatus(joinCreationResponse));
+    }
+
+    @Test
+    public void failToJoinAlreadyJoinedChat() throws IOException {
+        String chatName = "newChat_" + UUID.randomUUID();
+        final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
+        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
+        String chatId = chatCreationResult.optString(CHAT_ID);
+
+        final HttpResponse firstJoinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId);
+        TestUtils.getResponseContent(firstJoinChatResponse);
+        final HttpResponse secondJoinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId);
+        TestUtils.getResponseContent(secondJoinChatResponse);
+
+        assertEquals("Unexpected response status.", SC_INTERNAL_SERVER_ERROR, getStatus(secondJoinChatResponse));
+    }
 
     private int getStatus(HttpResponse postResponse) {
         return postResponse.getStatusLine().getStatusCode();

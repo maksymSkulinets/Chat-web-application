@@ -15,6 +15,7 @@ class HandlerContainer {
                 put(new RequestContext(DELETE_ACCOUNT_URI, "POST"), new DeleteAccountHandler());
                 put(new RequestContext(LOGIN_URI, "POST"), new LoginHandler());
                 put(new RequestContext(CHAT_CREATION_URI, "POST"), new ChatCreationHandler());
+                put(new RequestContext(JOIN_CHAT_URI, "POST"), new JoinChatHandler());
             }};
 
     Optional<Handler> getHandler(RequestContext context) {
