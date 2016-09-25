@@ -100,6 +100,21 @@ class TestUtils {
 
     }
 
+    static HttpResponse sendPostMessageRequest(String chatId, String userId, String nickname, String message)
+            throws IOException {
+        final String url = host + POST_MESSAGE_URI;
+
+        final List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair(CHAT_ID, chatId));
+        parameters.add(new BasicNameValuePair(USER_ID, userId));
+        parameters.add(new BasicNameValuePair(NICKNAME, nickname));
+        parameters.add(new BasicNameValuePair(MESSAGE, message));
+
+        HttpPost postRequest = new HttpPost(url);
+
+        return sendRequest(postRequest, parameters);
+    }
+
     static JSONObject getResponseContent(HttpResponse response) throws IOException {
 
         BufferedReader buffer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
