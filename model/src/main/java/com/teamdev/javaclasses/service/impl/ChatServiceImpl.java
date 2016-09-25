@@ -81,7 +81,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void joinChat(MemberChatDto memberChatDto) throws ChatMemberException {
         /*TODO update logs*/
-
+        /*TODO update memberChatDto > remove nickname > take username by user id*/
         checkNotNull(memberChatDto.getUserId(),"value of user id can not be null");
         checkNotNull(memberChatDto.getChatId(),"value of chat id can not be null");
 
@@ -142,7 +142,7 @@ public class ChatServiceImpl implements ChatService {
             throw new PostMessageException(NOT_A_CHAT_MEMBER);
         }
 
-        if (postMessageDto.getMessage().isEmpty()) {
+        if (postMessageDto.getMessage().trim().isEmpty()) {
             log.warn(EMPTY_MESSAGE.getMessage());
             throw new PostMessageException(EMPTY_MESSAGE);
         }

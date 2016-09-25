@@ -16,6 +16,8 @@ class HandlerContainer {
                 put(new RequestContext(LOGIN_URI, "POST"), new LoginHandler());
                 put(new RequestContext(CHAT_CREATION_URI, "POST"), new ChatCreationHandler());
                 put(new RequestContext(JOIN_CHAT_URI, "POST"), new JoinChatHandler());
+                put(new RequestContext(LEAVE_CHAT_URI, "POST"), new LeaveChatHandler());
+                put(new RequestContext(POST_MESSAGE_URI, "POST"), new PostMessageHandler());
             }};
 
     Optional<Handler> getHandler(RequestContext context) {

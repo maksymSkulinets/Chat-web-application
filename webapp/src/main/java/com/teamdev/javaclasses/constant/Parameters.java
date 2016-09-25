@@ -8,5 +8,6 @@ public class Parameters {
     public final static String TOKEN_ID = "tokenId";
     public final static String CHAT_NAME = "chatName";
     public final static String CHAT_ID = "chatId";
+    public final static String MESSAGE = "message";
     public final static String WARNING_MESSAGE = "warningMessage";
 }
