@@ -1,4 +1,5 @@
 define(function (require) {
+    var baseUrl = 'http://localhost:8080';
 
     var EventBus = require('./eventBus');
     var eventBus = new EventBus();
@@ -12,11 +13,11 @@ define(function (require) {
     var chatApp = new ChatApp("chat-appId", eventBus, Events);
     chatApp.init();
 
-    var UserService = require('./userService');
-    var userService = new UserService(eventBus, Events, storage);
-    userService.init();
+    var CloudUserService = require('./cloudUserService');
+    var cloudUserService = new CloudUserService(eventBus, Events, baseUrl);
+    cloudUserService.init();
 
-    var ChatsService = require('./chatsService');
+    /*var ChatsService = require('./chatsService');
     var chatsService = new ChatsService(eventBus, Events, storage);
-    chatsService.init();
+    chatsService.init();*/
 });

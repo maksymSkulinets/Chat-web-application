@@ -16,10 +16,10 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             _createRegistrationContainer();
 
             eventBus.subscribe(Events.REGISTRATION_FAIL, function (evt) {
-                _showFail(evt.message);
+                _showFail(evt.eventMessage);
             });
             eventBus.subscribe(Events.REGISTRATION_SUCCESS, function (evt) {
-                _showSuccess(evt.message);
+                _showSuccess(evt.eventMessage);
             });
 
             _renderForm();
@@ -77,7 +77,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                 _renderButton();
             });
             eventBus.subscribe(Events.LOGIN_FAIL, function (evt) {
-                _showFail(evt.message);
+                _showFail(evt.eventMessage);
             });
 
         }
