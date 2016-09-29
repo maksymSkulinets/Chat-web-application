@@ -29,36 +29,36 @@ var UserService = function (eventBus, events, storage) {
         var trimmedNickname = nickname.trim();
 
         if (!trimmedNickname || !password || !verifyPassword) {
-            eventBus.post(events.REGISTRATION_FAIL, {message: 'All fields must be filled.'});
+            eventBus.post(events.REGISTRATION_FAIL, {eventMessage: 'All fields must be filled.'});
             return;
         }
 
         if (storage.findEntityByValue(type, "nickname", trimmedNickname)) {
-            eventBus.post(events.REGISTRATION_FAIL, {message: 'Nickname must be unique.'});
+            eventBus.post(events.REGISTRATION_FAIL, {eventMessage: 'Nickname must be unique.'});
             return;
         }
 
         if (password !== verifyPassword) {
-            eventBus.post(events.REGISTRATION_FAIL, {message: 'Passwords must be unique.'});
+            eventBus.post(events.REGISTRATION_FAIL, {eventMessage: 'Passwords must be unique.'});
             return;
         }
 
         var user = new User(nickname, password);
         storage.addEntity(type, user);
-        eventBus.post(events.REGISTRATION_SUCCESS, {message: 'Registration was successful!'});
+        eventBus.post(events.REGISTRATION_SUCCESS, {eventMessage: 'Registration was successful!'});
     }
 
     function _login(nickname, password) {
         var trimmedNickname = nickname.trim();
 
         if (!trimmedNickname || !password) {
-            eventBus.post(events.LOGIN_FAIL, {message: 'All fields must be filled.'});
+            eventBus.post(events.LOGIN_FAIL, {eventMessage: 'All fields must be filled.'});
             return;
         }
 
         var user = storage.findEntityByValue(type, "nickname", trimmedNickname);
         if (!user || user.password !== password) {
-            eventBus.post(events.LOGIN_FAIL, {message: 'Such user must register before.'});
+            eventBus.post(events.LOGIN_FAIL, {eventMessage: 'Such user must register before.'});
             return;
         }
 
