@@ -15,8 +15,7 @@ var ChatService = function (eventBus, events, baseUrl) {
 
 
     function _createChat(chatName, userId, tokenId) {
-        console.log("_createChat");
-        console.log(chatName + userId + tokenId);
+        console.log('Attempt to create chat.');
         var chatDto = {
             'chatName': chatName,
             'userId': userId,
@@ -28,11 +27,13 @@ var ChatService = function (eventBus, events, baseUrl) {
             function (xhr) {
                 var data = eval('(' + xhr + ')');
                 eventBus.post(events.CHAT_CREATION_SUCCESS, data);
+                console.log('Chat creation success.');
                 console.log(data);
             }, 'text')
             .fail(function (xhr) {
                 var data = eval('(' + xhr.responseText + ')');
                 eventBus.post(events.CHAT_CREATION_FAIL, data);
+                console.log('Chat creation fail.');
                 console.log(xhr);
             })
 

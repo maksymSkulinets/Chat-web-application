@@ -2,6 +2,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
     var registrationFormId = _rootDivId + "_registrationFormId";
     var loginFormId = _rootDivId + "_loginFormId";
+    /*TODO rename variables to chatIdFrame and messageIdFrame to prevent duplication in naming*/
     var chatId = _rootDivId + "_chatId";
     var messageId = _rootDivId + "_messageId";
     var _init = function () {
@@ -161,7 +162,6 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                 var allChats = $.map(JSON.parse(chatList), function (element) {
                     return element;
                 });
-                console.log(allChats);
 
                 _render(allChats);
             });

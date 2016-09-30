@@ -24,11 +24,13 @@ var CloudUserService = function (eventBus, events, baseUrl) {
                 var data = eval('(' + xhr + ')');
                 data.eventMessage = 'Registration success';
                 eventBus.post(events.REGISTRATION_SUCCESS, data);
+                console.log('Registration success.');
                 console.log(data);
             }, 'text')
             .fail(function (xhr) {
                 var data = eval('(' + xhr.responseText + ')');
                 eventBus.post(events.REGISTRATION_FAIL, data);
+                console.log('Registration fail.');
                 console.log(xhr);
             })
     }
@@ -44,22 +46,22 @@ var CloudUserService = function (eventBus, events, baseUrl) {
             userData,
             function (xhr) {
                 var data = eval('(' + xhr + ')');
-                data.eventMessage = "Login success";
+                data.eventMessage = 'Login success';
                 data.nickname = nickname;
                 eventBus.post(events.LOGIN_SUCCESS, data);
+                console.log('Login success.');
                 console.log(data);
             }, 'text')
             .fail(function (xhr) {
                 var data = eval('(' + xhr.responseText + ')');
                 eventBus.post(events.LOGIN_FAIL, data);
+                console.log('Login fail.');
                 console.log(xhr);
             })
     }
 
     return {
-        "init": _init,
-        "register": _register,
-        "login": _login
+        "init": _init
     };
 
 };
