@@ -169,12 +169,16 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                 _showFail(evt.eventMessage)
             });
             eventBus.subscribe(Events.CHAT_CONNECTION_SUCCESS, function (evt) {
-                var chatName = evt.chat.name;
-                new Chat(chatId, chatName, eventBus).init(evt.chat.messages);
+                var chatName = evt.chatName;
+                var $messageList = $.map(JSON.parse(evt.messages), function (element) {
+                    return element;
+                });
+
+                new Chat(chatId, chatName, eventBus).init($messageList);
                 _clearMessage();
             });
             eventBus.subscribe(Events.CHAT_CONNECTION_FAIL, function (evt) {
-                _showFail(evt.message);
+                _showFail(evt.eventMessage);
             });
         }
 
@@ -213,7 +217,9 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             $('#' + joinChatButtonId).click(function () {
                 var chatName = $('#' + selectId).val();
                 eventBus.post(Events.CHAT_CONNECTION_REQUEST, {
-                    name: chatName
+                    chatName: chatName,
+                    userId: serverCredentials.userId,
+                    tokenId: serverCredentials.tokenId
                 });
             });
         }
@@ -226,7 +232,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             function _init(messages) {
                 eventBus.subscribe(Events.CHAT_MESSAGE_CREATION_SUCCESS, function (evt) {
                     if (evt.chat.name === chatName) {
-                        _renderMessages(evt.chat.messages);
+                        _renderMessages(evt.messages);
                         _clearMessageInput();
                     }
                 });
@@ -281,12 +287,13 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             }
 
             function _renderMessages(messages) {
+                console.log(messages);
                 if (messages) {
                     var $messageList = $('#' + messageListId);
                     $messageList.empty();
                     for (var i = 0; i < messages.length; i++) {
                         var msg = messages[i];
-                        $messageList.append($('<li>').text(msg.ownerName + ': ' + msg.message));
+                        $messageList.append($('<li>').text(msg));
                     }
                 }
             }

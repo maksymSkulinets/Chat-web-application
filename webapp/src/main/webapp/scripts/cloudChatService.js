@@ -5,12 +5,12 @@ var ChatService = function (eventBus, events, baseUrl) {
         eventBus.subscribe(events.CHAT_CREATION_REQUEST, function (evt) {
             _createChat(evt.chatName, evt.userId, evt.tokenId);
         });
-        /*  eventBus.subscribe(events.CHAT_CONNECTION_REQUEST, function (evt) {
-         _connectChat(evt.name);
-         });
-         eventBus.subscribe(events.CHAT_MESSAGE_CREATION_REQUEST, function (evt) {
+        eventBus.subscribe(events.CHAT_CONNECTION_REQUEST, function (evt) {
+            _joinChat(evt.chatName, evt.userId, evt.tokenId);
+        });
+        /*         eventBus.subscribe(events.CHAT_MESSAGE_CREATION_REQUEST, function (evt) {
          _addMessage(evt.chatName, evt.userNickname, evt.message);
-         });*/
+         })*/
     }
 
 
@@ -36,6 +36,31 @@ var ChatService = function (eventBus, events, baseUrl) {
                 console.log('Chat creation fail.');
                 console.log(xhr);
             })
+
+    }
+
+    function _joinChat(chatName, userId, tokenId) {
+        var chatDto = {
+            'chatName': chatName,
+            'userId': userId,
+            'tokenId': tokenId
+        };
+
+        $.post(baseUrl + '/chat/join-chat',
+            chatDto,
+            function (xhr) {
+                var data = eval('(' + xhr + ')');
+                eventBus.post(events.CHAT_CONNECTION_SUCCESS, data);
+                console.log('Joining chat success.');
+                console.log(data);
+            }, 'text')
+            .fail(function (xhr) {
+                var data = eval('(' + xhr.responseText + ')');
+                eventBus.post(events.CHAT_CONNECTION_FAIL, data);
+                console.log('Joining chat fail.');
+                console.log(xhr);
+            })
+
 
     }
 
