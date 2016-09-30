@@ -135,7 +135,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
     //Inner class:
     function ChatComponent(chatId, eventBus) {
-        var ownerNickname;
+        var serverCredentials = {};
         var chatCounter = 0;
 
         function _init() {
@@ -151,15 +151,22 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
             eventBus.subscribe(Events.LOGIN_SUCCESS, function (evt) {
                 _createChatContainer();
-                ownerNickname = evt.nickname;
+                serverCredentials.ownerNickname = evt.nickname;
+                serverCredentials.tokenId = evt.tokenId;
+                serverCredentials.userId = evt.userId;
                 _render();
             });
             eventBus.subscribe(Events.CHAT_CREATION_SUCCESS, function (evt) {
                 var chatList = evt.chatList;
-                _render(chatList);
+                var allChats = $.map(JSON.parse(chatList), function (element) {
+                    return element;
+                });
+                console.log(allChats);
+
+                _render(allChats);
             });
             eventBus.subscribe(Events.CHAT_CREATION_FAIL, function (evt) {
-                _showFail(evt.message)
+                _showFail(evt.eventMessage)
             });
             eventBus.subscribe(Events.CHAT_CONNECTION_SUCCESS, function (evt) {
                 var chatName = evt.chat.name;
@@ -179,7 +186,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             var joinChatButtonId = chatId + '_joinChatButtonId';
 
             $('#' + loginFormId).remove();
-            $('#' + chatId).text('Welcome: ' + ownerNickname).append($('<p>'))
+            $('#' + chatId).text('Welcome: ' + serverCredentials.ownerNickname).append($('<p>'))
                 .append($('<input>').attr('id', inputId).attr('placeholder', 'Enter new chat name'))
                 .append($('<button>').attr('class', 'btn btn-success').attr('id', addNewChatButtonId).text('Add new chat'))
                 .append($('<select>').attr('id', selectId))
@@ -190,14 +197,16 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             $('#' + addNewChatButtonId).click(function () {
                 var chatName = $('#' + inputId).val();
                 eventBus.post(Events.CHAT_CREATION_REQUEST, {
-                    name: chatName,
-                    ownerNickname: ownerNickname
+                    chatName: chatName,
+                    userId: serverCredentials.userId,
+                    tokenId: serverCredentials.tokenId
                 });
+
             });
 
             if (chatList) {
                 for (var i = 0; i < chatList.length; i++) {
-                    $('#' + selectId).append($('<option>').text(chatList[i].name));
+                    $('#' + selectId).append($('<option>').text(chatList[i]));
                 }
             }
 
