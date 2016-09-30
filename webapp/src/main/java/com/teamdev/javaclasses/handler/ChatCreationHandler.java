@@ -1,18 +1,19 @@
 package com.teamdev.javaclasses.handler;
 
 import com.teamdev.javaclasses.HandlerProcessingResult;
-import com.teamdev.javaclasses.dto.ChatCreationDto;
-import com.teamdev.javaclasses.dto.ChatIdDto;
-import com.teamdev.javaclasses.dto.TokenIdDto;
-import com.teamdev.javaclasses.dto.UserDto;
+import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.service.ChatCreationException;
 import com.teamdev.javaclasses.service.ChatService;
 import com.teamdev.javaclasses.service.UserService;
 import com.teamdev.javaclasses.service.impl.ChatServiceImpl;
 import com.teamdev.javaclasses.service.impl.UserServiceImpl;
+import org.json.JSONArray;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static com.teamdev.javaclasses.constant.Parameters.*;
@@ -37,16 +38,29 @@ public class ChatCreationHandler implements Handler {
             return content;
         }
 
+
         try {
             final ChatIdDto chatIdDto = chatService.create(new ChatCreationDto(chatName, userId));
+            final List<String> allChatNames = getAllChatNames();
+            final JSONArray chatList = new JSONArray(allChatNames);
             content = new HandlerProcessingResult(SC_OK);
             content.setContent(CHAT_ID, String.valueOf(chatIdDto.getValue()));
-
+            content.setContent(CHAT_LIST, String.valueOf(chatList));
         } catch (ChatCreationException e) {
             content = new HandlerProcessingResult(SC_INTERNAL_SERVER_ERROR);
             content.setContent(WARNING_MESSAGE, e.getMessage());
         }
 
         return content;
+    }
+
+    private List<String> getAllChatNames() {
+        final Collection<ChatDto> allChats = chatService.findAllChats();
+        final List<String> allChatNames = new ArrayList<>();
+
+        for (ChatDto current : allChats) {
+            allChatNames.add(current.getChatName());
+        }
+        return allChatNames;
     }
 }

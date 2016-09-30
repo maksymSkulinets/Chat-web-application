@@ -10,4 +10,5 @@ public class Parameters {
     public final static String CHAT_ID = "chatId";
     public final static String MESSAGE = "message";
     public final static String WARNING_MESSAGE = "eventMessage";
+    public final static String CHAT_LIST = "chatList";
 }
