@@ -2,6 +2,7 @@ package com.teamdev.javaclasses.service;
 
 import com.teamdev.javaclasses.dto.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,4 +65,7 @@ public interface ChatService {
     void removeChat(ChatIdDto chatIdDto);
 
     List<MessageDto> findChatMessages(ChatIdDto chatId);
+
+    Collection<ChatDto> findAllChats();
+
 }

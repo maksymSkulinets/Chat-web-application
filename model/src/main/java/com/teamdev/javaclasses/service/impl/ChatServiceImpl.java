@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,8 +83,8 @@ public class ChatServiceImpl implements ChatService {
     public void joinChat(MemberChatDto memberChatDto) throws ChatMemberException {
         /*TODO update logs*/
         /*TODO update memberChatDto > remove nickname > take username by user id*/
-        checkNotNull(memberChatDto.getUserId(),"value of user id can not be null");
-        checkNotNull(memberChatDto.getChatId(),"value of chat id can not be null");
+        checkNotNull(memberChatDto.getUserId(), "value of user id can not be null");
+        checkNotNull(memberChatDto.getChatId(), "value of chat id can not be null");
 
         final Chat chat = chatRepository.get(new ChatId(memberChatDto.getChatId()));
 
@@ -231,6 +232,37 @@ public class ChatServiceImpl implements ChatService {
         final String chatNameValue = chat.getChatName().getValue();
         final ChatDto chatDto = new ChatDto(chatIdValue, ownerIdValue, chatNameValue, membersDto, messagesDto);
         return Optional.of(chatDto);
+    }
+
+    @Override
+    public Collection<ChatDto> findAllChats() {
+
+        final Collection<Chat> chats = chatRepository.findAll();
+        final Collection<ChatDto> chatsDto = new ArrayList<>();
+
+        for (Chat chat : chats) {
+            final List<Message> messages = chat.getMessages();
+            final List<UserId> members = chat.getMembers();
+            List<MessageDto> messagesDto = new ArrayList<>();
+            List<Long> membersDto = new ArrayList<>();
+
+            for (Message current : messages) {
+                final String authorName = current.getUserName().getValue();
+                final String content = current.getContent().getValue();
+                messagesDto.add(new MessageDto(authorName, content));
+            }
+
+            for (UserId current : members) {
+                membersDto.add(current.getValue());
+            }
+
+            final long chatId = chat.getId().getValue();
+            final long ownerId = chat.getOwnerId().getValue();
+            final String chatName = chat.getChatName().getValue();
+            chatsDto.add(new ChatDto(chatId, ownerId, chatName, membersDto, messagesDto));
+        }
+
+        return chatsDto;
     }
 
 }
