@@ -55,7 +55,7 @@ public interface ChatService {
     Optional<ChatDto> findChat(ChatIdDto chatIdDto);
 
     /**
-     *Find chat members by chat id.
+     * Find chat members by chat id.
      *
      * @param chatIdDto - chat id data transfer object
      * @return user id data transfer object
@@ -68,4 +68,5 @@ public interface ChatService {
 
     Collection<ChatDto> findAllChats();
 
+    Optional<ChatIdDto> findChatIdByName(ChatNameDto chatName);
 }

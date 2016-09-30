@@ -265,4 +265,14 @@ public class ChatServiceImpl implements ChatService {
         return chatsDto;
     }
 
+    @Override
+    public Optional<ChatIdDto> findChatIdByName(ChatNameDto chatName) {
+        final Optional<Chat> chat = chatRepository.getChat(chatName.getValue());
+        if (chat.isPresent()) {
+            final long chatIdValue = chat.get().getId().getValue();
+            return Optional.of(new ChatIdDto(chatIdValue));
+        }
+        return Optional.empty();
+    }
+
 }
