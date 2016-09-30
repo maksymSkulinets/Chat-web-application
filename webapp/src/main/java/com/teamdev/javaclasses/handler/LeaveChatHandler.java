@@ -1,9 +1,7 @@
 package com.teamdev.javaclasses.handler;
 
 import com.teamdev.javaclasses.HandlerProcessingResult;
-import com.teamdev.javaclasses.dto.MemberChatDto;
-import com.teamdev.javaclasses.dto.TokenIdDto;
-import com.teamdev.javaclasses.dto.UserDto;
+import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.service.ChatMemberException;
 import com.teamdev.javaclasses.service.ChatService;
 import com.teamdev.javaclasses.service.UserService;
@@ -25,9 +23,10 @@ public class LeaveChatHandler implements Handler {
     @Override
     public HandlerProcessingResult process(HttpServletRequest request, HttpServletResponse response) {
         HandlerProcessingResult content;
+
         final Long tokenId = Long.valueOf(request.getParameter(TOKEN_ID));
         final Long userId = Long.valueOf(request.getParameter(USER_ID));
-        final Long chatId = Long.valueOf(request.getParameter(CHAT_ID));
+        final String chatName = request.getParameter(CHAT_NAME);
 
         final Optional<UserDto> userByToken = userService.findUser(new TokenIdDto(tokenId));
         if (!userByToken.isPresent()) {
@@ -36,10 +35,12 @@ public class LeaveChatHandler implements Handler {
             return content;
         }
 
+        final Optional<ChatIdDto> chatIdByName = chatService.findChatIdByName(new ChatNameDto(chatName));
+
         try {
+            final Long chatId = chatIdByName.get().getValue();
             chatService.leaveChat(new MemberChatDto(userId, chatId));
             content = new HandlerProcessingResult(SC_OK);
-
         } catch (ChatMemberException e) {
             content = new HandlerProcessingResult(SC_INTERNAL_SERVER_ERROR);
             content.setContent(WARNING_MESSAGE, e.getMessage());
