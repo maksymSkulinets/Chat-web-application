@@ -15,7 +15,7 @@ var Events = {
     CHAT_MESSAGE_CREATION_REQUEST: 'chatMessageCreationRequest',
     CHAT_MESSAGE_CREATION_SUCCESS: 'chatMessageCreationSuccess',
     CHAT_MESSAGE_CREATION_FAIL: 'chatMessageCreationFail',
-    CHAT_LEAVE_ACTION: 'chatLeaveRequest'
+    CHAT_LEAVE_REQUEST: 'chatLeaveRequest'
 
 };
 

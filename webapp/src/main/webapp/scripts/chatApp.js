@@ -245,19 +245,16 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                 _renderChat(chatId, chatName, messages);
             }
 
-            function _renderChat(chatId, name, messages) {
+            function _renderChat(chatId, chatName, messages) {
                 var currentChatId = chatId + '_chat-' + (++chatCounter);
                 var closeButtonId = currentChatId + '_closeButton';
                 messageListId = currentChatId + '_messageListId';
                 messageInputId = currentChatId + '_inputId';
                 var sendButtonId = currentChatId + '_sendButtonId';
 
-                /*TODO all messages rename to reports(Problem: duplicate posted messages and GUI reports)*/
-
-
                 $('#' + _rootDivId)
                     .append($('<div>').attr('id', currentChatId).attr('class', 'box')
-                        .append($('<label>').text('Chat Name: ' + name))
+                        .append($('<label>').text('Chat Name: ' + chatName))
                         .append($('<button>').attr('class', 'btn btn-primary').attr('id', closeButtonId).text('Close'))
                         .append($('<ul>', {'id': messageListId, class: 'chat-block'}))
                         .append($('<textarea>').attr('id', messageInputId).attr('placeholder', 'Type message here'))
@@ -277,17 +274,17 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
                 $('#' + closeButtonId).click(function () {
                     var evt = {
-                        nickname: ownerNickname,
+                        tokenId: serverCredentials.tokenId,
+                        userId: serverCredentials.userId,
                         chatName: chatName
                     };
-                    eventBus.post(Events.CHAT_LEAVE_ACTION, evt);
+                    eventBus.post(Events.CHAT_LEAVE_REQUEST, evt);
                     $('#' + currentChatId).remove();
 
                 })
             }
 
             function _renderMessages(messages) {
-                console.log(messages);
                 if (messages) {
                     var $messageList = $('#' + messageListId);
                     $messageList.empty();

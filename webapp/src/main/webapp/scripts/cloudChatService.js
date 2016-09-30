@@ -5,17 +5,26 @@ var ChatService = function (eventBus, events, baseUrl) {
         eventBus.subscribe(events.CHAT_CREATION_REQUEST, function (evt) {
             _createChat(evt.chatName, evt.userId, evt.tokenId);
         });
+
         eventBus.subscribe(events.CHAT_CONNECTION_REQUEST, function (evt) {
             _joinChat(evt.chatName, evt.userId, evt.tokenId);
         });
-        /*         eventBus.subscribe(events.CHAT_MESSAGE_CREATION_REQUEST, function (evt) {
+
+        eventBus.subscribe(events.CHAT_LEAVE_REQUEST, function (evt) {
+            _leaveChat(evt.chatName, evt.userId, evt.tokenId);
+        });
+
+        /*
+         eventBus.subscribe(events.CHAT_MESSAGE_CREATION_REQUEST, function (evt) {
          _addMessage(evt.chatName, evt.userNickname, evt.message);
-         })*/
+         })
+         */
     }
 
 
     function _createChat(chatName, userId, tokenId) {
         console.log('Attempt to create chat.');
+
         var chatDto = {
             'chatName': chatName,
             'userId': userId,
@@ -36,10 +45,11 @@ var ChatService = function (eventBus, events, baseUrl) {
                 console.log('Chat creation fail.');
                 console.log(xhr);
             })
-
     }
 
     function _joinChat(chatName, userId, tokenId) {
+        console.log('Attempt to join chat.');
+
         var chatDto = {
             'chatName': chatName,
             'userId': userId,
@@ -60,9 +70,28 @@ var ChatService = function (eventBus, events, baseUrl) {
                 console.log('Joining chat fail.');
                 console.log(xhr);
             })
-
-
     }
+
+    function _leaveChat(chatName, userId, tokenId) {
+        console.log('Attempt to leave chat.');
+
+        var chatDto = {
+            'chatName': chatName,
+            'userId': userId,
+            'tokenId': tokenId
+        };
+
+        $.post(baseUrl + '/chat/leave-chat',
+            chatDto,
+            function (xhr) {
+                console.log('Leaving chat success.');
+            }, 'text')
+            .fail(function (xhr) {
+                console.log('Leaving chat fail.');
+                console.log(xhr);
+            })
+    }
+
 
     return {
         "init": _init

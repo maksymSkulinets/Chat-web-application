@@ -10,7 +10,7 @@ var UserService = function (eventBus, events, storage) {
             _login(evt.nickname, evt.password);
         });
 
-        eventBus.subscribe(events.CHAT_LEAVE_ACTION, function (evt) {
+        eventBus.subscribe(events.CHAT_LEAVE_REQUEST, function (evt) {
             _leaveChat(evt.nickname, evt.chatName);
         });
 
@@ -71,7 +71,7 @@ var UserService = function (eventBus, events, storage) {
             if (user.chats[i].name === chatName) {
                 var evt = {message: 'Chat: ' + chatName + 'was leaved by user' + nickname};
                 user.chats.splice(i, 1);
-                eventBus.post(Event.CHAT_LEAVE_ACTION, evt);
+                eventBus.post(Event.CHAT_LEAVE_REQUEST, evt);
                 return;
             }
         }
