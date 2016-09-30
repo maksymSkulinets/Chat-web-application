@@ -9,7 +9,7 @@ var CloudUserService = function (eventBus, events, baseUrl) {
             _login(evt.nickname, evt.password);
         });
     }
-    
+
     function _register(nickname, password, verifyPassword) {
 
         var userData = {
@@ -21,8 +21,10 @@ var CloudUserService = function (eventBus, events, baseUrl) {
         $.post(baseUrl + '/chat/registration',
             userData,
             function (xhr) {
-                eventBus.post(events.REGISTRATION_SUCCESS, {eventMessage: "Registration success"});
-                console.log(xhr);
+                var data = eval('(' + xhr + ')');
+                data.eventMessage = 'Registration success';
+                eventBus.post(events.REGISTRATION_SUCCESS, data);
+                console.log(data);
             }, 'text')
             .fail(function (xhr) {
                 var data = eval('(' + xhr.responseText + ')');
@@ -41,8 +43,11 @@ var CloudUserService = function (eventBus, events, baseUrl) {
         $.post(baseUrl + '/chat/login',
             userData,
             function (xhr) {
-                eventBus.post(events.LOGIN_SUCCESS, {eventMessage: "Login success"});
-                console.log(xhr);
+                var data = eval('(' + xhr + ')');
+                data.eventMessage = "Login success";
+                data.nickname = nickname;
+                eventBus.post(events.LOGIN_SUCCESS, data);
+                console.log(data);
             }, 'text')
             .fail(function (xhr) {
                 var data = eval('(' + xhr.responseText + ')');

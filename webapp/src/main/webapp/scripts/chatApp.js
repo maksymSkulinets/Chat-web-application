@@ -1,5 +1,4 @@
 var ChatApp = function (_rootDivId, eventBus, Events) {
-    var ownerNickname;
 
     var registrationFormId = _rootDivId + "_registrationFormId";
     var loginFormId = _rootDivId + "_loginFormId";
@@ -136,6 +135,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
     //Inner class:
     function ChatComponent(chatId, eventBus) {
+        var ownerNickname;
         var chatCounter = 0;
 
         function _init() {

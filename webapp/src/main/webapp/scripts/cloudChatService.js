@@ -1,6 +1,6 @@
 var ChatService = function (eventBus, events, baseUrl) {
 
-
+    
     function _init() {
         eventBus.subscribe(events.CHAT_CREATION_REQUEST, function (evt) {
             _createChat(evt.chatName, evt.userId, evt.tokenId);

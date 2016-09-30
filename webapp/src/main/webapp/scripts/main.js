@@ -17,7 +17,7 @@ define(function (require) {
     var cloudUserService = new CloudUserService(eventBus, Events, baseUrl);
     cloudUserService.init();
 
-    /*var ChatsService = require('./chatsService');
-    var chatsService = new ChatsService(eventBus, Events, storage);
-    chatsService.init();*/
+    var CloudChatService = require('./cloudChatService');
+    var cloudChatService = new CloudChatService(eventBus, Events, baseUrl);
+    cloudChatService.init();
 });
