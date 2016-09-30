@@ -1,17 +1,18 @@
 package com.teamdev.javaclasses.handler;
 
 import com.teamdev.javaclasses.HandlerProcessingResult;
-import com.teamdev.javaclasses.dto.MemberChatDto;
-import com.teamdev.javaclasses.dto.TokenIdDto;
-import com.teamdev.javaclasses.dto.UserDto;
+import com.teamdev.javaclasses.dto.*;
 import com.teamdev.javaclasses.service.ChatMemberException;
 import com.teamdev.javaclasses.service.ChatService;
 import com.teamdev.javaclasses.service.UserService;
 import com.teamdev.javaclasses.service.impl.ChatServiceImpl;
 import com.teamdev.javaclasses.service.impl.UserServiceImpl;
+import org.json.JSONArray;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.teamdev.javaclasses.constant.Parameters.*;
@@ -25,9 +26,10 @@ public class JoinChatHandler implements Handler {
     @Override
     public HandlerProcessingResult process(HttpServletRequest request, HttpServletResponse response) {
         HandlerProcessingResult content;
+
         final Long tokenId = Long.valueOf(request.getParameter(TOKEN_ID));
         final Long userId = Long.valueOf(request.getParameter(USER_ID));
-        final Long chatId = Long.valueOf(request.getParameter(CHAT_ID));
+        final String chatName = request.getParameter(CHAT_NAME);
 
         final Optional<UserDto> userByToken = userService.findUser(new TokenIdDto(tokenId));
         if (!userByToken.isPresent()) {
@@ -36,15 +38,31 @@ public class JoinChatHandler implements Handler {
             return content;
         }
 
-        try {
-            chatService.joinChat(new MemberChatDto(userId, chatId));
-            content = new HandlerProcessingResult(SC_OK);
+        final Optional<ChatIdDto> chatIdByName = chatService.findChatIdByName(new ChatNameDto(chatName));
 
+        try {
+            final Long chatIdValue = chatIdByName.get().getValue();
+            chatService.joinChat(new MemberChatDto(userId, chatIdValue));
+
+            final JSONArray messageList = convertToList(chatIdByName.get());
+            content = new HandlerProcessingResult(SC_OK);
+            content.setContent(MESSAGES, String.valueOf(messageList));
+            content.setContent(CHAT_NAME, chatName);
         } catch (ChatMemberException e) {
             content = new HandlerProcessingResult(SC_INTERNAL_SERVER_ERROR);
             content.setContent(WARNING_MESSAGE, e.getMessage());
         }
 
         return content;
+    }
+
+    private JSONArray convertToList(ChatIdDto chatId) {
+        final List<String> messageList = new ArrayList<>();
+        final List<MessageDto> messages = chatService.findChatMessages(chatId);
+
+        for (MessageDto current : messages) {
+            messageList.add(current.getAuthorName() + ": " + current.getContent());
+        }
+        return new JSONArray(messageList);
     }
 }
