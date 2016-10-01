@@ -38,13 +38,13 @@ public class JoinChatHandler implements Handler {
             return content;
         }
 
-        final Optional<ChatIdDto> chatIdByName = chatService.findChatIdByName(new ChatNameDto(chatName));
+        final Optional<ChatIdDto> chatId = chatService.findChatIdByName(new ChatNameDto(chatName));
 
         try {
-            final Long chatIdValue = chatIdByName.get().getValue();
+            final Long chatIdValue = chatId.get().getValue();
             chatService.joinChat(new MemberChatDto(userId, chatIdValue));
 
-            final JSONArray messageList = convertToList(chatIdByName.get());
+            final JSONArray messageList = convertMessageToJSON(chatId.get());
             content = new HandlerProcessingResult(SC_OK);
             content.setContent(MESSAGES, String.valueOf(messageList));
             content.setContent(CHAT_NAME, chatName);
@@ -56,13 +56,14 @@ public class JoinChatHandler implements Handler {
         return content;
     }
 
-    private JSONArray convertToList(ChatIdDto chatId) {
+    private JSONArray convertMessageToJSON(ChatIdDto chatId) {
         final List<String> messageList = new ArrayList<>();
         final List<MessageDto> messages = chatService.findChatMessages(chatId);
 
         for (MessageDto current : messages) {
             messageList.add(current.getAuthorName() + ": " + current.getContent());
         }
+
         return new JSONArray(messageList);
     }
 }
