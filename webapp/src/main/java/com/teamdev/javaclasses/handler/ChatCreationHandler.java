@@ -38,7 +38,6 @@ public class ChatCreationHandler implements Handler {
             return content;
         }
 
-
         try {
             final ChatIdDto chatIdDto = chatService.create(new ChatCreationDto(chatName, userId));
             final List<String> allChatNames = getAllChatNames();

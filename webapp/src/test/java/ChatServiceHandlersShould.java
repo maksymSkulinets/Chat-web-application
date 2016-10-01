@@ -1,10 +1,8 @@
-import com.teamdev.javaclasses.service.*;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Random;
 import java.util.UUID;
 
@@ -19,10 +17,11 @@ public class ChatServiceHandlersShould {
     private String userId;
     private String tokenId;
     private String nickname = "User_" + UUID.randomUUID();
-    private String password = "correct_password";
 
     @Before
-    public void setUpUserAccount() throws SignUpException, LoginException, IOException {
+    public void setUpUserAccount() throws Exception {
+        String password = "correct_password";
+
         final HttpResponse registrationResponse = TestUtils.sendRegistrationRequest(nickname, password, password);
         TestUtils.getResponseContent(registrationResponse);
 
@@ -33,18 +32,17 @@ public class ChatServiceHandlersShould {
     }
 
     @Test
-    public void createChat() throws IOException {
-        /*TODO check chat with current name exist*/
+    public void createChat() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
         final JSONObject result = TestUtils.getResponseContent(chatCreationResponse);
 
         assertEquals("Unexpected response status.", SC_OK, getStatus(chatCreationResponse));
-        assertNotNull("Request failed.Token was not received.", result.optString(USER_ID));
+        assertNotNull("Chat id was not received.", result.optString(CHAT_ID));
     }
 
     @Test
-    public void creationNewChatFailIfChatNameIsEmpty() throws IOException {
+    public void creationNewChatFailIfChatNameIsEmpty() throws Exception {
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest("", userId, tokenId);
         final JSONObject result = TestUtils.getResponseContent(chatCreationResponse);
 
@@ -53,7 +51,7 @@ public class ChatServiceHandlersShould {
     }
 
     @Test
-    public void creationNewChatFailIfChatNameIsNotUnique() throws IOException {
+    public void creationNewChatFailIfChatNameIsNotUnique() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         final HttpResponse firstResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
         TestUtils.getResponseContent(firstResponse);
@@ -66,7 +64,7 @@ public class ChatServiceHandlersShould {
     }
 
     @Test
-    public void creationNewChatFailIfSuchTokenNonExist() throws IOException {
+    public void creationNewChatFailIfSuchTokenNonExist() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         String nonExistToken = String.valueOf(new Random().nextLong());
 
@@ -75,168 +73,159 @@ public class ChatServiceHandlersShould {
 
         assertEquals("Unexpected response status.", SC_FORBIDDEN, getStatus(chatCreationResponse));
         assertEquals("Unexpected message.", NON_SIGN_UP_USER.getMessage(), result.optString(WARNING_MESSAGE));
-
     }
 
     @Test
-    public void joinChat() throws IOException {
+    public void joinChat() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse joinCreationResponse = TestUtils.sendJoinChatRequest(userId, chatId, tokenId);
-        TestUtils.getResponseContent(joinCreationResponse);
+        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatName, tokenId);
+        final JSONObject joinChatResult = TestUtils.getResponseContent(joinChatResponse);
 
-        assertEquals("Unexpected response status.", SC_OK, getStatus(joinCreationResponse));
+        assertEquals("Unexpected response status.", SC_OK, getStatus(joinChatResponse));
+        assertEquals("Unexpected chat name", chatName, joinChatResult.optString(CHAT_NAME));
     }
 
     @Test
-    public void failToJoinChatIfSuchTokenNonExist() throws IOException {
+    public void failToJoinChatIfSuchTokenNonExist() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         String nonExistTokenId = String.valueOf(new Random().nextLong());
 
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse joinCreationResponse = TestUtils.sendJoinChatRequest(userId, chatId, nonExistTokenId);
-        final JSONObject joinChatResponseResult = TestUtils.getResponseContent(joinCreationResponse);
+        final HttpResponse joinCreationResponse = TestUtils.sendJoinChatRequest(userId, chatName, nonExistTokenId);
+        final JSONObject joinChatResult = TestUtils.getResponseContent(joinCreationResponse);
 
         assertEquals("Unexpected response status.", SC_FORBIDDEN, getStatus(joinCreationResponse));
-        assertEquals("Unexpected message.", NON_SIGN_UP_USER.getMessage(), joinChatResponseResult.optString(WARNING_MESSAGE));
-
+        assertEquals("Unexpected message.", NON_SIGN_UP_USER.getMessage(), joinChatResult.optString(WARNING_MESSAGE));
     }
 
 
     @Test
-    public void failToJoinAlreadyJoinedChat() throws IOException {
+    public void failToJoinAlreadyJoinedChat() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse firstJoinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId, tokenId);
-        TestUtils.getResponseContent(firstJoinChatResponse);
-        final HttpResponse secondJoinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId, tokenId);
-        final JSONObject secondJoinResponseResult = TestUtils.getResponseContent(secondJoinChatResponse);
+        final HttpResponse firstResponse = TestUtils.sendJoinChatRequest(userId, chatName, tokenId);
+        TestUtils.getResponseContent(firstResponse);
+        final HttpResponse secondResponse = TestUtils.sendJoinChatRequest(userId, chatName, tokenId);
+        final JSONObject secondResponseResult = TestUtils.getResponseContent(secondResponse);
 
-        assertEquals("Unexpected response status.", SC_INTERNAL_SERVER_ERROR, getStatus(secondJoinChatResponse));
-        assertEquals("Unexpected message.", CHAT_MEMBER_ALREADY_JOIN.getMessage(), secondJoinResponseResult.optString(WARNING_MESSAGE));
-
+        assertEquals("Unexpected response status.", SC_INTERNAL_SERVER_ERROR, getStatus(secondResponse));
+        assertEquals("Unexpected message.", CHAT_MEMBER_ALREADY_JOIN.getMessage(), secondResponseResult.optString(WARNING_MESSAGE));
     }
 
     @Test
-    public void leaveUserFromChat() throws IOException {
+    public void leaveUserFromChat() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId, tokenId);
+        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatName, tokenId);
         TestUtils.getResponseContent(joinChatResponse);
 
-        final HttpResponse leaveChatResponse = TestUtils.sendLeaveChatRequest(userId, chatId, tokenId);
+        final HttpResponse leaveChatResponse = TestUtils.sendLeaveChatRequest(userId, chatName, tokenId);
         TestUtils.getResponseContent(leaveChatResponse);
+
         assertEquals("Unexpected response status.", SC_OK, getStatus(chatCreationResponse));
     }
 
     @Test
-    public void failToLeaveChatIfNotAChatMember() throws IOException {
+    public void failToLeaveChatIfNotAChatMember() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse leaveChatResponse = TestUtils.sendLeaveChatRequest(userId, chatId, tokenId);
-        final JSONObject leaveChatResponseResult = TestUtils.getResponseContent(leaveChatResponse);
+        final HttpResponse leaveChatResponse = TestUtils.sendLeaveChatRequest(userId, chatName, tokenId);
+        final JSONObject leaveChatResult = TestUtils.getResponseContent(leaveChatResponse);
 
         assertEquals("Unexpected response status.", SC_INTERNAL_SERVER_ERROR, getStatus(leaveChatResponse));
-        assertEquals("Unexpected message.", NOT_A_CHAT_MEMBER.getMessage(), leaveChatResponseResult.optString(WARNING_MESSAGE));
+        assertEquals("Unexpected message.", NOT_A_CHAT_MEMBER.getMessage(), leaveChatResult.optString(WARNING_MESSAGE));
     }
 
     @Test
-    public void failToLeaveChatIfSuchTokenNonExist() throws IOException {
+    public void failToLeaveChatIfSuchTokenNonExist() throws Exception {
         String chatName = "newChat_" + UUID.randomUUID();
         String nonExistTokenId = String.valueOf(new Random().nextLong());
 
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse leaveCreationResponse = TestUtils.sendLeaveChatRequest(userId, chatId, nonExistTokenId);
-        final JSONObject leaveChatResponseResult = TestUtils.getResponseContent(leaveCreationResponse);
+        final HttpResponse leaveChatResponse = TestUtils.sendLeaveChatRequest(userId, chatName, nonExistTokenId);
+        final JSONObject leaveChatResult = TestUtils.getResponseContent(leaveChatResponse);
 
-        assertEquals("Unexpected response status.", SC_FORBIDDEN, getStatus(leaveCreationResponse));
-        assertEquals("Unexpected message.", NON_SIGN_UP_USER.getMessage(), leaveChatResponseResult.optString(WARNING_MESSAGE));
-
+        assertEquals("Unexpected response status.", SC_FORBIDDEN, getStatus(leaveChatResponse));
+        assertEquals("Unexpected message.", NON_SIGN_UP_USER.getMessage(), leaveChatResult.optString(WARNING_MESSAGE));
     }
 
     @Test
-    public void postMessageToChat() throws ChatMemberException, ChatCreationException, PostMessageException, IOException {
+    public void postMessageToChat() throws Exception {
         String message = "Message content";
         String chatName = "newChat_" + UUID.randomUUID();
 
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId, tokenId);
+        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatName, tokenId);
         TestUtils.getResponseContent(joinChatResponse);
 
-        final HttpResponse postMessageResponse = TestUtils.sendPostMessageRequest(chatId, userId, nickname, message, tokenId);
+        final HttpResponse postMessageResponse = TestUtils.
+                sendPostMessageRequest(userId, chatName, tokenId, nickname, message);
         TestUtils.getResponseContent(postMessageResponse);
+
         assertEquals("Unexpected response status.", SC_OK, getStatus(postMessageResponse));
     }
 
     @Test
-    public void failToPostEmptyMessage() throws ChatMemberException, ChatCreationException, PostMessageException, IOException {
+    public void failToPostEmptyMessage() throws Exception {
         String message = " ";
         String chatName = "newChat_" + UUID.randomUUID();
 
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId, tokenId);
+        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatName, tokenId);
         TestUtils.getResponseContent(joinChatResponse);
 
-        final HttpResponse postMessageResponse = TestUtils.sendPostMessageRequest(chatId, userId, nickname, message, tokenId);
-        final JSONObject postMessageResponseResult = TestUtils.getResponseContent(postMessageResponse);
+        final HttpResponse postMessageResponse = TestUtils.sendPostMessageRequest(userId, chatName, tokenId, nickname, message);
+        final JSONObject postMessageResult = TestUtils.getResponseContent(postMessageResponse);
 
         assertEquals("Unexpected response status.", SC_INTERNAL_SERVER_ERROR, getStatus(postMessageResponse));
-        assertEquals("Unexpected message.", EMPTY_MESSAGE.getMessage(), postMessageResponseResult.optString(WARNING_MESSAGE));
+        assertEquals("Unexpected message.", EMPTY_MESSAGE.getMessage(), postMessageResult.optString(WARNING_MESSAGE));
     }
 
     @Test
-    public void failToPostMessageWithoutJoiningToChat() throws ChatMemberException, ChatCreationException, PostMessageException, IOException {
+    public void failToPostMessageWithoutJoiningToChat() throws Exception {
         String message = "Message content";
         String chatName = "newChat_" + UUID.randomUUID();
 
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse postMessageResponse = TestUtils.sendPostMessageRequest(chatId, userId, nickname, message, tokenId);
-        final JSONObject postMessageResponseResult = TestUtils.getResponseContent(postMessageResponse);
+        final HttpResponse postMessageResponse = TestUtils.sendPostMessageRequest(userId, chatName, tokenId, nickname, message);
+        final JSONObject postMessageResult = TestUtils.getResponseContent(postMessageResponse);
+
         assertEquals("Unexpected response status.", SC_INTERNAL_SERVER_ERROR, getStatus(postMessageResponse));
-        assertEquals("Unexpected message.", NOT_A_CHAT_MEMBER.getMessage(), postMessageResponseResult.optString(WARNING_MESSAGE));
+        assertEquals("Unexpected message.", NOT_A_CHAT_MEMBER.getMessage(), postMessageResult.optString(WARNING_MESSAGE));
     }
 
     @Test
-    public void failToPostEmptyMessageWithNonExistToken() throws ChatMemberException, ChatCreationException, PostMessageException, IOException {
+    public void failToPostEmptyMessageWithNonExistToken() throws Exception {
         String message = "Message content";
         String chatName = "newChat_" + UUID.randomUUID();
         String nonExistTokenId = String.valueOf(new Random().nextLong());
 
         final HttpResponse chatCreationResponse = TestUtils.sendCreateChatRequest(chatName, userId, tokenId);
-        final JSONObject chatCreationResult = TestUtils.getResponseContent(chatCreationResponse);
-        String chatId = chatCreationResult.optString(CHAT_ID);
+        TestUtils.getResponseContent(chatCreationResponse);
 
-        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatId, tokenId);
+        final HttpResponse joinChatResponse = TestUtils.sendJoinChatRequest(userId, chatName, tokenId);
         TestUtils.getResponseContent(joinChatResponse);
 
-        final HttpResponse postMessageResponse = TestUtils.sendPostMessageRequest(chatId, userId, nickname, message, nonExistTokenId);
+        final HttpResponse postMessageResponse = TestUtils.sendPostMessageRequest(userId, chatName, nonExistTokenId, nickname, message);
         final JSONObject postMessageResponseResult = TestUtils.getResponseContent(postMessageResponse);
 
         assertEquals("Unexpected response status.", SC_FORBIDDEN, getStatus(postMessageResponse));

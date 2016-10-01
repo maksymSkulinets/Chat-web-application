@@ -75,12 +75,12 @@ class TestUtils {
         return sendRequest(postRequest, parameters);
     }
 
-    static HttpResponse sendJoinChatRequest(String userId, String chatId, String tokenId) throws IOException {
+    static HttpResponse sendJoinChatRequest(String userId, String chatName, String tokenId) throws IOException {
         final String url = host + JOIN_CHAT_URI;
 
         final List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair(USER_ID, userId));
-        parameters.add(new BasicNameValuePair(CHAT_ID, chatId));
+        parameters.add(new BasicNameValuePair(CHAT_NAME, chatName));
         parameters.add(new BasicNameValuePair(TOKEN_ID, tokenId));
 
         HttpPost postRequest = new HttpPost(url);
@@ -88,12 +88,12 @@ class TestUtils {
         return sendRequest(postRequest, parameters);
     }
 
-    static HttpResponse sendLeaveChatRequest(String userId, String chatId, String tokenId) throws IOException {
+    static HttpResponse sendLeaveChatRequest(String userId, String chatName, String tokenId) throws IOException {
         final String url = host + LEAVE_CHAT_URI;
 
         final List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair(USER_ID, userId));
-        parameters.add(new BasicNameValuePair(CHAT_ID, chatId));
+        parameters.add(new BasicNameValuePair(CHAT_NAME, chatName));
         parameters.add(new BasicNameValuePair(TOKEN_ID, tokenId));
 
         HttpPost postRequest = new HttpPost(url);
@@ -102,16 +102,17 @@ class TestUtils {
 
     }
 
-    static HttpResponse sendPostMessageRequest(String chatId, String userId, String nickname, String message, String  tokenId)
+    static HttpResponse sendPostMessageRequest(String userId, String chatName, String tokenId, String nickname, String message)
             throws IOException {
+
         final String url = host + POST_MESSAGE_URI;
 
         final List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair(CHAT_ID, chatId));
         parameters.add(new BasicNameValuePair(USER_ID, userId));
+        parameters.add(new BasicNameValuePair(CHAT_NAME, chatName));
+        parameters.add(new BasicNameValuePair(TOKEN_ID, tokenId));
         parameters.add(new BasicNameValuePair(NICKNAME, nickname));
         parameters.add(new BasicNameValuePair(MESSAGE, message));
-        parameters.add(new BasicNameValuePair(TOKEN_ID, tokenId));
 
         HttpPost postRequest = new HttpPost(url);
 
