@@ -14,13 +14,10 @@ var ChatService = function (eventBus, events, baseUrl) {
             _leaveChat(evt.chatName, evt.userId, evt.tokenId);
         });
 
-        /*
-         eventBus.subscribe(events.CHAT_MESSAGE_CREATION_REQUEST, function (evt) {
-         _addMessage(evt.chatName, evt.userNickname, evt.message);
-         })
-         */
+        eventBus.subscribe(events.POST_MESSAGE_REQUEST, function (evt) {
+            _postMessage(evt.chatName, evt.nickname, evt.message, evt.userId, evt.tokenId);
+        })
     }
-
 
     function _createChat(chatName, userId, tokenId) {
         console.log('Attempt to create chat.');
@@ -90,6 +87,34 @@ var ChatService = function (eventBus, events, baseUrl) {
                 console.log('Leaving chat fail.');
                 console.log(xhr);
             })
+    }
+
+    function _postMessage(chatName, nickname, message, userId, tokenId) {
+        console.log('Attempt to post message.');
+
+        var messageDto = {
+            'chatName': chatName,
+            'nickname': nickname,
+            'message': message,
+            'tokenId': tokenId,
+            'userId': userId
+        };
+
+        $.post(baseUrl + '/chat/post-message',
+            messageDto,
+            function (xhr) {
+                var data = eval('(' + xhr + ')');
+                eventBus.post(events.POST_MESSAGE_SUCCESS, data);
+                console.log('Post message success.');
+                console.log(data);
+            }, 'text')
+            .fail(function (xhr) {
+                var data = eval('(' + xhr.responseText + ')');
+                data.chatName = chatName;
+                eventBus.post(events.POST_MESSAGE_FAIL, data);
+                console.log('Post message fail.');
+                console.log(xhr);
+            });
     }
 
 

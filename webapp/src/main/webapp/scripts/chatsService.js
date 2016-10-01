@@ -5,7 +5,7 @@ var ChatService = function (eventBus, events, storage) {
         eventBus.subscribe(events.CHAT_CREATION_REQUEST, function (evt) {
             _addChat(evt.name, evt.owner);
         });
-        eventBus.subscribe(events.CHAT_MESSAGE_CREATION_REQUEST, function (evt) {
+        eventBus.subscribe(events.POST_MESSAGE_REQUEST, function (evt) {
             _addMessage(evt.chatName, evt.userNickname, evt.message);
         });
         eventBus.subscribe(events.CHAT_CONNECTION_REQUEST, function (evt) {
@@ -79,7 +79,7 @@ var ChatService = function (eventBus, events, storage) {
     function _addMessage(chatName, userNickname, message) {
         var trimmedMessage = message.trim();
         if (trimmedMessage === '') {
-            eventBus.post(events.CHAT_MESSAGE_CREATION_FAIL, {
+            eventBus.post(events.POST_MESSAGE_FAIL, {
                 target: chatName,
                 message: "Empty message can't be posted."
             });
@@ -94,7 +94,7 @@ var ChatService = function (eventBus, events, storage) {
          storage.updateEntity(type, currentChat);
          */
 
-        eventBus.post(events.CHAT_MESSAGE_CREATION_SUCCESS, {chat: currentChat});
+        eventBus.post(events.POST_MESSAGE_SUCCESS, {chat: currentChat});
     }
 
     return {

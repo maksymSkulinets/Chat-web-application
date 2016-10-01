@@ -230,15 +230,18 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             var messageInputId;
 
             function _init(messages) {
-                eventBus.subscribe(Events.CHAT_MESSAGE_CREATION_SUCCESS, function (evt) {
-                    if (evt.chat.name === chatName) {
-                        _renderMessages(evt.messages);
+                eventBus.subscribe(Events.POST_MESSAGE_SUCCESS, function (evt) {
+                    if (evt.chatName === chatName) {
+                        var messageList = $.map(JSON.parse(evt.messages), function (argument) {
+                            return argument;
+                        });
+                        _renderMessages(messageList);
                         _clearMessageInput();
                     }
                 });
-                eventBus.subscribe(Events.CHAT_MESSAGE_CREATION_FAIL, function (evt) {
-                    if (evt.target === chatName) {
-                        $('#' + messageInputId).attr('placeholder', evt.message);
+                eventBus.subscribe(Events.POST_MESSAGE_FAIL, function (evt) {
+                    if (evt.chatName === chatName) {
+                        $('#' + messageInputId).attr('placeholder', evt.eventMessage);
                     }
                 });
 
@@ -265,10 +268,12 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
                 $('#' + sendButtonId).click(function () {
                     var message = $('#' + messageInputId).val();
-                    eventBus.post(Events.CHAT_MESSAGE_CREATION_REQUEST, {
+                    eventBus.post(Events.POST_MESSAGE_REQUEST, {
                         chatName: chatName,
-                        userNickname: ownerNickname,
-                        message: message
+                        message: message,
+                        nickname: serverCredentials.ownerNickname,
+                        tokenId: serverCredentials.tokenId,
+                        userId: serverCredentials.userId
                     });
                 });
 

@@ -12,9 +12,9 @@ var Events = {
     CHAT_CONNECTION_REQUEST: 'chatConnectionRequest',
     CHAT_CONNECTION_SUCCESS: 'chatConnectionSuccess',
     CHAT_CONNECTION_FAIL: 'chatConnectionFail',
-    CHAT_MESSAGE_CREATION_REQUEST: 'chatMessageCreationRequest',
-    CHAT_MESSAGE_CREATION_SUCCESS: 'chatMessageCreationSuccess',
-    CHAT_MESSAGE_CREATION_FAIL: 'chatMessageCreationFail',
+    POST_MESSAGE_REQUEST: 'postMessageRequest',
+    POST_MESSAGE_SUCCESS: 'postMessageSuccess',
+    POST_MESSAGE_FAIL: 'postMessageFail',
     CHAT_LEAVE_REQUEST: 'chatLeaveRequest'
 
 };
