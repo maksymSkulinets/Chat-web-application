@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.teamdev.javaclasses.constant.Parameters.*;
+import static com.teamdev.javaclasses.service.ChatServiceFailCases.JOIN_TO_NON_EXIST_CHAT;
 import static com.teamdev.javaclasses.service.UserServiceFailCases.NON_SIGN_UP_USER;
 import static javax.servlet.http.HttpServletResponse.*;
 
@@ -41,8 +42,11 @@ public class JoinChatHandler implements Handler {
         final Optional<ChatIdDto> chatId = chatService.findChatIdByName(new ChatNameDto(chatName));
 
         try {
-            final Long chatIdValue = chatId.get().getValue();
-            chatService.joinChat(new MemberChatDto(userId, chatIdValue));
+            if (!chatId.isPresent()) {
+                throw new ChatMemberException(JOIN_TO_NON_EXIST_CHAT);
+            }
+
+            chatService.joinChat(new MemberChatDto(userId, chatId.get().getValue()));
 
             final JSONArray messageList = convertMessageToJSON(chatId.get());
             content = new HandlerProcessingResult(SC_OK);
