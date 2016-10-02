@@ -252,11 +252,15 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                     .append($('<div>').attr({'id': currentChatId, 'class': 'box'})
                         .append($('<label>').text('Chat Name: ' + chatName))
                         .append($('<button>').attr('id', closeChatButtonId)
-                            .append($('<img>').attr({'src': 'image/close_btn.gif', 'alt': 'close chat'})))
+                            .append($('<span>', {'class': 'glyphicon glyphicon-remove'})))
                         .append($('<ul>', {'id': messageListId, class: 'chat-block'}))
                         .append($('<textarea>').attr('id', messageInputId).attr('placeholder', 'Type message here'))
-                        .append($('<button>').attr({'class': 'btn btn-success','id': sendMessageButtonId}).text('Send'))
-                        .append($('<div>').attr('id', messageIdFrame)));
+                        .append($('<button>').attr({
+                            'class': 'btn btn-success',
+                            'id': sendMessageButtonId
+                        }).text('Send'))
+                        .append($('<div>').attr('id', messageIdFrame))
+                    );
 
                 _renderMessages(messages);
 
