@@ -17,11 +17,11 @@ var CloudUserService = function (eventBus, events, baseUrl) {
             'password': password,
             'verifyPassword': verifyPassword
         };
-
+        //TODO: another code should be refactored in the same way.
         $.post(baseUrl + '/chat/registration',
-            userData,
-            function (xhr) {
-                var data = eval('(' + xhr + ')');
+            userData)
+            .done(function (responseData) {
+                var data = JSON.parse(responseData);
                 data.eventMessage = 'Registration success';
                 eventBus.post(events.REGISTRATION_SUCCESS, data);
                 console.log('Registration success.');
