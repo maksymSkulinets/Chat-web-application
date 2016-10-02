@@ -152,9 +152,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             });
             eventBus.subscribe(Events.CHAT_CREATION_SUCCESS, function (evt) {
                 var chatList = evt.chatList;
-                var allChats = $.map(JSON.parse(chatList), function (element) {
-                    return element;
-                });
+                var allChats = JSON.parse(chatList);
 
                 _render(allChats);
             });
@@ -163,9 +161,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             });
             eventBus.subscribe(Events.CHAT_CONNECTION_SUCCESS, function (evt) {
                 var chatName = evt.chatName;
-                var $messageList = $.map(JSON.parse(evt.messages), function (element) {
-                    return element;
-                });
+                var $messageList = JSON.parse(evt.messages);
 
                 new Chat(chatId, chatName, eventBus).init($messageList);
                 _clearMessage();
@@ -225,9 +221,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             function _init(messages) {
                 eventBus.subscribe(Events.POST_MESSAGE_SUCCESS, function (evt) {
                     if (evt.chatName === chatName) {
-                        var messageList = $.map(JSON.parse(evt.messages), function (argument) {
-                            return argument;
-                        });
+                        var messageList = JSON.parse(evt.messages);
                         _renderMessages(messageList);
                         _clearMessageInput();
                     }
