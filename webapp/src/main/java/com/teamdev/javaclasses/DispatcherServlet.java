@@ -33,6 +33,7 @@ public class DispatcherServlet extends HttpServlet {
         if (handler.isPresent()) {
             final HandlerProcessingResult processingResult = handler.get().process(request, response);
             response.setStatus(processingResult.getResponseStatus());
+            response.setCharacterEncoding("UTF-8");
             response.getWriter().write(processingResult.getContent());
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
