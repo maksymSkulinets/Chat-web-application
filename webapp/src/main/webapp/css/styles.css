@@ -1,3 +1,7 @@
+.chat-app {
+    word-wrap: break-word;
+}
+
 .warning {
     color: red;
 }
