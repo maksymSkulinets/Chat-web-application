@@ -80,7 +80,7 @@ var ChatService = function (eventBus, events, baseUrl) {
 
         $.post(baseUrl + '/chat/leave-chat',
             chatDto,
-            function (xhr) {
+            function () {
                 console.log('Leaving chat success.');
             }, 'text')
             .fail(function (xhr) {
