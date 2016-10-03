@@ -15,8 +15,9 @@ var Events = {
     POST_MESSAGE_REQUEST: 'postMessageRequest',
     POST_MESSAGE_SUCCESS: 'postMessageSuccess',
     POST_MESSAGE_FAIL: 'postMessageFail',
-    CHAT_LEAVE_REQUEST: 'chatLeaveRequest'
-
+    CHAT_LEAVE_REQUEST: 'chatLeaveRequest',
+    REGISTRATION_FORM_RENDERING: 'registrationFormRendering',
+    LOGIN_FORM_RENDERING: 'loginFormRendering'
 };
 
 if (typeof define !== 'function') {

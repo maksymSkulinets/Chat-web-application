@@ -29,6 +29,8 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             var passwordId = containerId + "_passwordId";
             var verifyPasswordId = containerId + "_verifyPasswordId";
             var registerButtonId = containerId + "_registerButtonId";
+            var startLoginButtonId = containerId + '_startLoginButtonId';
+
 
             $('#' + containerId)
                 .text('Registration form.').append($('<br>'))
@@ -43,7 +45,11 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                 .append($('<input>').attr({'id': verifyPasswordId, 'type': 'password'}))
                 .append($('<br>'))
                 .append($('<button>').attr({'id': registerButtonId, 'class': 'btn btn-success'}).text('Register'))
-                .append($('<div>').attr('id', messageIdFrame));
+                .append($('<div>').attr('id', messageIdFrame))
+                .append($('<button>)').attr({
+                    'id': startLoginButtonId,
+                    'class': 'btn btn-success'
+                }).text('Start login'));
 
             $('#' + registerButtonId).click(function () {
 
@@ -63,6 +69,11 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
                 eventBus.post(Events.REGISTRATION_REQUEST, evt);
             });
+
+            $('#' + startLoginButtonId).click(function () {
+                $('#' + registrationFormId).remove();
+                eventBus.post(Events.LOGIN_FORM_RENDERING)
+            });
         }
 
 
@@ -72,8 +83,8 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
     //Inner class:
     function LoginComponent(containerId, eventBus) {
         function _init() {
-            eventBus.subscribe(Events.REGISTRATION_SUCCESS, function () {
-                _renderButton();
+            eventBus.subscribe(Events.LOGIN_FORM_RENDERING, function () {
+                _renderForm();
             });
             eventBus.subscribe(Events.LOGIN_FAIL, function (evt) {
                 _showFail(evt.eventMessage);
@@ -81,28 +92,12 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
         }
 
-        function _renderButton() {
+        function _renderForm() {
             _createLoginContainer();
 
+            var nicknameId = containerId + '_nicknameId';
+            var passwordId = containerId + '_passwordId';
             var loginButtonId = containerId + '_loginButtonId';
-            var $rootForm = $('#' + loginFormId);
-            $rootForm.empty();
-            $rootForm.append($('<button>)').attr({
-                'id': loginButtonId,
-                'class': 'btn btn-success'
-            }).text('Start login'));
-
-            $('#' + loginButtonId).click(function () {
-                $('#' + registrationFormId).remove();
-                _renderForm()
-            })
-        }
-
-        function _renderForm() {
-
-            var nicknameId = loginFormId + '_nicknameId';
-            var passwordId = loginFormId + '_passwordId';
-            var loginButtonId = loginFormId + '_loginButtonId';
 
             $('#' + loginFormId)
                 .text('Login form.').append($('<br>'))
@@ -327,7 +322,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
     }
 
     function _render() {
-        var registrationForm = new RegistrationComponent(registrationFormId);
+        var registrationForm = new RegistrationComponent(registrationFormId,eventBus);
         registrationForm.init();
 
         var loginComponent = new LoginComponent(loginFormId, eventBus);
