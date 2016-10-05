@@ -1,4 +1,4 @@
-var CloudUserService = function (eventBus, events, baseUrl) {
+var UserService = function (eventBus, events, baseUrl) {
 
     function _init() {
         eventBus.subscribe(events.REGISTRATION_REQUEST, function (evt) {
@@ -17,11 +17,11 @@ var CloudUserService = function (eventBus, events, baseUrl) {
             'password': password,
             'verifyPassword': verifyPassword
         };
-        //TODO: another code should be refactored in the same way.
+
         $.post(baseUrl + '/chat/registration',
             userData)
-            .done(function (responseData) {
-                var data = JSON.parse(responseData);
+            .done(function (xhr) {
+                var data = JSON.parse(xhr);
                 data.eventMessage = 'Registration success';
                 eventBus.post(events.REGISTRATION_SUCCESS, data);
                 console.log('Registration success.');
@@ -43,8 +43,8 @@ var CloudUserService = function (eventBus, events, baseUrl) {
         };
 
         $.post(baseUrl + '/chat/login',
-            userData,
-            function (xhr) {
+            userData)
+            .done(function (xhr) {
                 var data = eval('(' + xhr + ')');
                 data.eventMessage = 'Login success';
                 data.nickname = nickname;
@@ -66,11 +66,10 @@ var CloudUserService = function (eventBus, events, baseUrl) {
 
 };
 
-
 if (typeof define !== 'function') {
     var define = require('amdefine')(module)
 }
 
 define(function () {
-    return CloudUserService;
+    return UserService;
 });
