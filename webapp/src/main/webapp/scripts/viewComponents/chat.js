@@ -1,138 +1,13 @@
-var ChatApp = function (_rootDivId, eventBus, Events) {
+var Chat = function (_rootDivId, eventBus, Events) {
 
-    var registrationFormId = _rootDivId + "_registrationFormId";
-    var loginFormId = _rootDivId + "_loginFormId";
     var chatIdFrame = _rootDivId + "_chatId";
     var messageIdFrame = _rootDivId + "_messageId";
     var _init = function () {
         _render();
     };
 
-    // Inner class:
-    function RegistrationComponent(containerId) {
-
-        var _init = function () {
-            _createRegistrationContainer();
-
-            eventBus.subscribe(Events.REGISTRATION_FAIL, function (evt) {
-                _showFail(evt.eventMessage);
-            });
-            eventBus.subscribe(Events.REGISTRATION_SUCCESS, function (evt) {
-                _showSuccess(evt.eventMessage);
-            });
-
-            _renderForm();
-        };
-
-        function _renderForm() {
-            var nicknameId = containerId + "_nicknameId";
-            var passwordId = containerId + "_passwordId";
-            var verifyPasswordId = containerId + "_verifyPasswordId";
-            var registerButtonId = containerId + "_registerButtonId";
-            var startLoginButtonId = containerId + '_startLoginButtonId';
-
-
-            $('#' + containerId)
-                .text('Registration form.').append($('<br>'))
-                .append('Please fill in next fields:').append($('<p>'))
-                .append($('<label>').attr('for', nicknameId).text('Nickname:')).append($('<br>'))
-                .append($('<input>').attr({'id': nicknameId, 'type': 'text'}))
-                .append($('<br>'))
-                .append($('<label>').attr('for', passwordId).text('Password:')).append($('<br>'))
-                .append($('<input>').attr({'id': passwordId, 'type': 'password'}))
-                .append($('<br>'))
-                .append($('<label>').attr('for', verifyPasswordId).text('Verify password:')).append($('<br>'))
-                .append($('<input>').attr({'id': verifyPasswordId, 'type': 'password'}))
-                .append($('<br>'))
-                .append($('<button>').attr({'id': registerButtonId, 'class': 'btn btn-success'}).text('Register'))
-                .append($('<div>').attr('id', messageIdFrame))
-                .append($('<button>)').attr({
-                    'id': startLoginButtonId,
-                    'class': 'btn btn-success'
-                }).text('Start login'));
-
-            $('#' + registerButtonId).click(function () {
-
-                console.log('Registration form. Data input:');
-                var nickname = $('#' + nicknameId).val();
-                console.log('nickname: ' + nickname);
-                var password = $('#' + passwordId).val();
-                console.log('password: ' + password);
-                var verifyPassword = $('#' + verifyPasswordId).val();
-                console.log('verifyPassword: ' + verifyPassword);
-
-                var evt = {
-                    "nickname": nickname,
-                    "password": password,
-                    "verifyPassword": verifyPassword
-                };
-
-                eventBus.post(Events.REGISTRATION_REQUEST, evt);
-            });
-
-            $('#' + startLoginButtonId).click(function () {
-                $('#' + registrationFormId).remove();
-                eventBus.post(Events.LOGIN_FORM_RENDERING)
-            });
-        }
-
-
-        return {"init": _init};
-    }
-
     //Inner class:
-    function LoginComponent(containerId, eventBus) {
-        function _init() {
-            eventBus.subscribe(Events.LOGIN_FORM_RENDERING, function () {
-                _renderForm();
-            });
-            eventBus.subscribe(Events.LOGIN_FAIL, function (evt) {
-                _showFail(evt.eventMessage);
-            });
-
-        }
-
-        function _renderForm() {
-            _createLoginContainer();
-
-            var nicknameId = containerId + '_nicknameId';
-            var passwordId = containerId + '_passwordId';
-            var loginButtonId = containerId + '_loginButtonId';
-
-            $('#' + loginFormId)
-                .text('Login form.').append($('<br>'))
-                .append('Please fill in next fields:').append($('<p>'))
-                .append($('<label>').attr('for', nicknameId).text('Nickname:')).append($('<br>'))
-                .append($('<input>').attr({'id': nicknameId, 'type': 'text'})).append($('<br>'))
-                .append($('<label>').attr('for', passwordId).text('Password:')).append($('<br>'))
-                .append($('<input>').attr({'id': passwordId, 'type': 'password'})).append($('<br>'))
-                .append($('<button>').attr({'id': loginButtonId, 'class': 'btn btn-success'}).text('Login'))
-                .append($('<div>').attr('id', messageIdFrame));
-
-            $('#' + loginButtonId).click(function () {
-
-                console.log('Login form. Data input:');
-                var nickname = $('#' + nicknameId).val();
-                console.log('nickname: ' + nickname);
-                var password = $('#' + passwordId).val();
-                console.log('password: ' + password);
-
-                var evt = {
-                    'nickname': nickname,
-                    'password': password
-                };
-
-                eventBus.post(Events.LOGIN_DATA_REQUEST, evt)
-            })
-
-        }
-
-
-        return {"init": _init};
-    }
-
-    //Inner class:
-    function ChatComponent(chatId, eventBus) {
+    function ChatComponent(chatIdFrame, eventBus) {
         var serverCredentials = {};
         var chatCounter = 0;
 
@@ -158,7 +33,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                 var chatName = evt.chatName;
                 var $messageList = JSON.parse(evt.messages);
 
-                new Chat(chatId, chatName, eventBus).init($messageList);
+                new Chat(chatIdFrame, chatName, eventBus).init($messageList);
                 _clearMessage();
             });
             eventBus.subscribe(Events.CHAT_CONNECTION_FAIL, function (evt) {
@@ -168,13 +43,12 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
 
         function _render(chatList) {
 
-            var addNewChatButtonId = chatId + '_addNewChatButtonId';
-            var chatInputId = chatId + '_chatInputId';
-            var chatSelectorId = chatId + '_chatSelectorId';
-            var joinChatButtonId = chatId + '_joinChatButtonId';
+            var addNewChatButtonId = chatIdFrame + '_addNewChatButtonId';
+            var chatInputId = chatIdFrame + '_chatInputId';
+            var chatSelectorId = chatIdFrame + '_chatSelectorId';
+            var joinChatButtonId = chatIdFrame + '_joinChatButtonId';
 
-            $('#' + loginFormId).remove();
-            $('#' + chatId).text('Welcome: ' + serverCredentials.ownerNickname).append($('<p>'))
+            $('#' + chatIdFrame).text('Welcome: ' + serverCredentials.ownerNickname).append($('<p>'))
                 .append($('<input>').attr({'id': chatInputId, 'placeholder': 'Enter new chat name'}))
                 .append($('<button>').attr({'class': 'btn btn-success', 'id': addNewChatButtonId}).text('Add new chat'))
                 .append($('<select>').attr('id', chatSelectorId))
@@ -208,7 +82,7 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
             });
         }
 
-        function Chat(chatId, chatName, eventBus) {
+        function Chat(chatIdFrame, chatName, eventBus) {
 
             var messageListId;
             var messageInputId;
@@ -227,11 +101,11 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
                     }
                 });
 
-                _renderChat(chatId, chatName, messages);
+                _renderChat(chatIdFrame, chatName, messages);
             }
 
-            function _renderChat(chatId, chatName, messages) {
-                var currentChatId = chatId + '_chat-' + (++chatCounter);
+            function _renderChat(chatIdFrame, chatName, messages) {
+                var currentChatId = chatIdFrame + '_chat-' + (++chatCounter);
                 var closeChatButtonId = currentChatId + '_closeChatButtonId';
                 var sendMessageButtonId = currentChatId + '_sendMessageButtonId';
                 messageListId = currentChatId + '_messageListId';
@@ -299,15 +173,6 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
         return {"init": _init};
     }
 
-    function _showSuccess(message) {
-        _clearMessage();
-        $('#' + messageIdFrame)
-            .append($('<div>')
-                .attr('class', 'message')
-                .attr('class', 'success')
-                .text(message));
-    }
-
     function _showFail(message) {
         _clearMessage();
         $('#' + messageIdFrame)
@@ -322,29 +187,8 @@ var ChatApp = function (_rootDivId, eventBus, Events) {
     }
 
     function _render() {
-        var registrationForm = new RegistrationComponent(registrationFormId,eventBus);
-        registrationForm.init();
-
-        var loginComponent = new LoginComponent(loginFormId, eventBus);
-        loginComponent.init();
-
         var chatComponent = new ChatComponent(chatIdFrame, eventBus);
         chatComponent.init();
-    }
-
-    function _createRegistrationContainer() {
-        $('#' + _rootDivId)
-            .append($('<div>')
-                .attr('id', registrationFormId)
-                .attr('class', 'registration-form box')
-                .text('registration-form '));
-    }
-
-    function _createLoginContainer() {
-        $('#' + _rootDivId)
-            .append($('<div>')
-                .attr('id', loginFormId)
-                .attr('class', 'login-form box'));
     }
 
     function _createChatContainer() {
@@ -365,5 +209,5 @@ if (typeof define !== 'function') {
 }
 
 define(function () {
-    return ChatApp;
+    return Chat;
 });
