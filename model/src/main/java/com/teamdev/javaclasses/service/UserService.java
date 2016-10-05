@@ -5,40 +5,49 @@ import com.teamdev.javaclasses.dto.*;
 import java.util.Optional;
 
 /**
- * User service public API.
+ * Public API of user service.
  */
 public interface UserService {
 
     /**
      * Sign up new user.
      *
-     * @param signUpData client sign up data
+     * @param signUpData contain nickname, password and verify password
      * @return unique user id and unique nickname
-     * @throws SignUpException if sign up fail
+     * @throws SignUpException throw if user sign up fail
      */
     UserDto signUp(SignUpDto signUpData) throws SignUpException;
 
     /**
-     * Login already sign up users.
+     * Login user.
      *
-     * @param loginData client login data
-     * @return TokenDto for access
-     * @throws LoginException if login fail
+     * @param loginData contain nickname and password.
+     * @return TokenDto unique identifier for access
+     * @throws LoginException throw if user login fail
      */
     TokenDto login(LoginDto loginData) throws LoginException;
 
     /**
-     * Get user.
+     * Return user by id.
      *
      * @param userId user id
-     * @return user.
+     * @return user data transfer object
      */
     Optional<UserDto> findUser(UserIdDto userId);
 
+    /**
+     * Return user by token.
+     *
+     * @param token unique identifier for access
+     * @return user data transfer object
+     */
     Optional<UserDto> findUser(TokenIdDto token);
-    /*TODO rename to delete account*/
-    void deleteUser(UserIdDto userId);
 
-    void logout(TokenIdDto token);
+    /**
+     * Delete user account by id.
+     *
+     * @param userId user id
+     */
+    void deleteAccount(UserIdDto userId);
 
 }

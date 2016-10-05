@@ -44,7 +44,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatIdDto create(ChatCreationDto chatCreationDto) throws ChatCreationException {
-        /*TODO update logs, except warn level*/
 
         checkNotNull(chatCreationDto.getChatName());
         checkNotNull(chatCreationDto.getUserId());
@@ -81,8 +80,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void joinChat(MemberChatDto memberChatDto) throws ChatMemberException {
-        /*TODO update logs*/
-        /*TODO update memberChatDto > remove nickname > take username by user id*/
+
         checkNotNull(memberChatDto.getUserId(), "value of user id can not be null");
         checkNotNull(memberChatDto.getChatId(), "value of chat id can not be null");
 
@@ -106,7 +104,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void leaveChat(MemberChatDto memberChatDto) throws ChatMemberException {
-        /*TODO update logs*/
 
         checkNotNull(memberChatDto.getUserId());
         checkNotNull(memberChatDto.getChatId());
@@ -130,7 +127,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void postMessage(PostMessageDto postMessageDto) throws PostMessageException {
-        /*TODO update logs*/
 
         checkNotNull(postMessageDto.getChatId());
         checkNotNull(postMessageDto.getUserName());
@@ -161,7 +157,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void removeChat(ChatIdDto chatIdDto) {
-        /*TODO add logs*/
 
         checkNotNull(chatIdDto.getValue());
 

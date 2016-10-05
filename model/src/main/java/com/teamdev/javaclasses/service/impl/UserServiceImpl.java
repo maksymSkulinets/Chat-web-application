@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(UserIdDto userId) {
+    public void deleteAccount(UserIdDto userId) {
         final User user = userRepository.remove(new UserId(userId.getId()));
 
         if (user == null) {
@@ -224,14 +224,4 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public void logout(TokenIdDto token) {
-
-        final Token userToken = tokenRepository.remove(new TokenId(token.getId()));
-
-        if (log.isInfoEnabled()) {
-            log.info("User with id: " + userToken.getUserId() + " was logged out.");
-        }
-
-    }
 }

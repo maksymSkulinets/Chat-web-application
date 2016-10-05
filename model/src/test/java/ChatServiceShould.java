@@ -29,7 +29,7 @@ public class ChatServiceShould {
 
     @After
     public void tearDownUser() {
-        userService.deleteUser(new UserIdDto(userId));
+        userService.deleteAccount(new UserIdDto(userId));
     }
 
     @Test

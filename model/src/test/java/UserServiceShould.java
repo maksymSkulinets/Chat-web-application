@@ -29,7 +29,7 @@ public class UserServiceShould {
         assertEquals("Nickname of registered user is not equal expected.",
                 nickname, userById.get().getNickname());
 
-        userService.deleteUser(new UserIdDto(userById.get().getId()));
+        userService.deleteAccount(new UserIdDto(userById.get().getId()));
     }
 
 
@@ -45,7 +45,7 @@ public class UserServiceShould {
             assertEquals("Sign up fail messages are not match", EXIST_USER.getMessage(), e.getMessage());
         }
 
-        userService.deleteUser(new UserIdDto(user.getId()));
+        userService.deleteAccount(new UserIdDto(user.getId()));
 
     }
 
@@ -83,7 +83,7 @@ public class UserServiceShould {
         assertEquals("User with current nickname is not logged.",
                 nickname, userByToken.get().getNickname());
 
-        userService.deleteUser(new UserIdDto(user.getId()));
+        userService.deleteAccount(new UserIdDto(user.getId()));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class UserServiceShould {
             assertEquals("Sign up fail messages are not match", EMPTY_INPUT.getMessage(), e.getMessage());
         }
 
-        userService.deleteUser(new UserIdDto(user.getId()));
+        userService.deleteAccount(new UserIdDto(user.getId()));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class UserServiceShould {
                     NON_SIGN_UP_USER.getMessage(), e.getMessage());
         }
 
-        userService.deleteUser(new UserIdDto(user.getId()));
+        userService.deleteAccount(new UserIdDto(user.getId()));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class UserServiceShould {
         final Optional<UserDto> user = userService.findUser(new TokenIdDto(userToken.getToken()));
         assertTrue("Current user entity is not keep in repository.", user.isPresent());
 
-        userService.deleteUser(new UserIdDto(userToken.getUserId()));
+        userService.deleteAccount(new UserIdDto(userToken.getUserId()));
         final Optional<UserDto> deletedUser = userService.findUser(new TokenIdDto(userToken.getToken()));
         assertFalse("Current user entity keep in repository but was deleted.", deletedUser.isPresent());
     }
@@ -154,6 +154,6 @@ public class UserServiceShould {
         final Optional<UserDto> logoutUser = userService.findUser(new TokenIdDto(userToken.getToken()));
         assertFalse("Current user token keep in repository but user was logout.", logoutUser.isPresent());
 
-        userService.deleteUser(new UserIdDto(userToken.getUserId()));
+        userService.deleteAccount(new UserIdDto(userToken.getUserId()));
     }
 }

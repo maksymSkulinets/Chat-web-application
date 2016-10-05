@@ -17,7 +17,7 @@ public class DeleteAccountHandler implements Handler {
     @Override
     public HandlerProcessingResult process(HttpServletRequest request, HttpServletResponse response) {
         final String userId = request.getParameter(USER_ID);
-        service.deleteUser(new UserIdDto(Long.valueOf(userId)));
+        service.deleteAccount(new UserIdDto(Long.valueOf(userId)));
 
         return new HandlerProcessingResult(SC_OK);
     }
