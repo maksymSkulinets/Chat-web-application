@@ -29,8 +29,8 @@ var ChatService = function (eventBus, events, baseUrl) {
         };
 
         $.post(baseUrl + '/chat/chat-creation',
-            chatDto,
-            function (xhr) {
+            chatDto)
+            .done(function (xhr) {
                 var data = eval('(' + xhr + ')');
                 eventBus.post(events.CHAT_CREATION_SUCCESS, data);
                 console.log('Chat creation success.');
@@ -54,8 +54,8 @@ var ChatService = function (eventBus, events, baseUrl) {
         };
 
         $.post(baseUrl + '/chat/join-chat',
-            chatDto,
-            function (xhr) {
+            chatDto)
+            .done(function (xhr) {
                 var data = eval('(' + xhr + ')');
                 eventBus.post(events.CHAT_CONNECTION_SUCCESS, data);
                 console.log('Joining chat success.');
@@ -78,9 +78,9 @@ var ChatService = function (eventBus, events, baseUrl) {
             'tokenId': tokenId
         };
 
-        $.post(baseUrl + '/chat/leave-chat',
-            chatDto,
-            function () {
+        $.post(baseUrl + '/chat/chat-leave',
+            chatDto)
+            .done(function () {
                 console.log('Leaving chat success.');
             }, 'text')
             .fail(function (xhr) {
@@ -101,8 +101,8 @@ var ChatService = function (eventBus, events, baseUrl) {
         };
 
         $.post(baseUrl + '/chat/post-message',
-            messageDto,
-            function (xhr) {
+            messageDto)
+            .done(function (xhr) {
                 var data = eval('(' + xhr + ')');
                 eventBus.post(events.POST_MESSAGE_SUCCESS, data);
                 console.log('Post message success.');
