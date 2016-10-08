@@ -78,9 +78,9 @@ var ChatService = function (eventBus, events, baseUrl) {
             'tokenId': tokenId
         };
 
-        $.post(baseUrl + '/chat/chat-leave',
+        $.post(baseUrl + '/chat/leave-chat',
             chatDto)
-            .done(function () {
+            .done(function (xhr) {
                 console.log('Leaving chat success.');
             }, 'text')
             .fail(function (xhr) {

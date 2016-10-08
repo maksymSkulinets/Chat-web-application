@@ -27,13 +27,23 @@ var Login = function (_rootDivId, eventBus, Events) {
         var loginButtonId = loginFormId + '_loginButtonId';
 
         $('#' + loginFormId)
-            .text('Login form.').append($('<br>'))
-            .append('Please fill in next fields:').append($('<p>'))
-            .append($('<label>').attr('for', nicknameId).text('Nickname:')).append($('<br>'))
-            .append($('<input>').attr({'id': nicknameId, 'type': 'text'})).append($('<br>'))
-            .append($('<label>').attr('for', passwordId).text('Password:')).append($('<br>'))
-            .append($('<input>').attr({'id': passwordId, 'type': 'password'})).append($('<br>'))
-            .append($('<button>').attr({'id': loginButtonId, 'class': 'btn btn-success'}).text('Login'))
+            .append($('<h3>').text('Login:'))
+            .append($('<hr>'))
+            .append($('<label>').attr({
+                'id': 'icon',
+                'for': nicknameId
+            }).append($('<i>').attr('class', 'glyphicon glyphicon-user')))
+            .append($('<input>').attr({'id': nicknameId, 'type': 'text', 'placeholder': 'nickname'}))
+            .append($('<br>'))
+            .append($('<label>').attr({
+                'id': 'icon',
+                'for': passwordId
+            }).append($('<i>').attr('class', 'glyphicon glyphicon-lock'))).append($('<input>').attr({
+            'id': passwordId,
+            'type': 'password',
+            'placeholder': 'password'
+        }))
+            .append($('<button>').attr({'id': loginButtonId, 'class': 'large-button'}).text('Login'))
             .append($('<div>').attr('id', messageId));
 
         $('#' + loginButtonId).click(function () {
@@ -56,9 +66,8 @@ var Login = function (_rootDivId, eventBus, Events) {
     function _showFail(message) {
         _clearMessage();
         $('#' + messageId)
-            .append($('<div>')
-                .attr('class', 'message')
-                .attr('class', 'warning')
+            .append($('<span>')
+                .attr('class', 'message warning glyphicon glyphicon-remove')
                 .text(message));
     }
 
@@ -70,7 +79,7 @@ var Login = function (_rootDivId, eventBus, Events) {
         $('#' + _rootDivId)
             .append($('<div>')
                 .attr('id', loginFormId)
-                .attr('class', 'login-form box'));
+                .attr('class', 'login-form_box'));
     }
 
     function _removeForm() {

@@ -26,23 +26,37 @@ var Registration = function (_rootDivId, eventBus, Events) {
         var startLoginButtonId = registrationFormId + '_startLoginButtonId';
 
         $('#' + registrationFormId)
-            .text('Registration form.').append($('<br>'))
-            .append('Please fill in next fields:').append($('<p>'))
-            .append($('<label>').attr('for', nicknameId).text('Nickname:')).append($('<br>'))
-            .append($('<input>').attr({'id': nicknameId, 'type': 'text'}))
+            .append($('<h3>').text('Registration:'))
+            .append($('<hr>'))
+            .append($('<label>').attr({
+                'id': 'icon',
+                'for': nicknameId
+            }).append($('<i>').attr('class', 'glyphicon glyphicon-user')))
+            .append($('<input>').attr({'id': nicknameId, 'type': 'text', 'placeholder': 'nickname'}))
             .append($('<br>'))
-            .append($('<label>').attr('for', passwordId).text('Password:')).append($('<br>'))
-            .append($('<input>').attr({'id': passwordId, 'type': 'password'}))
+            .append($('<label>').attr({
+                'id': 'icon',
+                'for': passwordId
+            }).append($('<i>').attr('class', 'glyphicon glyphicon-lock'))).append($('<input>').attr({
+            'id': passwordId,
+            'type': 'password',
+            'placeholder': 'password'
+        }))
             .append($('<br>'))
-            .append($('<label>').attr('for', verifyPasswordId).text('Verify password:')).append($('<br>'))
-            .append($('<input>').attr({'id': verifyPasswordId, 'type': 'password'}))
-            .append($('<br>'))
-            .append($('<button>').attr({'id': registerButtonId, 'class': 'btn btn-success'}).text('Register'))
-            .append($('<div>').attr('id', messageId))
+            .append($('<label>').attr({
+                'id': 'icon',
+                'for': verifyPasswordId
+            }).append($('<i>').attr('class', 'glyphicon glyphicon-lock'))).append($('<input>').attr({
+            'id': verifyPasswordId,
+            'type': 'password',
+            'placeholder': 'repeat password'
+        })).append($('<button>').attr({'id': registerButtonId, 'class': 'large-button'}).text('Register'))
             .append($('<button>)').attr({
                 'id': startLoginButtonId,
-                'class': 'btn btn-success'
-            }).text('Start login'));
+                'class': 'large-button'
+            }).text('Start login'))
+            .append($('<span>').attr('id', messageId));
+
 
         $('#' + registerButtonId).click(function () {
 
@@ -72,18 +86,16 @@ var Registration = function (_rootDivId, eventBus, Events) {
     function _showSuccess(message) {
         _clearMessage();
         $('#' + messageId)
-            .append($('<div>')
-                .attr('class', 'message')
-                .attr('class', 'success')
+            .append($('<span>')
+                .attr('class', 'message success glyphicon glyphicon-ok')
                 .text(message));
     }
 
     function _showFail(message) {
         _clearMessage();
         $('#' + messageId)
-            .append($('<div>')
-                .attr('class', 'message')
-                .attr('class', 'warning')
+            .append($('<span>')
+                .attr('class', 'message warning glyphicon glyphicon-remove')
                 .text(message));
     }
 
@@ -95,8 +107,7 @@ var Registration = function (_rootDivId, eventBus, Events) {
         $('#' + _rootDivId)
             .append($('<div>')
                 .attr('id', registrationFormId)
-                .attr('class', 'registration-form box')
-                .text('registration-form '));
+                .attr('class', 'registration-form_box'))
     }
 
     return {

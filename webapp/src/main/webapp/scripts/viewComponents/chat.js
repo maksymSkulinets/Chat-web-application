@@ -2,6 +2,7 @@ var Chat = function (_rootDivId, eventBus, Events) {
 
     var chatIdFrame = _rootDivId + "_chatId";
     var messageIdFrame = _rootDivId + "_messageId";
+    
     var _init = function () {
         _render();
     };
@@ -20,15 +21,18 @@ var Chat = function (_rootDivId, eventBus, Events) {
                 serverCredentials.userId = evt.userId;
                 _render();
             });
+
             eventBus.subscribe(Events.CHAT_CREATION_SUCCESS, function (evt) {
                 var chatList = evt.chatList;
                 var allChats = JSON.parse(chatList);
-
+                $('#' + chatIdFrame).empty();
                 _render(allChats);
             });
+
             eventBus.subscribe(Events.CHAT_CREATION_FAIL, function (evt) {
                 _showFail(evt.eventMessage)
             });
+
             eventBus.subscribe(Events.CHAT_CONNECTION_SUCCESS, function (evt) {
                 var chatName = evt.chatName;
                 var $messageList = JSON.parse(evt.messages);
@@ -36,6 +40,7 @@ var Chat = function (_rootDivId, eventBus, Events) {
                 new Chat(chatIdFrame, chatName, eventBus).init($messageList);
                 _clearMessage();
             });
+
             eventBus.subscribe(Events.CHAT_CONNECTION_FAIL, function (evt) {
                 _showFail(evt.eventMessage);
             });
@@ -48,9 +53,13 @@ var Chat = function (_rootDivId, eventBus, Events) {
             var chatSelectorId = chatIdFrame + '_chatSelectorId';
             var joinChatButtonId = chatIdFrame + '_joinChatButtonId';
 
-            $('#' + chatIdFrame).text('Welcome: ' + serverCredentials.ownerNickname).append($('<p>'))
+            $('#' + chatIdFrame)
+                .append($('<h3>').text('Welcome: ' + serverCredentials.ownerNickname)).append($('<hr>'))
                 .append($('<input>').attr({'id': chatInputId, 'placeholder': 'Enter new chat name'}))
-                .append($('<button>').attr({'class': 'btn btn-success', 'id': addNewChatButtonId}).text('Add new chat'))
+                .append($('<button>').attr({
+                    'class': 'btn btn-success',
+                    'id': addNewChatButtonId
+                }).text('Add new chat')).append($('<br>'))
                 .append($('<select>').attr('id', chatSelectorId))
                 .append($('<button>').attr({'class': 'btn btn-success', 'id': joinChatButtonId}).text('Join chat'))
                 .append($('<div>').attr('id', messageIdFrame));
@@ -114,12 +123,12 @@ var Chat = function (_rootDivId, eventBus, Events) {
                 $('#' + _rootDivId)
                     .append($('<div>').attr({'id': currentChatId, 'class': 'box'})
                         .append($('<label>').text('Chat Name: ' + chatName))
-                        .append($('<button>').attr('id', closeChatButtonId)
+                        .append($('<button>').attr({'id': closeChatButtonId,'class':'close-chat-button'})
                             .append($('<span>', {'class': 'glyphicon glyphicon-remove'})))
                         .append($('<ul>', {'id': messageListId, class: 'chat-block'}))
                         .append($('<textarea>').attr('id', messageInputId).attr('placeholder', 'Type message here'))
                         .append($('<button>').attr({
-                            'class': 'btn btn-success',
+                            'class': 'send-message-button',
                             'id': sendMessageButtonId
                         }).text('Send'))
                         .append($('<div>').attr('id', messageIdFrame))
