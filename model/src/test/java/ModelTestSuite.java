@@ -5,7 +5,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         UserServiceShould.class,
         ChatServiceShould.class,
-        MultithreadingTest.class
 })
 
 public class ModelTestSuite {
