@@ -1,6 +1,9 @@
-import com.teamdev.javaclasses.service.UserService;
+import com.teamdev.javaclasses.dto.LoginDto;
+import com.teamdev.javaclasses.dto.SignUpDto;
+import com.teamdev.javaclasses.dto.TokenDto;
 import com.teamdev.javaclasses.entities.tinyTypes.TokenId;
 import com.teamdev.javaclasses.entities.tinyTypes.UserId;
+import com.teamdev.javaclasses.service.UserService;
 import com.teamdev.javaclasses.service.impl.UserServiceImpl;
 import org.junit.Ignore;
 import org.junit.Test;

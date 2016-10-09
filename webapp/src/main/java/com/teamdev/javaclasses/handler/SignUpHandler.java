@@ -1,6 +1,8 @@
 package com.teamdev.javaclasses.handler;
 
 import com.teamdev.javaclasses.HandlerProcessingResult;
+import com.teamdev.javaclasses.dto.SignUpDto;
+import com.teamdev.javaclasses.dto.UserDto;
 import com.teamdev.javaclasses.service.SignUpException;
 import com.teamdev.javaclasses.service.UserService;
 import com.teamdev.javaclasses.service.impl.UserServiceImpl;
