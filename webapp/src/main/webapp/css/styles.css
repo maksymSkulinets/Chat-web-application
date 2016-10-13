@@ -1,3 +1,7 @@
+h3 {
+    text-align: center;
+}
+
 .chat-app {
     word-wrap: break-word;
     font-family: 'Nunito', sans-serif;
@@ -18,28 +22,28 @@
 
 #chat-appId_registrationFormId {
     position: absolute;
-    width: 320px;
-    height: 340px;
+    width: 300px;
+    height: 325px;
     left: 50%;
     top: 50%;
     margin-left: -250px;
     margin-top: -150px;
     border-radius: 3%;
-    padding: 10px 35px 10px 35px;
+    padding: 10px 30px 10px 30px;
     background-color: lightgrey;
     text-align: center;
 }
 
 #chat-appId_loginFormId {
     position: absolute;
-    width: 320px;
-    height: 260px;
+    width: 300px;
+    height: 245px;
     left: 50%;
     top: 50%;
     margin-left: -250px;
     margin-top: -150px;
     border-radius: 3%;
-    padding: 10px 35px 10px 35px;
+    padding: 10px 30px 10px 30px;
     background-color: lightgrey;
     text-align: center;
 }
@@ -72,35 +76,35 @@
 }
 
 select, input {
-    margin-left: 25px;
     width: 180px;
-    height: 30px;
+    height: 25px;
     border-radius: 5px;
-    margin-bottom: 3px;
 }
 
 textarea {
-    width: 510px;
-    height: 80px;
+    width: 590px;
+    height: 70px;
     border-radius: 5px;
 }
 
 #chat-appId_registrationFormId_registerButtonId,
 #chat-appId_registrationFormId_startLoginButtonId,
 #chat-appId_loginFormId_loginButtonId {
-    padding: 8px 22px 8px 22px;
+    padding: 6px 20px 6px 20px;
     color: #FFF;
     background-color: #4bc970;
     font-size: 16px;
     text-align: center;
     font-style: normal;
     border-radius: 5px;
+    height: 36px;
     width: 100%;
     box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
 #chat-appId_chatId_addNewChatButtonId,
 #chat-appId_chatId_joinChatButtonId {
+    margin: 3px;
     color: #FFF;
     background-color: #4bc970;
     font-size: 14px;
@@ -108,6 +112,7 @@ textarea {
     font-style: normal;
     border-radius: 5px;
     width: 35%;
+    height: 30px;
     box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
@@ -123,13 +128,13 @@ textarea {
     box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
-.close-chat-button {
-    margin-left: 425px;
+.close-chat{
+    float: right;
 }
 
 #icon {
     color: #384047;
-    margin-left: 20px;
+    margin: 5px;
 }
 
 #chat-appId_registrationFormId_startLoginButtonId,
@@ -138,6 +143,3 @@ textarea {
     margin-top: 16px;
 }
 
-h3 {
-    text-align: center;
-}

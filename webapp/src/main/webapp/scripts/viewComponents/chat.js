@@ -2,7 +2,7 @@ var Chat = function (_rootDivId, eventBus, Events) {
 
     var chatIdFrame = _rootDivId + "_chatId";
     var messageIdFrame = _rootDivId + "_messageId";
-    
+
     var _init = function () {
         _render();
     };
@@ -123,8 +123,10 @@ var Chat = function (_rootDivId, eventBus, Events) {
                 $('#' + _rootDivId)
                     .append($('<div>').attr({'id': currentChatId, 'class': 'box'})
                         .append($('<label>').text('Chat Name: ' + chatName))
-                        .append($('<button>').attr({'id': closeChatButtonId,'class':'close-chat-button'})
-                            .append($('<span>', {'class': 'glyphicon glyphicon-remove'})))
+                        .append($('<span>', {
+                            'class': 'glyphicon glyphicon-remove close-chat',
+                            'id': closeChatButtonId
+                        }))
                         .append($('<ul>', {'id': messageListId, class: 'chat-block'}))
                         .append($('<textarea>').attr('id', messageInputId).attr('placeholder', 'Type message here'))
                         .append($('<button>').attr({
@@ -132,7 +134,8 @@ var Chat = function (_rootDivId, eventBus, Events) {
                             'id': sendMessageButtonId
                         }).text('Send'))
                         .append($('<div>').attr('id', messageIdFrame))
-                    );
+                    )
+                ;
 
                 _renderMessages(messages);
 
