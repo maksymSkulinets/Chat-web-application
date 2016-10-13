@@ -49,11 +49,11 @@ h3 {
 }
 
 #chat-appId_chatId {
-    margin-left: 20px;
+    margin-left: 100px;
     margin-top: 20px;
-    width: 450px;
+    width: 500px;
     height: 220px;
-    border-radius: 3%;
+    border-radius: 1%;
     padding: 10px 35px 10px 35px;
     background-color: lightgrey;
     text-align: center;
@@ -79,6 +79,11 @@ select, input {
     width: 180px;
     height: 25px;
     border-radius: 5px;
+}
+
+#chat-appId_chatId_chatInputId,
+#chat-appId_chatId_chatSelectorId {
+    height: 30px;
 }
 
 textarea {
@@ -128,7 +133,7 @@ textarea {
     box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
-.close-chat{
+.close-chat {
     float: right;
 }
 
